@@ -27,6 +27,7 @@ const SelectArgs = memo(({ handleArgSelect, cmd, arg, selectedArgs }: SelectArgs
 			<SelectValue placeholder={`Select ${arg.name}`} />
 		</SelectTrigger>
 		<SelectContent>
+			<SelectItem value='none-selected'>None</SelectItem>
 			{arg.options?.map((option) => (
 				<SelectItem key={option.value} value={option.value}>
 					{option.description} ({option.value})

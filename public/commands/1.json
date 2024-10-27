@@ -12,6 +12,7 @@
                 "api": {
                     "game": "gi",
                     "jsonBody": {
+                        "command": false,
                         "search": [
                             "monster_id"
                         ],
@@ -92,6 +93,7 @@
                 "api": {
                     "game": "gi",
                     "jsonBody": {
+                        "command": false,
                         "search": [
                             "character id"
                         ],
@@ -133,6 +135,7 @@
                 "api": {
                     "game": "gi",
                     "jsonBody": {
+                        "command": false,
                         "search": [
                             "item id"
                         ],
@@ -188,6 +191,7 @@
                 "api": {
                     "game": "gi",
                     "jsonBody": {
+                        "command": false,
                         "search": [
                             "id"
                         ],
@@ -300,23 +304,53 @@
                 "options": [
                     {
                         "value": "level",
-                        "description": "Weapon level"
+                        "description": "Weapon level",
+                        "args": [
+                            {
+                                "key": "level",
+                                "name": "Level",
+                                "description": "Level of the weapon to change.",
+                                "type": "number",
+                                "limit": {
+                                    "min": 1,
+                                    "max": 90
+                                }
+                            }
+                        ]
                     },
                     {
                         "value": "break",
-                        "description": "Ascension level"
+                        "description": "Ascension level",
+                        "args": [
+                            {
+                                "key": "level",
+                                "name": "Level",
+                                "description": "Level of the ascension to change.",
+                                "type": "number",
+                                "limit": {
+                                    "min": 1,
+                                    "max": 6
+                                }
+                            }
+                        ]
                     },
                     {
                         "value": "refine",
-                        "description": "Refinement level"
+                        "description": "Refinement level",
+                        "args": [
+                            {
+                                "key": "level",
+                                "name": "Level",
+                                "description": "Refinement level of the weapon to change.",
+                                "type": "number",
+                                "limit": {
+                                    "min": 1,
+                                    "max": 5
+                                }
+                            }
+                        ]
                     }
                 ]
-            },
-            {
-                "key": "level",
-                "name": "Level",
-                "description": "Level of the value to set. Level max is 90, break/ascension max is 6, refinement max is 5.",
-                "type": "number"
             }
         ]
     },
@@ -370,6 +404,7 @@
                 "api": {
                     "game": "gi",
                     "jsonBody": {
+                        "command": false,
                         "search": [
                             "weapon id"
                         ],

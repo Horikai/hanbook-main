@@ -107,6 +107,7 @@
                 "api": {
                     "game": "gi",
                     "jsonBody": {
+                        "command": false,
                         "search": [
                             "character id"
                         ],

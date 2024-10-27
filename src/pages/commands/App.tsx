@@ -10,6 +10,13 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import ArgumentsContainer from './components/ArgsContainer'
 import { Input } from '@/components/ui/input'
 
+type CommandOption = {
+	value: string
+	description: string
+	remove?: boolean | string[]
+	args?: Argument[]
+}
+
 export type Argument = {
 	key: string
 	name: string
@@ -19,10 +26,7 @@ export type Argument = {
 		min: number
 		max: number
 	}
-	options?: Array<{
-		value: string
-		description: string
-	}>
+	options?: CommandOption[]
 	api?: {
 		game: 'gi' | 'sr'
 		jsonBody: {
@@ -72,14 +76,60 @@ export default function App() {
 	}, [])
 
 	const handleArgSelect = useCallback((commandId: number, argKey: string, value: string) => {
-		setSelectedArgs((prev) => ({
-			...prev,
-			[commandId]: {
-				...prev[commandId],
-				[argKey]: value,
-			},
-		}))
+		setSelectedArgs((prev) => {
+			if (value === 'none-selected') {
+				// Create new object without this arg
+				const newCommandArgs = { ...prev[commandId] }
+				delete newCommandArgs[argKey]
+				return {
+					...prev,
+					[commandId]: newCommandArgs,
+				}
+			}
+
+			return {
+				...prev,
+				[commandId]: {
+					...prev[commandId],
+					[argKey]: value,
+				},
+			}
+		})
 	}, [])
+
+	const getUpdatedCommand = useCallback(
+		(cmd: CommandLists) => {
+			let updatedCommand = cmd.command
+			if (cmd.args && selectedArgs[cmd.id]) {
+				for (const [key, selectedValue] of Object.entries(selectedArgs[cmd.id])) {
+					if (selectedValue) {
+						updatedCommand = updatedCommand.replace(`<${key}>`, selectedValue)
+					}
+				}
+			}
+			return updatedCommand
+		},
+		[selectedArgs]
+	)
+
+	const filteredCommands = useMemo(() => {
+		const lowerQuery = searchQuery.toLowerCase()
+		return commands.filter(
+			(cmd) =>
+				cmd.name.toLowerCase().includes(lowerQuery) ||
+				cmd.command.toLowerCase().includes(lowerQuery) ||
+				cmd.args?.some(
+					(arg) =>
+						arg.name.toLowerCase().includes(lowerQuery) ||
+						(arg.type === 'select' &&
+							arg.options?.some(
+								(option) =>
+									option.value.toLowerCase().includes(lowerQuery) ||
+									option.description.toLowerCase().includes(lowerQuery)
+							))
+				)
+		)
+	}, [commands, searchQuery])
 
 	useEffect(() => {
 		const fetchCommands = async () => {
@@ -101,39 +151,6 @@ export default function App() {
 		}
 		fetchCommands()
 	}, [toast, activeTab])
-
-	const getUpdatedCommand = useCallback(
-		(cmd: CommandLists) => {
-			let updatedCommand = cmd.command
-			if (cmd.args && selectedArgs[cmd.id]) {
-				for (const [key, selectedValue] of Object.entries(selectedArgs[cmd.id])) {
-					if (selectedValue) {
-						updatedCommand = updatedCommand.replace(`<${key}>`, selectedValue)
-					}
-				}
-			}
-			return updatedCommand
-		},
-		[selectedArgs]
-	)
-
-	const filteredCommands = useMemo(() => {
-		return commands.filter(
-			(cmd) =>
-				cmd.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				cmd.command.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				cmd.args?.some(
-					(arg) =>
-						arg.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-						(arg.type === 'select' &&
-							arg.options?.some(
-								(option) =>
-									option.value.toLowerCase().includes(searchQuery.toLowerCase()) ||
-									option.description.toLowerCase().includes(searchQuery.toLowerCase())
-							))
-				)
-		)
-	}, [commands, searchQuery])
 
 	return (
 		<div className='container mx-auto p-4'>
