@@ -63,23 +63,79 @@
                         "description": "World Level"
                     },
                     {
-                        "value": "ns",
-                        "description": "No Stamina"
+                        "value": "abyss",
+                        "description": "Tower Level"
                     },
                     {
-                        "value": "abyss",
-                        "description": "Abyss"
+                        "value": "bplevel",
+                        "description": "BP Level"
                     },
                     {
                         "value": "god",
-                        "description": "God mode = No damage"
+                        "description": "God Mode"
+                    },
+                    {
+                        "value": "ns",
+                        "description": "Unlimited Stamina"
+                    },
+                    {
+                        "value": "ue",
+                        "description": "Unlimited Energy"
+                    },
+                    {
+                        "value": "element",
+                        "description": "Switch Element"
+                    },
+                    {
+                        "value": "so",
+                        "description": "Set Open State"
+                    },
+                    {
+                        "value": "uo",
+                        "description": "Unset Open State"
+                    },
+                    {
+                        "value": "point",
+                        "description": "Unlock Map"
+                    },
+                    {
+                        "value": "teapot",
+                        "description": "Unlock Teapot"
+                    },
+                    {
+                        "value": "glider",
+                        "description": "Can Fly"
+                    },
+                    {
+                        "value": "swim",
+                        "description": "Can Swim"
+                    },
+                    {
+                        "value": "sts",
+                        "description": "Set Tag Scene"
+                    },
+                    {
+                        "value": "uts",
+                        "description": "Unset Tag Scene"
+                    },
+                    {
+                        "value": "lv",
+                        "description": "Level Character Currently"
+                    },
+                    {
+                        "value": "stlv",
+                        "description": "Level Character Team"
+                    },
+                    {
+                        "value": "salv",
+                        "description": "Level Character All"
                     }
                 ]
             },
             {
                 "key": "value",
                 "name": "Value",
-                "description": "Value of the prop.",
+                "description": "Value of the prop. For element: wind/anemo, rock/geo, electro, grass/dendro, hydro/water. For others: on/off/toggle/all_on/all_off/reset or number.",
                 "type": "select",
                 "options": [
                     {
@@ -89,6 +145,22 @@
                     {
                         "value": "off",
                         "description": "Off"
+                    },
+                    {
+                        "value": "toggle",
+                        "description": "Toggle"
+                    },
+                    {
+                        "value": "all_on",
+                        "description": "All On"
+                    },
+                    {
+                        "value": "all_off",
+                        "description": "All Off"
+                    },
+                    {
+                        "value": "reset",
+                        "description": "Reset"
                     }
                 ]
             }
@@ -189,12 +261,346 @@
             {
                 "key": "level",
                 "name": "Level",
-                "description": "Level of the fetter.",
+                "description": "Level of friendship/fetter to set for the current character.",
                 "type": "number",
                 "limit": {
-                    "min": 1,
+                    "min": 0,
                     "max": 10
                 }
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "name": "Achievement Management",
+        "command": "/achievement <action> <value>",
+        "args": [
+            {
+                "key": "action",
+                "name": "Action",
+                "description": "Action to perform on achievements.",
+                "type": "select",
+                "options": [
+                    {
+                        "value": "grant",
+                        "description": "Grant a specific achievement",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Achievement ID",
+                                "description": "ID of the achievement to grant.",
+                                "type": "number"
+                            }
+                        ]
+                    },
+                    {
+                        "value": "revoke",
+                        "description": "Revoke a specific achievement",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Achievement ID",
+                                "description": "ID of the achievement to revoke.",
+                                "type": "number"
+                            }
+                        ]
+                    },
+                    {
+                        "value": "progress",
+                        "description": "Set progress for an achievement",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Achievement ID",
+                                "description": "ID of the achievement to set progress for.",
+                                "type": "number"
+                            },
+                            {
+                                "key": "progress",
+                                "name": "Progress",
+                                "description": "Progress value to set for the achievement.",
+                                "type": "number"
+                            }
+                        ]
+                    },
+                    {
+                        "value": "grantall",
+                        "description": "Grant all achievements",
+                        "remove": "value"
+                    },
+                    {
+                        "value": "revokeall",
+                        "description": "Revoke all achievements",
+                        "remove": "value"
+                    }
+                ]
+            },
+            {
+                "key": "value",
+                "name": "Value",
+                "description": "Achievement ID or progress value based on selected action.",
+                "type": "search",
+                "api": {
+                    "game": "gi",
+                    "jsonBody": {
+                        "search": [
+                            "value"
+                        ],
+                        "category": [
+                            "Achievements"
+                        ],
+                        "command": false,
+                        "limit": 10
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "id": 7,
+        "name": "Talent Command",
+        "command": "/talent <action> <value>",
+        "args": [
+            {
+                "key": "action",
+                "name": "Action",
+                "description": "What talent action to perform.",
+                "type": "select",
+                "options": [
+                    {
+                        "value": "set",
+                        "description": "Set talent level by ID",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Talent ID",
+                                "description": "ID of the talent to modify.",
+                                "type": "number"
+                            },
+                            {
+                                "key": "level",
+                                "name": "Level",
+                                "description": "New level for the talent (1-15).",
+                                "type": "number",
+                                "limit": {
+                                    "min": 1,
+                                    "max": 15
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "value": "n",
+                        "description": "Set normal attack talent level",
+                        "args": [
+                            {
+                                "key": "level",
+                                "name": "Level",
+                                "description": "New level for normal attack talent (1-15).",
+                                "type": "number",
+                                "limit": {
+                                    "min": 1,
+                                    "max": 15
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "value": "e",
+                        "description": "Set elemental skill talent level",
+                        "args": [
+                            {
+                                "key": "level",
+                                "name": "Level",
+                                "description": "New level for elemental skill talent (1-15).",
+                                "type": "number",
+                                "limit": {
+                                    "min": 1,
+                                    "max": 15
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "value": "q",
+                        "description": "Set elemental burst talent level",
+                        "args": [
+                            {
+                                "key": "level",
+                                "name": "Level",
+                                "description": "New level for elemental burst talent (1-15).",
+                                "type": "number",
+                                "limit": {
+                                    "min": 1,
+                                    "max": 15
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "value": "all",
+                        "description": "Set all talent levels",
+                        "args": [
+                            {
+                                "key": "level",
+                                "name": "Level",
+                                "description": "New level for all talents (1-15).",
+                                "type": "number",
+                                "limit": {
+                                    "min": 1,
+                                    "max": 15
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "value": "getid",
+                        "description": "Get talent IDs for current character",
+                        "remove": "value"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 8,
+        "name": "Set Stats",
+        "command": "/stats <action> <stat> <value>",
+        "data": [
+            {
+                "id": 1,
+                "options": [
+                    {
+                        "value": "hp",
+                        "description": "HP"
+                    },
+                    {
+                        "value": "maxhp",
+                        "description": "Max HP"
+                    },
+                    {
+                        "value": "atk",
+                        "description": "ATK"
+                    },
+                    {
+                        "value": "def",
+                        "description": "DEF"
+                    },
+                    {
+                        "value": "crit%",
+                        "description": "CRIT Rate"
+                    },
+                    {
+                        "value": "critdmg%",
+                        "description": "CRIT DMG"
+                    },
+                    {
+                        "value": "er%",
+                        "description": "Energy Recharge"
+                    },
+                    {
+                        "value": "em",
+                        "description": "Elemental Mastery"
+                    },
+                    {
+                        "value": "heal%",
+                        "description": "Healing Bonus"
+                    },
+                    {
+                        "value": "phys%",
+                        "description": "Physical DMG Bonus"
+                    },
+                    {
+                        "value": "anemo%",
+                        "description": "Anemo DMG Bonus"
+                    },
+                    {
+                        "value": "geo%",
+                        "description": "Geo DMG Bonus"
+                    },
+                    {
+                        "value": "electro%",
+                        "description": "Electro DMG Bonus"
+                    },
+                    {
+                        "value": "hydro%",
+                        "description": "Hydro DMG Bonus"
+                    },
+                    {
+                        "value": "pyro%",
+                        "description": "Pyro DMG Bonus"
+                    },
+                    {
+                        "value": "cryo%",
+                        "description": "Cryo DMG Bonus"
+                    },
+                    {
+                        "value": "dendro%",
+                        "description": "Dendro DMG Bonus"
+                    }
+                ]
+            }
+        ],
+        "args": [
+            {
+                "key": "action",
+                "name": "Action",
+                "description": "Action to perform on stats.",
+                "type": "select",
+                "options": [
+                    {
+                        "value": "set",
+                        "description": "Set a stat value (temporary, resets after combat or other stat updates)",
+                        "args": [
+                            {
+                                "key": "stat",
+                                "name": "Stat",
+                                "description": "The stat to modify",
+                                "type": "select",
+                                "options": 1
+                            },
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "New value to set (can use % for percentages)",
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    {
+                        "value": "lock",
+                        "description": "Lock a stat to a value",
+                        "args": [
+                            {
+                                "key": "stat",
+                                "name": "Stat",
+                                "description": "The stat to lock",
+                                "type": "select",
+                                "options": 1
+                            },
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Value to lock to (optional, defaults to current value)",
+                                "type": "string",
+                                "options": 1
+                            }
+                        ]
+                    },
+                    {
+                        "value": "unlock",
+                        "description": "Unlock a stat",
+                        "args": [
+                            {
+                                "key": "stat",
+                                "name": "Stat",
+                                "description": "The stat to unlock",
+                                "type": "select",
+                                "options": 1
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     }
