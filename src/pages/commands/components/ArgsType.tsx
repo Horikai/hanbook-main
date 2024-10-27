@@ -16,26 +16,53 @@ interface SelectArgsProps {
 	cmd: CommandLists
 	arg: Argument
 	selectedArgs: { [key: number]: { [key: string]: string } }
+	description: string
 }
 
-const SelectArgs = memo(({ handleArgSelect, cmd, arg, selectedArgs }: SelectArgsProps) => (
-	<Select
-		onValueChange={(value) => handleArgSelect(cmd.id, arg.key, value)}
-		value={selectedArgs[cmd.id]?.[arg.key] || ''}
-	>
-		<SelectTrigger id={`${cmd.id}-${arg.key}`}>
-			<SelectValue placeholder={`Select ${arg.name}`} />
-		</SelectTrigger>
-		<SelectContent>
-			<SelectItem value='none-selected'>None</SelectItem>
-			{arg.options?.map((option) => (
-				<SelectItem key={option.value} value={option.value}>
-					{option.description} ({option.value})
-				</SelectItem>
-			))}
-		</SelectContent>
-	</Select>
-))
+const SelectArgs = memo(({ handleArgSelect, cmd, arg, selectedArgs, description }: SelectArgsProps) => {
+	// Helper function to resolve options
+	const resolveOptions = () => {
+		if (!arg.options) return []
+
+		// If options is a number, look up in data
+		if (typeof arg.options === 'number') {
+			const dataSet = cmd.data?.find((d) => d.id === arg.options)
+			if (!dataSet) {
+				console.warn(`No data found for options reference ${arg.options}`)
+				return []
+			}
+			return dataSet.options.map((opt) => ({
+				value: opt.value,
+				description: opt.description,
+			}))
+		}
+
+		// Otherwise return the options array directly
+		return arg.options
+	}
+
+	return (
+		<>
+			<Select
+				onValueChange={(value) => handleArgSelect(cmd.id, arg.key, value)}
+				value={selectedArgs[cmd.id]?.[arg.key] || ''}
+			>
+				<SelectTrigger id={`${cmd.id}-${arg.key}`}>
+					<SelectValue placeholder={`Select ${arg.name}`} />
+				</SelectTrigger>
+				<SelectContent>
+					<SelectItem value='none-selected'>None</SelectItem>
+					{resolveOptions().map((option) => (
+						<SelectItem key={option.value} value={option.value}>
+							{option.description} ({option.value})
+						</SelectItem>
+					))}
+				</SelectContent>
+			</Select>
+			<p className='text-sm text-muted-foreground'>{description}</p>
+		</>
+	)
+})
 
 interface SearchArgsProps {
 	commands: CommandLists[]

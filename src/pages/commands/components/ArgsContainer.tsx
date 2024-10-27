@@ -1,4 +1,4 @@
-import type { CommandLists, Argument } from '@/pages/commands/App'
+import type { CommandLists, Argument, CommandOption } from '@/pages/commands/App'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
@@ -32,61 +32,13 @@ const ArgumentsContainer = memo(
 		setSearchResults,
 		commands,
 	}: ArgumentsContainerProps) => {
-		// Get the updated description based on selected value
-		const getUpdatedDescription = () => {
-			if (arg.type === 'select') {
-				const selectedValue = selectedArgs[cmd.id]?.[arg.key]
-				if (selectedValue) {
-					const selectedOption = arg.options?.find((opt) => opt.value === selectedValue)
-					if (selectedOption?.args?.[0]) {
-						// Return the description from the first argument of the selected option
-						return selectedOption.args[0].description
-					}
-				}
+		// Helper function to get selected option from either direct options or data reference
+		const getSelectedOption = (cmdArg: Argument, selectedValue: string): CommandOption | undefined => {
+			if (typeof cmdArg.options === 'number') {
+				const dataSet = cmd.data?.find((d) => d.id === cmdArg.options)
+				return dataSet?.options.find((opt) => opt.value === selectedValue)
 			}
-			// Return original description if no updates needed
-			return arg.description
-		}
-
-		const shouldRenderArg = () => {
-			const isOriginalArg = cmd.args?.some((cmdArg) => cmdArg.key === arg.key)
-
-			// Check all selected arguments for this command
-			for (const cmdArg of cmd.args || []) {
-				if (cmdArg.type === 'select') {
-					const selectedValue = selectedArgs[cmd.id]?.[cmdArg.key]
-					if (!selectedValue) continue
-
-					// Find the selected option
-					const selectedOption = cmdArg.options?.find((opt) => opt.value === selectedValue)
-					if (!selectedOption) continue
-
-					// If this is an original arg and should be removed
-					if (isOriginalArg && selectedOption.remove) {
-						if (selectedOption.remove === true) {
-							return false
-						}
-						if (Array.isArray(selectedOption.remove) && selectedOption.remove.includes(arg.key)) {
-							return false
-						}
-					}
-
-					// If this is a replacement arg from the selected option
-					if (selectedOption.args) {
-						const newArg = selectedOption.args.find((a) => a.key === arg.key)
-						if (newArg) {
-							// Update the arg properties with the new ones
-							Object.assign(arg, newArg)
-						}
-					}
-				}
-			}
-
-			return true
-		}
-
-		if (!shouldRenderArg()) {
-			return null
+			return cmdArg.options?.find((opt) => opt.value === selectedValue)
 		}
 
 		const renderArgInput = () => {
@@ -103,6 +55,7 @@ const ArgumentsContainer = memo(
 								cmd={cmd}
 								arg={arg}
 								selectedArgs={selectedArgs}
+								description={arg.description}
 							/>
 						)
 						break
@@ -122,49 +75,52 @@ const ArgumentsContainer = memo(
 						)
 						break
 					case 'number':
+					case 'string':
 						listRender.push(
-							<NumberInput
+							<InputNumberString
 								key={`number-${cmd.id}-${arg.key}`}
 								cmd={cmd}
 								arg={arg}
 								handleArgSelect={handleArgSelect}
 								selectedArgs={selectedArgs}
+								description={arg.description}
 							/>
 						)
 						break
 					default:
 				}
 
-				if (arg.type === 'select') {
-					const selectedValue = selectedArgs[cmd.id]?.[arg.key]
-					if (selectedValue) {
-						const selectedOption = arg.options?.find((opt) => opt.value === selectedValue)
-						if (selectedOption?.args) {
-							for (const additionalArg of selectedOption.args) {
-								switch (additionalArg.type) {
-									case 'select':
-										listRender.push(
-											<SelectArgs
-												key={`additional-select-${cmd.id}-${additionalArg.key}`}
-												cmd={cmd}
-												arg={additionalArg}
-												handleArgSelect={handleArgSelect}
-												selectedArgs={selectedArgs}
-											/>
-										)
-										break
-									case 'number':
-										listRender.push(
-											<NumberInput
-												key={`additional-number-${cmd.id}-${additionalArg.key}`}
-												cmd={cmd}
-												arg={additionalArg}
-												handleArgSelect={handleArgSelect}
-												selectedArgs={selectedArgs}
-											/>
-										)
-										break
-								}
+				const selectedValue = selectedArgs[cmd.id]?.[arg.key]
+				if (selectedValue) {
+					const selectedOption = getSelectedOption(arg, selectedValue)
+					if (selectedOption?.args) {
+						for (const additionalArg of selectedOption.args) {
+							switch (additionalArg.type) {
+								case 'select':
+									listRender.push(
+										<SelectArgs
+											key={`additional-select-${cmd.id}-${additionalArg.key}`}
+											cmd={cmd}
+											arg={additionalArg}
+											handleArgSelect={handleArgSelect}
+											selectedArgs={selectedArgs}
+											description={additionalArg.description}
+										/>
+									)
+									break
+								case 'number':
+								case 'string':
+									listRender.push(
+										<InputNumberString
+											key={`additional-number-${cmd.id}-${additionalArg.key}`}
+											cmd={cmd}
+											arg={additionalArg}
+											handleArgSelect={handleArgSelect}
+											selectedArgs={selectedArgs}
+											description={additionalArg.description}
+										/>
+									)
+									break
 							}
 						}
 					}
@@ -184,20 +140,20 @@ const ArgumentsContainer = memo(
 					<span className='ml-2 text-sm text-gray-500'>({arg.type})</span>
 				</label>
 				{renderArgInput()}
-				<p className='text-sm text-muted-foreground'>{getUpdatedDescription()}</p>
 			</div>
 		)
 	}
 )
 
-interface NumberInputProps {
+interface InputNumberStringProps {
 	cmd: CommandLists
 	arg: Argument
 	handleArgSelect: (commandId: number, argKey: string, value: string) => void
 	selectedArgs: { [key: number]: { [key: string]: string } }
+	description: string
 }
 
-const NumberInput = memo(({ cmd, arg, handleArgSelect, selectedArgs }: NumberInputProps) => {
+const InputNumberString = memo(({ cmd, arg, handleArgSelect, selectedArgs, description }: InputNumberStringProps) => {
 	if (arg.limit) {
 		return (
 			<>
@@ -224,7 +180,7 @@ const NumberInput = memo(({ cmd, arg, handleArgSelect, selectedArgs }: NumberInp
 					/>
 				) : (
 					<Input
-						type='number'
+						type={arg.type === 'number' ? 'number' : 'text'}
 						min={arg.limit.min}
 						max={arg.limit.max}
 						onChange={(e) => {
@@ -234,19 +190,23 @@ const NumberInput = memo(({ cmd, arg, handleArgSelect, selectedArgs }: NumberInp
 						className='w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400 transition-colors duration-200'
 					/>
 				)}
+				<p className='text-sm text-muted-foreground'>{description}</p>
 			</>
 		)
 	}
 
 	return (
-		<Input
-			type='number'
-			onChange={(e) => {
-				handleArgSelect(cmd.id, arg.key, e.target.value)
-			}}
-			placeholder={`Enter ${arg.name}`}
-			className='w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400 transition-colors duration-200'
-		/>
+		<>
+			<Input
+				type={arg.type === 'number' ? 'number' : 'text'}
+				onChange={(e) => {
+					handleArgSelect(cmd.id, arg.key, e.target.value)
+				}}
+				placeholder={`Enter ${arg.name}`}
+				className='w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400 transition-colors duration-200'
+			/>
+			<p className='text-sm text-muted-foreground'>{description}</p>
+		</>
 	)
 })
 

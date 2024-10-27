@@ -10,23 +10,31 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import ArgumentsContainer from './components/ArgsContainer'
 import { Input } from '@/components/ui/input'
 
-type CommandOption = {
+export type CommandOption = {
 	value: string
 	description: string
 	remove?: boolean | string[]
 	args?: Argument[]
 }
 
+export type DataArgs = {
+	id: number
+	options: {
+		value: string
+		description: string
+	}[]
+}
+
 export type Argument = {
 	key: string
 	name: string
 	description: string
-	type: 'select' | 'search' | 'number'
+	type: 'select' | 'search' | 'number' | 'string'
 	limit?: {
 		min: number
 		max: number
 	}
-	options?: CommandOption[]
+	options?: CommandOption[] | number // Can be array of options or reference to data id
 	api?: {
 		game: 'gi' | 'sr'
 		jsonBody: {
@@ -39,6 +47,7 @@ export type CommandLists = {
 	id: number
 	name: string
 	command: string
+	data?: DataArgs[] // Array of reusable option sets
 	args?: Argument[]
 }
 
@@ -102,8 +111,12 @@ export default function App() {
 			let updatedCommand = cmd.command
 			if (cmd.args && selectedArgs[cmd.id]) {
 				for (const [key, selectedValue] of Object.entries(selectedArgs[cmd.id])) {
-					if (selectedValue) {
-						updatedCommand = updatedCommand.replace(`<${key}>`, selectedValue)
+					// Skip slider toggle flags
+					if (key.endsWith('-useSlider')) continue
+
+					if (selectedValue && !key.includes('-useSlider')) {
+						const regex = new RegExp(`<${key}>`, 'g')
+						updatedCommand = updatedCommand.replace(regex, selectedValue.toString())
 					}
 				}
 			}
@@ -118,16 +131,30 @@ export default function App() {
 			(cmd) =>
 				cmd.name.toLowerCase().includes(lowerQuery) ||
 				cmd.command.toLowerCase().includes(lowerQuery) ||
-				cmd.args?.some(
-					(arg) =>
-						arg.name.toLowerCase().includes(lowerQuery) ||
-						(arg.type === 'select' &&
-							arg.options?.some(
-								(option) =>
-									option.value.toLowerCase().includes(lowerQuery) ||
-									option.description.toLowerCase().includes(lowerQuery)
-							))
-				)
+				cmd.args?.some((arg) => {
+					// Check arg name
+					if (arg.name.toLowerCase().includes(lowerQuery)) return true
+
+					// Handle select type args
+					if (arg.type === 'select' && arg.options) {
+						// If options is a number reference, look up in data
+						if (typeof arg.options === 'number') {
+							const dataSet = cmd.data?.find((d) => d.id === arg.options)
+							return dataSet?.options.some(
+								(opt) =>
+									opt.value.toLowerCase().includes(lowerQuery) ||
+									opt.description.toLowerCase().includes(lowerQuery)
+							)
+						}
+						// If options is array, check directly
+						return arg.options.some(
+							(opt) =>
+								opt.value.toLowerCase().includes(lowerQuery) ||
+								opt.description.toLowerCase().includes(lowerQuery)
+						)
+					}
+					return false
+				})
 		)
 	}, [commands, searchQuery])
 
