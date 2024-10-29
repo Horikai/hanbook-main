@@ -155,6 +155,7 @@ const Search: React.FC<SearchProps> = ({ loadGI, loadSR, currentLanguage, state,
 	const [pathHandbook, setPathHandbook] = useLocalStorage<string>('handbookPath', '')
 	const [forceUpdatePath, setForceUpdatePath] = useState<boolean>(false)
 	const [isOpen, setIsOpen] = useState(false)
+	const [isHelpOpen, setIsHelpOpen] = useState(false)
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setState((prevState) => ({
@@ -388,11 +389,7 @@ const Search: React.FC<SearchProps> = ({ loadGI, loadSR, currentLanguage, state,
 
 	return (
 		<div className='mt-5 flex justify-center'>
-			<div
-				className={
-					'relative flex w-full flex-col items-center justify-between rounded-lg border border-gray-600 shadow-lg md:w-3/4 lg:w-3/5'
-				}
-			>
+			<div className='relative flex w-full flex-col items-center justify-between rounded-lg border border-gray-600 shadow-lg md:w-3/4 lg:w-3/5'>
 				<h2 className='select-none text-gray-600 dark:text-gray-400 mt-2 font-bold'>{state.currentType}</h2>
 				<div className='form-control w-full items-center justify-between px-4'>
 					<Label className='my-2 flex justify-center'>
@@ -410,55 +407,59 @@ const Search: React.FC<SearchProps> = ({ loadGI, loadSR, currentLanguage, state,
 						}}
 						className='relative flex items-center w-full'
 					>
-						<Dialog>
-							<DialogTrigger>
-								<TooltipProvider>
-									<Tooltip>
-										<TooltipTrigger asChild>
-											<Button
-												type='button'
-												variant='ghost'
-												className='absolute rounded-r-none left-0 top-0 h-full px-3 hover:bg-gray-600 dark:hover:bg-gray-400 bg-gray-500 dark:bg-gray-500 z-10 transition-colors duration-200'
-											>
-												<HelpCircle className='h-5 w-5' />
-												<span className='sr-only'>Search help</span>
-											</Button>
-										</TooltipTrigger>
-										<TooltipContent>{t('tooltip.help')}</TooltipContent>
-									</Tooltip>
-								</TooltipProvider>
-							</DialogTrigger>
-							<HelpSearch />
-						</Dialog>
-						<Input
-							type='text'
-							placeholder={t('input_placeholder')}
-							className='w-full rounded-l-lg border-2 border-gray-500 bg-transparent px-4 py-2 outline-none pl-12 pr-20'
-							value={state.searchTerm}
-							onChange={handleInputChange}
-							onKeyDown={handleSearchInputKeyDown}
-							disabled={isHandbookLoading}
-						/>
-						<TooltipProvider>
-							<Tooltip>
-								<TooltipTrigger asChild>
-									<Button
-										type='button'
-										onClick={handleSearchTrigger}
-										disabled={isHandbookLoading}
-										variant='ghost'
-										className='absolute right-0 hover:bg-gray-600 dark:hover:bg-gray-400 rounded-l-none bg-gray-500 dark:bg-gray-500 transition-colors duration-200 w-14'
-									>
-										{isHandbookLoading ? (
-											<Spinner size='sm' />
-										) : (
-											<Icon icon={IoMdSearch} className='w-6 h-6' />
-										)}
-									</Button>
-								</TooltipTrigger>
-								<TooltipContent>{t('tooltip.search')}</TooltipContent>
-							</Tooltip>
-						</TooltipProvider>
+						<div className='relative flex w-full items-center'>
+							<TooltipProvider>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<Dialog open={isHelpOpen} onOpenChange={setIsHelpOpen}>
+											<DialogTrigger asChild>
+												<Button
+													type='button'
+													variant='outline'
+													className='h-full px-3 rounded-l-lg rounded-r-none hover:bg-accent hover:text-accent-foreground'
+													onClick={() => setIsHelpOpen(true)}
+												>
+													<HelpCircle className='h-5 w-5' />
+													<span className='sr-only'>Search help</span>
+												</Button>
+											</DialogTrigger>
+											<DialogContent>
+												<HelpSearch />
+											</DialogContent>
+										</Dialog>
+									</TooltipTrigger>
+									<TooltipContent>{t('tooltip.help')}</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
+							<Input
+								type='text'
+								placeholder={t('input_placeholder')}
+								className='w-full rounded-none'
+								value={state.searchTerm}
+								onChange={handleInputChange}
+								onKeyDown={handleSearchInputKeyDown}
+								disabled={isHandbookLoading}
+							/>
+							<TooltipProvider>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<Button
+											type='submit'
+											disabled={isHandbookLoading}
+											variant='ghost'
+											className='h-full px-3 rounded-l-none border hover:bg-accent hover:text-accent-foreground'
+										>
+											{isHandbookLoading ? (
+												<Spinner size='sm' />
+											) : (
+												<Icon icon={IoMdSearch} className='w-5 h-5' />
+											)}
+										</Button>
+									</TooltipTrigger>
+									<TooltipContent>{t('tooltip.search')}</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
+						</div>
 					</form>
 					<div className='mt-2 flex justify-center'>
 						<TooltipProvider delayDuration={500}>
