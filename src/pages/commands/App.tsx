@@ -10,6 +10,15 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import ArgumentsContainer from './components/ArgsContainer'
 import { Input } from '@/components/ui/input'
 import { useCookies } from 'react-cookie'
+import {
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogDescription,
+} from '@/components/ui/dialog'
+import { useNavigate } from 'react-router-dom'
 
 export type CommandOption = {
 	value: string
@@ -66,6 +75,8 @@ export default function App() {
 	const [searchQuery, setSearchQuery] = useState('')
 	const [yuukips, setYuukips] = useState<YuukiPS | null>(null)
 	const [cookies] = useCookies(['uid', 'server', 'code'])
+	const navigate = useNavigate()
+	const [isDialogOpen, setIsDialogOpen] = useState(false)
 
 	const copyToClipboard = useCallback(
 		(text: string) => {
@@ -93,7 +104,10 @@ export default function App() {
 
 	const applyCommand = useCallback(
 		(command: string) => {
-			if (!cookies.uid || !cookies.server || !cookies.code) return
+			if (!cookies.uid || !cookies.server || !cookies.code) {
+				setIsDialogOpen(true)
+				return
+			}
 			const resultCommand = YuukiPS.generateResultCommand(command, {})
 			yuukips?.sendCommand(cookies.uid, cookies.code, cookies.server, resultCommand)
 			toast({
@@ -296,6 +310,31 @@ export default function App() {
 					</div>
 				</CardContent>
 			</Card>
+			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Please set your UID, Server, and Code</DialogTitle>
+					</DialogHeader>
+					<DialogDescription>
+						<p>Please set your UID, Server, and Code in the settings page.</p>
+					</DialogDescription>
+					<DialogFooter>
+						<Button variant={'outline'} onClick={() => setIsDialogOpen(false)}>
+							Close
+						</Button>
+						<Button
+							variant={'outline'}
+							onClick={() => {
+								setIsDialogOpen(false)
+								navigate('/settings')
+								window.location.reload()
+							}}
+						>
+							Go to Settings
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 		</div>
 	)
 }
