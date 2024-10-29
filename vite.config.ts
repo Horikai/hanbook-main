@@ -26,15 +26,6 @@ export default defineConfig({
 			scanDir: 'src/pages',
 			defaultEntries: 'search',
 		}),
-		// Source: https://dev.to/onticdani/how-to-load-and-render-markdown-files-into-your-vite-react-app-using-typescript-26jm
-		{
-			name: 'markdown-loader',
-			transform(code, id) {
-				if (id.slice(-3) === '.md') {
-					return `export default ${JSON.stringify(code)}`
-				}
-			},
-		},
 		{
 			name: 'after-build',
 			apply: 'build',
