@@ -60,107 +60,327 @@
                 "options": [
                     {
                         "value": "wl",
-                        "description": "World Level"
+                        "description": "World Level",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Value of the world level.",
+                                "type": "number",
+                                "limit": {
+                                    "min": 1,
+                                    "max": 10
+                                }
+                            }
+                        ]
                     },
                     {
                         "value": "abyss",
-                        "description": "Tower Level"
+                        "description": "Tower Level",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Value of the tower level.",
+                                "type": "number"
+                            }
+                        ]
                     },
                     {
                         "value": "bplevel",
-                        "description": "BP Level"
+                        "description": "BP Level",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Value of the BP level.",
+                                "type": "number"
+                            }
+                        ]
                     },
                     {
                         "value": "god",
-                        "description": "God Mode"
+                        "description": "God Mode",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Enable/disable god mode.",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "value": "on",
+                                        "description": "Enable"
+                                    },
+                                    {
+                                        "value": "off",
+                                        "description": "Disable"
+                                    }
+                                ]
+                            }
+                        ]
                     },
                     {
                         "value": "ns",
-                        "description": "Unlimited Stamina"
+                        "description": "Unlimited Stamina",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Enable/disable unlimited stamina.",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "value": "on",
+                                        "description": "Enable"
+                                    },
+                                    {
+                                        "value": "off",
+                                        "description": "Disable"
+                                    }
+                                ]
+                            }
+                        ]
                     },
                     {
                         "value": "ue",
-                        "description": "Unlimited Energy"
+                        "description": "Unlimited Energy",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Enable/disable unlimited energy.",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "value": "on",
+                                        "description": "Enable"
+                                    },
+                                    {
+                                        "value": "off",
+                                        "description": "Disable"
+                                    }
+                                ]
+                            }
+                        ]
                     },
                     {
                         "value": "element",
-                        "description": "Switch Element"
+                        "description": "Switch Element",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Element to switch to.",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "value": "anemo",
+                                        "description": "Anemo/Wind"
+                                    },
+                                    {
+                                        "value": "geo",
+                                        "description": "Geo/Rock"
+                                    },
+                                    {
+                                        "value": "electro",
+                                        "description": "Electro"
+                                    },
+                                    {
+                                        "value": "dendro",
+                                        "description": "Dendro/Grass"
+                                    },
+                                    {
+                                        "value": "hydro",
+                                        "description": "Hydro/Water"
+                                    }
+                                ]
+                            }
+                        ]
                     },
                     {
                         "value": "so",
-                        "description": "Set Open State"
+                        "description": "Set Open State",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "State ID to set.",
+                                "type": "number"
+                            }
+                        ]
                     },
                     {
                         "value": "uo",
-                        "description": "Unset Open State"
+                        "description": "Unset Open State",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "State ID to unset.",
+                                "type": "number"
+                            }
+                        ]
                     },
                     {
                         "value": "point",
-                        "description": "Unlock Map"
+                        "description": "Unlock Map",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Enable/disable map unlock.",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "value": "all_on",
+                                        "description": "Unlock All"
+                                    },
+                                    {
+                                        "value": "all_off",
+                                        "description": "Lock All"
+                                    }
+                                ]
+                            }
+                        ]
                     },
                     {
                         "value": "teapot",
-                        "description": "Unlock Teapot"
+                        "description": "Unlock Teapot",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Enable/disable teapot unlock.",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "value": "on",
+                                        "description": "Enable"
+                                    },
+                                    {
+                                        "value": "off",
+                                        "description": "Disable"
+                                    }
+                                ]
+                            }
+                        ]
                     },
                     {
                         "value": "glider",
-                        "description": "Can Fly"
+                        "description": "Can Fly",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Enable/disable flying.",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "value": "on",
+                                        "description": "Enable"
+                                    },
+                                    {
+                                        "value": "off",
+                                        "description": "Disable"
+                                    }
+                                ]
+                            }
+                        ]
                     },
                     {
                         "value": "swim",
-                        "description": "Can Swim"
+                        "description": "Can Swim",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Enable/disable swimming.",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "value": "on",
+                                        "description": "Enable"
+                                    },
+                                    {
+                                        "value": "off",
+                                        "description": "Disable"
+                                    }
+                                ]
+                            }
+                        ]
                     },
                     {
                         "value": "sts",
-                        "description": "Set Tag Scene"
+                        "description": "Set Tag Scene",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Scene ID to set.",
+                                "type": "number"
+                            }
+                        ]
                     },
                     {
                         "value": "uts",
-                        "description": "Unset Tag Scene"
+                        "description": "Unset Tag Scene",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Scene ID to unset.",
+                                "type": "number"
+                            }
+                        ]
                     },
                     {
                         "value": "lv",
-                        "description": "Level Character Currently"
+                        "description": "Level Character Currently",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Level to set (1-90).",
+                                "type": "number",
+                                "limit": {
+                                    "min": 1,
+                                    "max": 90
+                                }
+                            }
+                        ]
                     },
                     {
                         "value": "stlv",
-                        "description": "Level Character Team"
+                        "description": "Level Character Team",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Level to set (1-90).",
+                                "type": "number",
+                                "limit": {
+                                    "min": 1,
+                                    "max": 90
+                                }
+                            }
+                        ]
                     },
                     {
                         "value": "salv",
-                        "description": "Level Character All"
-                    }
-                ]
-            },
-            {
-                "key": "value",
-                "name": "Value",
-                "description": "Value of the prop. For element: wind/anemo, rock/geo, electro, grass/dendro, hydro/water. For others: on/off/toggle/all_on/all_off/reset or number.",
-                "type": "select",
-                "options": [
-                    {
-                        "value": "on",
-                        "description": "On"
-                    },
-                    {
-                        "value": "off",
-                        "description": "Off"
-                    },
-                    {
-                        "value": "toggle",
-                        "description": "Toggle"
-                    },
-                    {
-                        "value": "all_on",
-                        "description": "All On"
-                    },
-                    {
-                        "value": "all_off",
-                        "description": "All Off"
-                    },
-                    {
-                        "value": "reset",
-                        "description": "Reset"
+                        "description": "Level Character All",
+                        "args": [
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Level to set (1-90).",
+                                "type": "number",
+                                "limit": {
+                                    "min": 1,
+                                    "max": 90
+                                }
+                            }
+                        ]
                     }
                 ]
             }
@@ -169,7 +389,7 @@
     {
         "id": 3,
         "name": "Adding Avatars",
-        "command": "/give <character id> lv<level> c<constellation>",
+        "command": "/give <character id> lv<level> c<constellation> sl<skilllevel>",
         "args": [
             {
                 "key": "character id",
@@ -208,6 +428,16 @@
                 "limit": {
                     "min": 0,
                     "max": 6
+                }
+            },
+            {
+                "key": "skilllevel",
+                "name": "Skill Level",
+                "description": "Skill level of the character.",
+                "type": "number",
+                "limit": {
+                    "min": 1,
+                    "max": 15
                 }
             }
         ]
@@ -326,12 +556,16 @@
                     {
                         "value": "grantall",
                         "description": "Grant all achievements",
-                        "remove": "value"
+                        "remove": [
+                            "value"
+                        ]
                     },
                     {
                         "value": "revokeall",
                         "description": "Revoke all achievements",
-                        "remove": "value"
+                        "remove": [
+                            "value"
+                        ]
                     }
                 ]
             },
@@ -359,7 +593,7 @@
     {
         "id": 7,
         "name": "Talent Command",
-        "command": "/talent <action> <value>",
+        "command": "/talent <action> <value> <level>",
         "args": [
             {
                 "key": "action",
@@ -456,7 +690,9 @@
                     {
                         "value": "getid",
                         "description": "Get talent IDs for current character",
-                        "remove": "value"
+                        "remove": [
+                            "value"
+                        ]
                     }
                 ]
             }
@@ -487,11 +723,11 @@
                         "description": "DEF"
                     },
                     {
-                        "value": "crit%",
+                        "value": "crate",
                         "description": "CRIT Rate"
                     },
                     {
-                        "value": "critdmg%",
+                        "value": "cdmg",
                         "description": "CRIT DMG"
                     },
                     {
@@ -503,39 +739,39 @@
                         "description": "Elemental Mastery"
                     },
                     {
-                        "value": "heal%",
+                        "value": "eheal",
                         "description": "Healing Bonus"
                     },
                     {
-                        "value": "phys%",
+                        "value": "ephys",
                         "description": "Physical DMG Bonus"
                     },
                     {
-                        "value": "anemo%",
+                        "value": "eanemo",
                         "description": "Anemo DMG Bonus"
                     },
                     {
-                        "value": "geo%",
+                        "value": "eggeo",
                         "description": "Geo DMG Bonus"
                     },
                     {
-                        "value": "electro%",
+                        "value": "eelectro",
                         "description": "Electro DMG Bonus"
                     },
                     {
-                        "value": "hydro%",
+                        "value": "ehydro",
                         "description": "Hydro DMG Bonus"
                     },
                     {
-                        "value": "pyro%",
+                        "value": "epyro",
                         "description": "Pyro DMG Bonus"
                     },
                     {
-                        "value": "cryo%",
+                        "value": "ecryo",
                         "description": "Cryo DMG Bonus"
                     },
                     {
-                        "value": "dendro%",
+                        "value": "edendro",
                         "description": "Dendro DMG Bonus"
                     }
                 ]
@@ -583,7 +819,27 @@
                                 "name": "Value",
                                 "description": "Value to lock to (optional, defaults to current value)",
                                 "type": "string",
+                                "optional": true
+                            }
+                        ]
+                    },
+                    {
+                        "value": "freeze",
+                        "description": "Lock a stat to a value",
+                        "args": [
+                            {
+                                "key": "stat",
+                                "name": "Stat",
+                                "description": "The stat to lock",
+                                "type": "select",
                                 "options": 1
+                            },
+                            {
+                                "key": "value",
+                                "name": "Value",
+                                "description": "Value to lock to (optional, defaults to current value)",
+                                "type": "string",
+                                "optional": true
                             }
                         ]
                     },
@@ -599,8 +855,68 @@
                                 "options": 1
                             }
                         ]
+                    },
+                    {
+                        "value": "unfreeze",
+                        "description": "Unlock a stat",
+                        "args": [
+                            {
+                                "key": "stat",
+                                "name": "Stat",
+                                "description": "The stat to unlock",
+                                "type": "select",
+                                "options": 1
+                            }
+                        ]
                     }
                 ]
+            }
+        ]
+    },
+    {
+        "id": 9,
+        "name": "Heal Command",
+        "command": "/heal"
+    },
+    {
+        "id": 10,
+        "name": "Kill Command",
+        "command": "/kill <type> <sceneId>",
+        "args": [
+            {
+                "key": "type",
+                "name": "Type",
+                "description": "What to kill",
+                "type": "select",
+                "options": [
+                    {
+                        "value": "monster",
+                        "description": "Kill all monsters in the scene"
+                    },
+                    {
+                        "value": "item",
+                        "description": "Kill all dropped items in the scene"
+                    },
+                    {
+                        "value": "gadget",
+                        "description": "Kill all gadgets in the scene"
+                    },
+                    {
+                        "value": "me",
+                        "description": "Kill yourself"
+                    },
+                    {
+                        "value": "all",
+                        "description": "Kill everything in the scene"
+                    }
+                ]
+            },
+            {
+                "key": "sceneId",
+                "name": "Scene ID",
+                "description": "Optional scene ID to target",
+                "type": "number",
+                "optional": true
             }
         ]
     }
