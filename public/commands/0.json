@@ -818,8 +818,7 @@
                                 "key": "value",
                                 "name": "Value",
                                 "description": "Value to lock to (optional, defaults to current value)",
-                                "type": "string",
-                                "optional": true
+                                "type": "string"
                             }
                         ]
                     },
@@ -838,8 +837,7 @@
                                 "key": "value",
                                 "name": "Value",
                                 "description": "Value to lock to (optional, defaults to current value)",
-                                "type": "string",
-                                "optional": true
+                                "type": "string"
                             }
                         ]
                     },
@@ -915,8 +913,7 @@
                 "key": "sceneId",
                 "name": "Scene ID",
                 "description": "Optional scene ID to target",
-                "type": "number",
-                "optional": true
+                "type": "number"
             }
         ]
     }
