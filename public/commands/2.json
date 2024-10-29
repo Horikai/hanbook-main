@@ -1,0 +1,279 @@
+[
+    {
+        "id": 1,
+        "name": "Avatar Command",
+        "command": "/avatar <target> <level> <promotion> <eidolon> <skill>",
+        "args": [
+            {
+                "key": "target",
+                "name": "Target",
+                "description": "Which avatar(s) to modify",
+                "type": "select",
+                "options": [
+                    {
+                        "value": "cur",
+                        "description": "Current active avatar"
+                    },
+                    {
+                        "value": "all",
+                        "description": "All owned avatars"
+                    },
+                    {
+                        "value": "lineup",
+                        "description": "Current lineup avatars"
+                    }
+                ]
+            },
+            {
+                "key": "level",
+                "name": "Level",
+                "description": "Level to set the avatar(s) to",
+                "type": "number",
+                "limit": {
+                    "min": 1,
+                    "max": 80
+                }
+            },
+            {
+                "key": "promotion",
+                "name": "Ascension",
+                "description": "Ascension level to set the avatar(s) to",
+                "type": "number",
+                "limit": {
+                    "min": 0,
+                    "max": 6
+                }
+            },
+            {
+                "key": "eidolon",
+                "name": "Eidolon",
+                "description": "Eidolon level to set the avatar(s) to",
+                "type": "number",
+                "limit": {
+                    "min": 0,
+                    "max": 6
+                }
+            },
+            {
+                "key": "skill",
+                "name": "Skill Level",
+                "description": "Skill level to set for the avatar(s)",
+                "type": "number",
+                "limit": {
+                    "min": 1,
+                    "max": 10
+                }
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Clear Items",
+        "command": "/clear <type> <level>",
+        "args": [
+            {
+                "key": "type",
+                "name": "Type",
+                "description": "Type of items to clear from inventory",
+                "type": "select",
+                "options": [
+                    {
+                        "value": "relics",
+                        "description": "Clear relics"
+                    },
+                    {
+                        "value": "r",
+                        "description": "Clear relics (shorthand)"
+                    },
+                    {
+                        "value": "equipment",
+                        "description": "Clear light cones"
+                    },
+                    {
+                        "value": "lightcones",
+                        "description": "Clear light cones"
+                    },
+                    {
+                        "value": "lc",
+                        "description": "Clear light cones (shorthand)"
+                    },
+                    {
+                        "value": "materials",
+                        "description": "Clear materials"
+                    },
+                    {
+                        "value": "mats",
+                        "description": "Clear materials (shorthand)"
+                    },
+                    {
+                        "value": "m",
+                        "description": "Clear materials (shorthand)"
+                    },
+                    {
+                        "value": "items",
+                        "description": "Clear all unlocked items"
+                    },
+                    {
+                        "value": "all",
+                        "description": "Clear all unlocked items"
+                    }
+                ]
+            },
+            {
+                "key": "level",
+                "name": "Level",
+                "description": "Maximum level of items to clear (only applies to relics and light cones)",
+                "type": "number",
+                "limit": {
+                    "min": 1,
+                    "max": 80
+                }
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Change Player Gender",
+        "command": "/gender <gender>",
+        "args": [
+            {
+                "key": "gender",
+                "name": "Gender",
+                "description": "The gender to change to.",
+                "type": "select",
+                "options": [
+                    {
+                        "value": "male",
+                        "description": "Male (also accepts: m, boy, man, 1)"
+                    },
+                    {
+                        "value": "female",
+                        "description": "Female (also accepts: f, girl, woman, 2)"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "name": "Give All Items",
+        "command": "/giveall <type> <level>",
+        "args": [
+            {
+                "key": "type",
+                "name": "Type",
+                "description": "Which items to give.",
+                "type": "select",
+                "options": [
+                    {
+                        "value": "all",
+                        "description": "Give all items (costs 10 points)"
+                    },
+                    {
+                        "value": "materials",
+                        "description": "Give all materials (costs 2 points)"
+                    },
+                    {
+                        "value": "lightcones",
+                        "description": "Give all light cones (costs 1 point)"
+                    },
+                    {
+                        "value": "relics",
+                        "description": "Give all relics (costs 2 points)"
+                    },
+                    {
+                        "value": "avatars",
+                        "description": "Give all avatars (costs 1 point)"
+                    },
+                    {
+                        "value": "unlocks",
+                        "description": "Give all unlockable items (costs 2 points)"
+                    },
+                    {
+                        "value": "consumables",
+                        "description": "Give all food items (costs 2 points)"
+                    }
+                ]
+            },
+            {
+                "key": "level",
+                "name": "Level",
+                "description": "Level to set items to (optional)",
+                "type": "number",
+                "limit": {
+                    "min": 1,
+                    "max": 90
+                }
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "name": "Give Item",
+        "command": "/give <item_id> <amount> <level> <rank> <promotion>",
+        "args": [
+            {
+                "key": "item_id",
+                "name": "Item ID",
+                "description": "ID of the item to give",
+                "type": "search",
+                "api": {
+                    "game": "sr",
+                    "jsonBody": {
+                        "search": [
+                            "item_id"
+                        ],
+                        "category": [
+                            "Items",
+                            "Characters",
+                            "Light Cones",
+                            "Relics"
+                        ],
+                        "command": false,
+                        "limit": 10
+                    }
+                }
+            },
+            {
+                "key": "amount",
+                "name": "Amount",
+                "description": "Amount of the item to give (optional)",
+                "type": "number",
+                "prefix": "x"
+            },
+            {
+                "key": "level",
+                "name": "Level",
+                "description": "Level to set the item to (optional)",
+                "type": "number",
+                "prefix": "lv",
+                "limit": {
+                    "min": 1,
+                    "max": 80
+                }
+            },
+            {
+                "key": "rank",
+                "name": "Rank/Eidolon",
+                "description": "Rank/Eidolon level to set (optional)",
+                "type": "number",
+                "prefix": "r",
+                "limit": {
+                    "min": 0,
+                    "max": 6
+                }
+            },
+            {
+                "key": "promotion",
+                "name": "Promotion/Ascension",
+                "description": "Promotion/Ascension level to set (optional)",
+                "type": "number",
+                "prefix": "p",
+                "limit": {
+                    "min": 0,
+                    "max": 6
+                }
+            }
+        ]
+    }
+]
