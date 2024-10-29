@@ -7,9 +7,10 @@ import type React from 'react'
 import { memo, useRef, useState, type Dispatch, type SetStateAction, useEffect, useCallback } from 'react'
 import type { Argument, CommandLists } from '../App'
 import { debounce } from 'lodash'
-import axios from 'axios'
-import type { APIElaXan } from '@/types/gm'
+import type { GmhandbookGI } from '@/types/gm'
 import { useToast } from '@/components/ui/use-toast'
+import elaxanApi from '@/api/elaxanApi'
+import type { Hsr } from '@/types/hsr'
 
 interface SelectArgsProps {
 	handleArgSelect: (commandId: number, argKey: string, value: string) => void
@@ -172,8 +173,6 @@ const SearchArgs = memo(
 
 				try {
 					setLocalIsLoading(true)
-					const endpoint = currentArg.api.game === 'gi' ? 'gm' : 'sr'
-					const url = new URL(`v4/${endpoint}`, 'https://api.elaxan.xyz')
 					const updatedJsonBody = { ...currentArg.api.jsonBody }
 
 					for (const [key, value] of Object.entries(updatedJsonBody)) {
@@ -183,19 +182,33 @@ const SearchArgs = memo(
 							updatedJsonBody[key] = query
 						}
 					}
-
-					const results = await axios.post<APIElaXan>(url.toString(), updatedJsonBody).then((res) => res.data)
+					let results: GmhandbookGI[] | Hsr
+					const baseURL = 'https://api.elaxan.xyz'
+					if (currentArg.api.game === 'gi') {
+						results = await elaxanApi.getHandbook(baseURL, 'gi', {
+							search: updatedJsonBody.search as string[],
+							limit: Number(updatedJsonBody.limit) || 10,
+							category: updatedJsonBody.category as string[],
+						})
+					} else {
+						results = await elaxanApi.getHandbook(baseURL, 'sr', {
+							search: updatedJsonBody.search as string[],
+							limit: Number(updatedJsonBody.limit) || 10,
+							category: updatedJsonBody.category as string[],
+						})
+					}
 
 					setSearchResults(
-						results.data.map((result) => ({
-							name: result.name,
+						(Array.isArray(results) ? results : results.data).map((result) => ({
+							name: typeof result.name === 'string' ? result.name : result.name.en,
 							id: result.id.toString(),
-							description: result.description?.toString(),
+							description:
+								typeof result.description === 'string' ? result.description : result.description?.en,
 							image:
 								typeof result.image === 'string'
 									? result.image
 									: result.image && typeof result.image === 'object'
-										? result.image.icon || result.image.side
+										? result.image.icon
 										: undefined,
 						}))
 					)
