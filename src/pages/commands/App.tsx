@@ -5,15 +5,16 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
 import Tabs from './components/Tabs'
 import axios from 'axios'
-import { AlertTriangle, Loader2, Clipboard } from 'lucide-react'
+import { AlertTriangle, Loader2 } from 'lucide-react'
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import ArgumentsContainer from './components/ArgsContainer'
 import { Input } from '@/components/ui/input'
+import { useCookies } from 'react-cookie'
 
 export type CommandOption = {
 	value: string
 	description: string
-	remove?: boolean | string[]
+	remove?: boolean | string[] | string
 	args?: Argument[]
 }
 
@@ -63,6 +64,8 @@ export default function App() {
 	const [loading, setLoading] = useState(true)
 	const [activeTab, setActiveTab] = useState(0)
 	const [searchQuery, setSearchQuery] = useState('')
+	const [yuukips, setYuukips] = useState<YuukiPS | null>(null)
+	const [cookies] = useCookies(['uid', 'server', 'code'])
 
 	const copyToClipboard = useCallback(
 		(text: string) => {
@@ -75,6 +78,30 @@ export default function App() {
 			})
 		},
 		[toast]
+	)
+
+	useEffect(() => {
+		const yuukips = new YuukiPS()
+		setYuukips(yuukips)
+		yuukips.getResponseCommand((response) => {
+			toast({
+				title: 'Success',
+				description: response.message,
+			})
+		})
+	}, [toast])
+
+	const applyCommand = useCallback(
+		(command: string) => {
+			if (!cookies.uid || !cookies.server || !cookies.code) return
+			const resultCommand = YuukiPS.generateResultCommand(command, {})
+			yuukips?.sendCommand(cookies.uid, cookies.code, cookies.server, resultCommand)
+			toast({
+				title: 'Success',
+				description: 'Command applied.',
+			})
+		},
+		[cookies, toast, yuukips]
 	)
 
 	const toggleArgsVisibility = useCallback((commandId: number) => {
@@ -215,18 +242,26 @@ export default function App() {
 									<CardTitle className='text-lg'>{cmd.name}</CardTitle>
 								</CardHeader>
 								<CardContent className='flex-grow'>
-									<div className='relative mb-4'>
+									<pre className='bg-muted p-2 rounded-md whitespace-pre-wrap mb-2'>
+										<code>{getUpdatedCommand(cmd)}</code>
+									</pre>
+									<div className='flex justify-center mb-2'>
 										<Button
 											variant='secondary'
 											size='sm'
-											className='absolute top-1 right-2'
+											className='w-full rounded-r-none'
 											onClick={() => copyToClipboard(getUpdatedCommand(cmd))}
 										>
-											<Clipboard className='h-4 w-4' />
+											Copy Command
 										</Button>
-										<pre className='bg-muted p-2 rounded-md whitespace-pre-wrap'>
-											<code>{getUpdatedCommand(cmd)}</code>
-										</pre>
+										<Button
+											variant='secondary'
+											size='sm'
+											className='w-full rounded-l-none'
+											onClick={() => applyCommand(getUpdatedCommand(cmd))}
+										>
+											Apply Command
+										</Button>
 									</div>
 									{cmd.args && cmd.args.length > 0 && (
 										<Button
