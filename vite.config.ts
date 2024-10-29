@@ -8,6 +8,18 @@ const host = process.env.TAURI_DEV_HOST
 
 // https://vitejs.dev/config/
 export default defineConfig({
+	build: {
+		chunkSizeWarningLimit: 1000,
+		rollupOptions: {
+			output: {
+				manualChunks(id) {
+					if (id.includes('node_modules')) {
+						return id.split('node_modules/')[1].split('/')[0].replace('@', '')
+					}
+				},
+			},
+		},
+	},
 	plugins: [
 		react(),
 		mpa({
