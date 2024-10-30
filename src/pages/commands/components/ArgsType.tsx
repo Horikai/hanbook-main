@@ -189,12 +189,14 @@ const SearchArgs = memo(
 							search: updatedJsonBody.search as string[],
 							limit: Number(updatedJsonBody.limit) || 10,
 							category: updatedJsonBody.category as string[],
+							command: false,
 						})
 					} else {
 						results = await elaxanApi.getHandbook(baseURL, 'sr', {
 							search: updatedJsonBody.search as string[],
 							limit: Number(updatedJsonBody.limit) || 10,
 							category: updatedJsonBody.category as string[],
+							command: false,
 						})
 					}
 
