@@ -276,5 +276,6 @@ export default class YuukiPS {
 				return result.replace(new RegExp(`[a-zA-Z]*${placeholder}`, 'g'), value)
 			}, command)
 			.trim()
+			.replace(/\s+/g, ' ');
 	}
 }
