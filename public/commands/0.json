@@ -870,5 +870,112 @@
                 "type": "number"
             }
         ]
+    },
+    {
+        "id": 11,
+        "name": "Change UID Display",
+        "command": "/uid <uid>",
+        "description": "Changes the UID display at the bottom right. This does not change your actual UID. Requires sponsor role.",
+        "args": [
+            {
+                "key": "uid",
+                "name": "UID",
+                "description": "The UID to display",
+                "type": "number"
+            }
+        ]
+    },
+    {
+        "id": 12,
+        "name": "Team Command",
+        "command": "/team <action> <index> <avatarId>",
+        "args": [
+            {
+                "key": "action",
+                "name": "Action",
+                "description": "What team action to perform",
+                "type": "select",
+                "options": [
+                    {
+                        "value": "add",
+                        "description": "Add avatars to team",
+                        "args": [
+                            {
+                                "key": "avatarId",
+                                "name": "Avatar IDs",
+                                "description": "Comma-separated list of avatar IDs to add",
+                                "type": "search",
+                                "api": {
+                                    "game": "gi",
+                                    "jsonBody": {
+                                        "search": [
+                                            "avatarId"
+                                        ],
+                                        "category": [
+                                            "Characters"
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                "key": "index",
+                                "name": "Index",
+                                "description": "Optional position to insert at (1-based)",
+                                "type": "number",
+                                "limit": {
+                                    "min": 1,
+                                    "max": 4
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "value": "remove",
+                        "description": "Remove avatars from team",
+                        "args": [
+                            {
+                                "key": "indexes",
+                                "name": "Indexes",
+                                "description": "Comma-separated list of positions to remove (e.g. 1,2-4,last)",
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    {
+                        "value": "set",
+                        "description": "Set avatar at position",
+                        "args": [
+                            {
+                                "key": "index",
+                                "name": "Index",
+                                "description": "Position to set (1-based)",
+                                "type": "number",
+                                "limit": {
+                                    "min": 1,
+                                    "max": 4
+                                }
+                            },
+                            {
+                                "key": "avatarId",
+                                "name": "Avatar ID",
+                                "description": "ID of avatar to set at position",
+                                "type": "search",
+                                "api": {
+                                    "game": "gi",
+                                    "jsonBody": {
+                                        "search": [
+                                            "avatarId"
+                                        ],
+                                        "category": [
+                                            "Characters"
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
     }
 ]
