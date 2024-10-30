@@ -1,0 +1,204 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "number",
+                "description": "Unique ID of the command"
+            },
+            "name": {
+                "type": "string",
+                "description": "Name of the command"
+            },
+            "command": {
+                "type": "string",
+                "description": "Command to apply"
+            },
+            "description": {
+                "type": "string",
+                "description": "Description of the command"
+            },
+            "data": {
+                "type": "array",
+                "description": "Array of reusable option sets",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "number",
+                            "description": "Unique ID of the data"
+                        },
+                        "options": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "value": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "value",
+                                    "description"
+                                ]
+                            }
+                        }
+                    },
+                    "required": [
+                        "id",
+                        "options"
+                    ]
+                }
+            },
+            "args": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "key": {
+                            "type": "string",
+                            "description": "Key of the argument from the command"
+                        },
+                        "name": {
+                            "type": "string",
+                            "description": "Name of the argument"
+                        },
+                        "description": {
+                            "type": "string",
+                            "description": "Description of the argument"
+                        },
+                        "type": {
+                            "type": "string",
+                            "enum": [
+                                "select",
+                                "search",
+                                "number",
+                                "string"
+                            ],
+                            "description": "Type of argument"
+                        },
+                        "limit": {
+                            "type": "object",
+                            "description": "Limit for number type only",
+                            "properties": {
+                                "min": {
+                                    "type": "number",
+                                    "description": "Minimum value"
+                                },
+                                "max": {
+                                    "type": "number",
+                                    "description": "Maximum value"
+                                }
+                            },
+                            "required": [
+                                "min",
+                                "max"
+                            ]
+                        },
+                        "options": {
+                            "oneOf": [
+                                {
+                                    "type": "number",
+                                    "description": "Reference to data id"
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "value": {
+                                                "type": "string",
+                                                "description": "Value of the option"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "description": "Description of the option"
+                                            },
+                                            "remove": {
+                                                "oneOf": [
+                                                    {
+                                                        "type": "boolean"
+                                                    },
+                                                    {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Remove option configuration"
+                                            },
+                                            "args": {
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/items/properties/args/items"
+                                                }
+                                            }
+                                        },
+                                        "required": [
+                                            "value",
+                                            "description"
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        "api": {
+                            "type": "object",
+                            "properties": {
+                                "game": {
+                                    "type": "string",
+                                    "enum": [
+                                        "gi",
+                                        "sr"
+                                    ],
+                                    "description": "Game to use"
+                                },
+                                "jsonBody": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "description": "JSON body to send to the API"
+                                }
+                            },
+                            "required": [
+                                "game",
+                                "jsonBody"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "key",
+                        "name",
+                        "description",
+                        "type"
+                    ]
+                }
+            }
+        },
+        "required": [
+            "id",
+            "name",
+            "command"
+        ]
+    }
+}
