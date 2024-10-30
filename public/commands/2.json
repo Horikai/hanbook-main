@@ -212,9 +212,7 @@
                             "Characters",
                             "Light Cones",
                             "Relics"
-                        ],
-                        "command": false,
-                        "limit": 10
+                        ]
                     }
                 }
             },
@@ -386,8 +384,7 @@
                         "category": [
                             "Monsters",
                             "Props"
-                        ],
-                        "limit": 10
+                        ]
                     }
                 }
             },
@@ -401,10 +398,7 @@
                 "key": "amount",
                 "name": "Amount",
                 "description": "Number of entities to spawn (minimum 1).",
-                "type": "number",
-                "limit": {
-                    "min": 1
-                }
+                "type": "number"
             },
             {
                 "key": "level",
@@ -420,10 +414,7 @@
                 "key": "radius",
                 "name": "Radius",
                 "description": "Spawn radius in meters around the player (minimum 5).",
-                "type": "number",
-                "limit": {
-                    "min": 5
-                }
+                "type": "number"
             }
         ]
     },

@@ -17,9 +17,7 @@
                         ],
                         "category": [
                             "Monsters"
-                        ],
-                        "command": false,
-                        "limit": 10
+                        ]
                     }
                 }
             },
@@ -399,14 +397,12 @@
                 "api": {
                     "game": "gi",
                     "jsonBody": {
-                        "command": false,
                         "search": [
                             "character id"
                         ],
                         "category": [
                             "Characters"
-                        ],
-                        "limit": 20
+                        ]
                     }
                 }
             },
@@ -476,8 +472,7 @@
                         ],
                         "category": [
                             "Quests"
-                        ],
-                        "limit": 10
+                        ]
                     }
                 }
             }
@@ -582,9 +577,7 @@
                         ],
                         "category": [
                             "Achievements"
-                        ],
-                        "command": false,
-                        "limit": 10
+                        ]
                     }
                 }
             }
