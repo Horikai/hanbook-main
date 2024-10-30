@@ -17,6 +17,7 @@ interface HandbookSr {
     limit: number;
     category?: string[];
     language?: string;
+    command?: boolean
 }
 
 const endpoints = {
