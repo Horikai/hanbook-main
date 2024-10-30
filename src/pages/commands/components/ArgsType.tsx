@@ -66,7 +66,6 @@ const SelectArgs = memo(({ handleArgSelect, cmd, arg, selectedArgs, description 
 })
 
 interface SearchArgsProps {
-	commands: CommandLists[]
 	cmd: CommandLists
 	arg: Argument
 	showResults: boolean
@@ -76,11 +75,11 @@ interface SearchArgsProps {
 		SetStateAction<{ id: string; name: string; description: string | undefined; image: string | undefined }[]>
 	>
 	handleArgSelect: (commandId: number, argKey: string, value: string) => void
+	description: string
 }
 
 const SearchArgs = memo(
 	({
-		commands,
 		cmd,
 		arg,
 		showResults,
@@ -88,6 +87,7 @@ const SearchArgs = memo(
 		setShowResults,
 		setSearchResults,
 		handleArgSelect,
+		description,
 	}: SearchArgsProps) => {
 		const { toast } = useToast()
 		const [inputValue, setInputValue] = useState('')
@@ -168,23 +168,22 @@ const SearchArgs = memo(
 					return
 				}
 
-				const currentArg = commands.find((c) => c.id === cmd.id)?.args?.find((a) => a.key === arg.key)
-				if (currentArg?.type !== 'search' || !currentArg.api) return
+				if (arg.type !== 'search' || !arg.api) return
 
 				try {
 					setLocalIsLoading(true)
-					const updatedJsonBody = { ...currentArg.api.jsonBody }
+					const updatedJsonBody = { ...arg.api.jsonBody }
 
 					for (const [key, value] of Object.entries(updatedJsonBody)) {
 						if (Array.isArray(value)) {
-							updatedJsonBody[key] = value.map((v) => (v === `${currentArg.key}` ? query : v))
-						} else if (value === `${currentArg.key}`) {
+							updatedJsonBody[key] = value.map((v) => (v === `${arg.key}` ? query : v))
+						} else if (value === `${arg.key}`) {
 							updatedJsonBody[key] = query
 						}
 					}
 					let results: GmhandbookGI[] | Hsr
 					const baseURL = 'https://api.elaxan.xyz'
-					if (currentArg.api.game === 'gi') {
+					if (arg.api.game === 'gi') {
 						results = await elaxanApi.getHandbook(baseURL, 'gi', {
 							search: updatedJsonBody.search as string[],
 							limit: Number(updatedJsonBody.limit) || 10,
@@ -227,7 +226,7 @@ const SearchArgs = memo(
 					setLocalIsLoading(false)
 				}
 			}, 500),
-			[commands, cmd.id, arg.key, toast]
+			[arg, toast, setSearchResults, setShowResults]
 		)
 
 		const dropDownResults = () => (
@@ -310,6 +309,7 @@ const SearchArgs = memo(
 						</Button>
 					</div>
 				</div>
+				<p className='text-sm text-muted-foreground'>{description}</p>
 
 				{/* Results Dropdown */}
 				{showResults && isFocused && searchResults.length > 0 && dropDownResults()}

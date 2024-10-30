@@ -373,7 +373,6 @@ export default function App() {
 													cmd={cmd}
 													arg={arg}
 													handleArgSelect={handleArgSelect}
-													commands={commands}
 													selectedArgs={selectedArgs}
 													showResults={showResults}
 													searchResults={searchResults}

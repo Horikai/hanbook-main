@@ -17,7 +17,6 @@ interface ArgumentsContainerProps {
 	setSearchResults: Dispatch<
 		SetStateAction<{ id: string; name: string; description: string | undefined; image: string | undefined }[]>
 	>
-	commands: CommandLists[]
 }
 
 const ArgumentsContainer = memo(
@@ -30,7 +29,6 @@ const ArgumentsContainer = memo(
 		searchResults,
 		setShowResults,
 		setSearchResults,
-		commands,
 	}: ArgumentsContainerProps) => {
 		// Helper function to get selected option from either direct options or data reference
 		const getSelectedOption = (cmdArg: Argument, selectedValue: string): CommandOption | undefined => {
@@ -64,13 +62,13 @@ const ArgumentsContainer = memo(
 							<SearchArgs
 								key={`search-${cmd.id}-${arg.key}`}
 								cmd={cmd}
-								commands={commands}
 								arg={arg}
 								showResults={showResults}
 								searchResults={searchResults}
 								setShowResults={setShowResults}
 								setSearchResults={setSearchResults}
 								handleArgSelect={handleArgSelect}
+								description={arg.description}
 							/>
 						)
 						break
@@ -104,6 +102,21 @@ const ArgumentsContainer = memo(
 											arg={additionalArg}
 											handleArgSelect={handleArgSelect}
 											selectedArgs={selectedArgs}
+											description={additionalArg.description}
+										/>
+									)
+									break
+								case 'search':
+									listRender.push(
+										<SearchArgs
+											key={`additional-search-${cmd.id}-${additionalArg.key}`}
+											cmd={cmd}
+											arg={additionalArg}
+											handleArgSelect={handleArgSelect}
+											showResults={showResults}
+											searchResults={searchResults}
+											setShowResults={setShowResults}
+											setSearchResults={setSearchResults}
 											description={additionalArg.description}
 										/>
 									)
