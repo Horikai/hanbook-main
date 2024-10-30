@@ -82,10 +82,6 @@
                         "description": "Clear relics"
                     },
                     {
-                        "value": "r",
-                        "description": "Clear relics (shorthand)"
-                    },
-                    {
                         "value": "equipment",
                         "description": "Clear light cones"
                     },
@@ -94,20 +90,8 @@
                         "description": "Clear light cones"
                     },
                     {
-                        "value": "lc",
-                        "description": "Clear light cones (shorthand)"
-                    },
-                    {
                         "value": "materials",
                         "description": "Clear materials"
-                    },
-                    {
-                        "value": "mats",
-                        "description": "Clear materials (shorthand)"
-                    },
-                    {
-                        "value": "m",
-                        "description": "Clear materials (shorthand)"
                     },
                     {
                         "value": "items",
@@ -269,6 +253,219 @@
                 "description": "Promotion/Ascension level to set (optional)",
                 "type": "number",
                 "prefix": "p",
+                "limit": {
+                    "min": 0,
+                    "max": 6
+                }
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "name": "Heal Command",
+        "command": "/heal",
+        "description": "Heals all avatars in your current lineup to full HP."
+    },
+    {
+        "id": 7,
+        "name": "Mission Command",
+        "command": "/mission <action> <mission_id>",
+        "description": "Manage missions. Actions: start, finish, sync, skip, status. Note: Mission system is in testing and may have bugs.",
+        "args": [
+            {
+                "key": "action",
+                "name": "Action",
+                "description": "Action to perform on the mission",
+                "type": "select",
+                "options": [
+                    {
+                        "value": "start",
+                        "description": "Start a main/sub mission"
+                    },
+                    {
+                        "value": "finish",
+                        "description": "Complete a mission"
+                    },
+                    {
+                        "value": "sync",
+                        "description": "Sync mission status"
+                    },
+                    {
+                        "value": "skip",
+                        "description": "Skip current missions"
+                    },
+                    {
+                        "value": "status",
+                        "description": "Check mission status"
+                    },
+                    {
+                        "value": "main",
+                        "description": "Start main story missions"
+                    },
+                    {
+                        "value": "reset",
+                        "description": "Reset mission database"
+                    }
+                ]
+            },
+            {
+                "key": "mission_id",
+                "name": "Mission ID",
+                "description": "ID of the mission (optional, only needed for start/finish actions)",
+                "type": "number"
+            }
+        ]
+    },
+    {
+        "id": 8,
+        "name": "Refill Skill Points",
+        "command": "/refill",
+        "description": "Refill your skill points in open world."
+    },
+    {
+        "id": 9,
+        "name": "Refill Energy",
+        "command": "/energy",
+        "description": "Refills all characters energy (SP) in current lineup to maximum."
+    },
+    {
+        "id": 10,
+        "name": "Set Level",
+        "command": "/setlevel <level>",
+        "description": "Sets your trailblazer level to the specified value.",
+        "args": [
+            {
+                "key": "level",
+                "name": "Level",
+                "description": "The level to set your trailblazer to.",
+                "type": "number",
+                "limit": {
+                    "min": 1,
+                    "max": 70
+                }
+            }
+        ]
+    },
+    {
+        "id": 11,
+        "name": "Scene Teleport",
+        "command": "/scene <scene_id> <floor_id>",
+        "description": "Teleports the player to the specified scene.",
+        "args": [
+            {
+                "key": "scene_id",
+                "name": "Scene ID",
+                "description": "The ID of the maze plane/scene to teleport to.",
+                "type": "number"
+            },
+            {
+                "key": "floor_id",
+                "name": "Floor ID",
+                "description": "The floor ID within the scene (optional, defaults to start floor if not specified).",
+                "type": "number"
+            }
+        ]
+    },
+    {
+        "id": 12,
+        "name": "Spawn",
+        "command": "/spawn <id> s<stage_id> x<amount> lv<level> r<radius>",
+        "description": "Spawns a monster or prop near the targeted player.",
+        "args": [
+            {
+                "key": "id",
+                "name": "ID",
+                "description": "The NPC monster ID or prop ID to spawn. Use 'monster' to spawn the base monster.",
+                "type": "search",
+                "api": {
+                    "game": "sr",
+                    "jsonBody": {
+                        "search": [
+                            "id"
+                        ],
+                        "category": [
+                            "Monsters",
+                            "Props"
+                        ],
+                        "limit": 10
+                    }
+                }
+            },
+            {
+                "key": "stage_id",
+                "name": "Stage ID",
+                "description": "The battle stage ID to use for the spawned monster.",
+                "type": "number"
+            },
+            {
+                "key": "amount",
+                "name": "Amount",
+                "description": "Number of entities to spawn (minimum 1).",
+                "type": "number",
+                "limit": {
+                    "min": 1
+                }
+            },
+            {
+                "key": "level",
+                "name": "Level",
+                "description": "Level of the spawned monster (1-100).",
+                "type": "number",
+                "limit": {
+                    "min": 1,
+                    "max": 100
+                }
+            },
+            {
+                "key": "radius",
+                "name": "Radius",
+                "description": "Spawn radius in meters around the player (minimum 5).",
+                "type": "number",
+                "limit": {
+                    "min": 5
+                }
+            }
+        ]
+    },
+    {
+        "id": 13,
+        "name": "Change UID Display",
+        "command": "/uid <uid>",
+        "description": "Changes the UID display at the bottom right. This does not change your actual UID. Requires sponsor role.",
+        "args": [
+            {
+                "key": "uid",
+                "name": "UID",
+                "description": "The UID to display",
+                "type": "number"
+            }
+        ]
+    },
+    {
+        "id": 14,
+        "name": "Unstuck Player",
+        "command": "/unstuck @<player_id>",
+        "description": "Unstucks an offline player if they're in a scene that doesn't load. Resets their position and lineup.",
+        "args": [
+            {
+                "key": "player_id",
+                "name": "Player ID",
+                "description": "The ID of the player to unstuck",
+                "type": "number"
+            }
+        ]
+    },
+    {
+        "id": 15,
+        "name": "Set World Level",
+        "command": "/worldlevel <level>",
+        "description": "Sets the player's equilibrium level (0-6).",
+        "args": [
+            {
+                "key": "level",
+                "name": "Level",
+                "description": "The equilibrium level to set (0-6)",
+                "type": "number",
                 "limit": {
                     "min": 0,
                     "max": 6
