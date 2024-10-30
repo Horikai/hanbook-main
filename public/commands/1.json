@@ -12,14 +12,12 @@
                 "api": {
                     "game": "gi",
                     "jsonBody": {
-                        "command": false,
                         "search": [
                             "monster_id"
                         ],
                         "category": [
                             "Monsters"
-                        ],
-                        "limit": 10
+                        ]
                     }
                 }
             },
@@ -93,14 +91,12 @@
                 "api": {
                     "game": "gi",
                     "jsonBody": {
-                        "command": false,
                         "search": [
                             "character id"
                         ],
                         "category": [
                             "Characters"
-                        ],
-                        "limit": 20
+                        ]
                     }
                 }
             }
@@ -135,14 +131,12 @@
                 "api": {
                     "game": "gi",
                     "jsonBody": {
-                        "command": false,
                         "search": [
                             "item id"
                         ],
                         "category": [
                             "Materials"
-                        ],
-                        "limit": 20
+                        ]
                     }
                 }
             },
@@ -191,14 +185,12 @@
                 "api": {
                     "game": "gi",
                     "jsonBody": {
-                        "command": false,
                         "search": [
                             "id"
                         ],
                         "category": [
                             "Quests"
-                        ],
-                        "limit": 10
+                        ]
                     }
                 }
             }
@@ -404,14 +396,12 @@
                 "api": {
                     "game": "gi",
                     "jsonBody": {
-                        "command": false,
                         "search": [
                             "weapon id"
                         ],
                         "category": [
                             "Weapons"
-                        ],
-                        "limit": 20
+                        ]
                     }
                 }
             },
