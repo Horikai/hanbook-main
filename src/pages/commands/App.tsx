@@ -1,7 +1,7 @@
 import YuukiPS from '@/api/yuukips'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
 import Tabs from './components/Tabs'
 import axios from 'axios'
@@ -20,15 +20,39 @@ import {
 } from '@/components/ui/dialog'
 import { useNavigate } from 'react-router-dom'
 
+/**
+ * Option for select type argument
+ */
 export type CommandOption = {
+	/**
+	 * Value of the option
+	 */
 	value: string
+	/**
+	 * Description of the option
+	 */
 	description: string
+	/**
+	 * Remove option, can be boolean or array of values to remove. To remove other options, use boolean true to remove all other options.
+	 */
 	remove?: boolean | string[] | string
+	/**
+	 * Arguments for the option
+	 */
 	args?: Argument[]
 }
 
+/**
+ * Reusable option set, useful when the same option set is used in multiple commands
+ */
 export type DataArgs = {
+	/**
+	 * Unique ID of the data
+	 */
 	id: number
+	/**
+	 * Array of options
+	 */
 	options: {
 		value: string
 		description: string
@@ -36,17 +60,50 @@ export type DataArgs = {
 }
 
 export type Argument = {
+	/**
+	 * Key of the argument from the command, example: <target> then key is target
+	 */
 	key: string
+	/**
+	 * Name of the argument
+	 */
 	name: string
+	/**
+	 * Description of the argument
+	 */
 	description: string
+	/**
+	 * Type of argument
+	 */
 	type: 'select' | 'search' | 'number' | 'string'
+	/**
+	 * Limit for number type only when used in number type
+	 */
 	limit?: {
+		/**
+		 * Minimum value
+		 */
 		min: number
+		/**
+		 * Maximum value
+		 */
 		max: number
 	}
-	options?: CommandOption[] | number // Can be array of options or reference to data id
+	/**
+	 * Array of options or reference to data id
+	 */
+	options?: CommandOption[] | number
+	/**
+	 * API call to use
+	 */
 	api?: {
+		/**
+		 * Game to use
+		 */
 		game: 'gi' | 'sr'
+		/**
+		 * JSON body to send to the API
+		 */
 		jsonBody: {
 			[key: string]: string | Array<string>
 		}
@@ -54,11 +111,30 @@ export type Argument = {
 }
 
 export type CommandLists = {
+	/**
+	 * Unique ID of the command
+	 */
 	id: number
+	/**
+	 * Name of the command
+	 */
 	name: string
+	/**
+	 * Command to apply
+	 */
 	command: string
-	data?: DataArgs[] // Array of reusable option sets
+	/**
+	 * Array of reusable option sets, useful when the same option set is used in multiple commands
+	 */
+	data?: DataArgs[]
+	/**
+	 * Arguments of the command
+	 */
 	args?: Argument[]
+	/**
+	 * Description of the command
+	 */
+	description?: string
 }
 
 export default function App() {
@@ -256,6 +332,9 @@ export default function App() {
 									<CardTitle className='text-lg'>{cmd.name}</CardTitle>
 								</CardHeader>
 								<CardContent className='flex-grow'>
+									{cmd.description && (
+										<CardDescription className='mb-2 -mt-6'>{cmd.description}</CardDescription>
+									)}
 									<pre className='bg-muted p-2 rounded-md whitespace-pre-wrap mb-2'>
 										<code>{getUpdatedCommand(cmd)}</code>
 									</pre>
