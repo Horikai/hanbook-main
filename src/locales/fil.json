@@ -13,6 +13,7 @@
     "drawer": {
         "search_id": "Maghanap ng ID",
         "commands": "Mga Utos",
+        "artifacts": "Mga Artifacto",
         "generate": "Lumikha",
         "player_settings": "Mga Setting ng Player",
         "download": "I-download",

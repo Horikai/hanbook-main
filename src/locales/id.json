@@ -13,6 +13,7 @@
 	"drawer": {
 		"search_id": "Cari ID",
 		"commands": "Perintah",
+		"artifacts": "Artifact Custom",
 		"generate": "Generate",
 		"player_settings": "Pengaturan Pemain",
 		"download": "Unduh",

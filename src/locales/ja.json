@@ -13,6 +13,7 @@
 	"drawer": {
 		"search_id": "ID検索",
 		"commands": "コマンド",
+		"artifacts": "カスタムアーティファクト",
 		"generate": "生成",
 		"player_settings": "プレイヤー設定",
 		"download": "ダウンロード",

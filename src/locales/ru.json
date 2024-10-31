@@ -13,6 +13,7 @@
 	"drawer": {
 		"search_id": "Поиск ID",
 		"commands": "Команды",
+		"artifacts": "Кастомные артефакты",
 		"generate": "Генерация",
 		"player_settings": "Настройки игрока",
 		"download": "Скачать",

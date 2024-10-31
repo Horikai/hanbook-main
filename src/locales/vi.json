@@ -13,6 +13,7 @@
     "drawer": {
         "search_id": "Tìm kiếm ID",
         "commands": "Lệnh",
+        "artifacts": "Artifact Custom",
         "generate": "Tạo",
         "player_settings": "Cài đặt người chơi",
         "download": "Tải xuống",

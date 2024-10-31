@@ -13,6 +13,7 @@
 	"drawer": {
 		"search_id": "Search ID",
 		"commands": "Commands",
+		"artifacts": "Custom Artifacts",
 		"generate": "Generate",
 		"player_settings": "Player Settings",
 		"download": "Download",

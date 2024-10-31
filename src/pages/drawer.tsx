@@ -20,6 +20,7 @@ import {
 	CommandIcon,
 	SunMoonIcon,
 	UserIcon,
+	BookIcon,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import ErrorHandling from './error'
@@ -65,6 +66,7 @@ const Drawer: React.FC<DrawerProps> = memo(({ children }) => {
 	const navItems = [
 		{ href: '/', icon: SearchIcon, label: 'search_id' },
 		{ href: '/commands', icon: CommandIcon, label: 'commands' },
+		{ href: '/artifacts', icon: BookIcon, label: 'artifacts' },
 		{ href: '/settings', icon: UserIcon, label: 'player_settings' },
 		{ href: '/generate', icon: PickaxeIcon, label: 'generate' },
 		{ href: '/download', icon: DownloadIcon, label: 'download' },
