@@ -1,13 +1,15 @@
+import { lazy, Suspense, memo, useMemo, useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
-import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Separator } from '@/components/ui/separator'
+import { useToast } from '@/components/ui/use-toast'
+import type { Server } from '@/types/yuukipsServer'
+import { useTranslation } from 'react-i18next'
+import { IoMdSearch } from 'react-icons/io'
+import { LuDot } from 'react-icons/lu'
+import { LoadingContainer } from '@/components/ui/loading'
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -17,29 +19,23 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { useToast } from '@/components/ui/use-toast'
-import type { Server } from '@/types/yuukipsServer'
-import React, { memo, useCallback, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { IoMdSearch } from 'react-icons/io'
-import { LuDot } from 'react-icons/lu'
+import React from 'react'
+
+// Lazy load the dialog component
+const ServerDialog = lazy(() => import('./ServerDialog'))
 
 interface ListServerAvailableProps {
 	handleSelectAccount: (value: string) => void
 	listServerAvailable: Server
 }
 
-const ForwardedTooltipTrigger = React.forwardRef<HTMLDivElement, { children: React.ReactNode }>(
-	({ children, ...props }, ref) => (
+const ForwardedTooltipTrigger = memo(
+	React.forwardRef<HTMLDivElement, { children: React.ReactNode }>(({ children, ...props }, ref) => (
 		<TooltipTrigger {...props} ref={ref as React.LegacyRef<HTMLButtonElement>} asChild>
 			{children}
 		</TooltipTrigger>
-	)
+	))
 )
 
 const ListServerAvailable: React.FC<ListServerAvailableProps> = memo(({ handleSelectAccount, listServerAvailable }) => {
@@ -51,6 +47,7 @@ const ListServerAvailable: React.FC<ListServerAvailableProps> = memo(({ handleSe
 	const [openModal, setOpenModal] = useState<boolean>(false)
 	const [uid, setUid] = useState<string>('')
 	const [serverSelected, setServerSelected] = useState<string>('')
+
 	const handleSave = useCallback(() => {
 		if (!uid) {
 			toast({
@@ -151,33 +148,18 @@ const ListServerAvailable: React.FC<ListServerAvailableProps> = memo(({ handleSe
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</div>
-			<Dialog open={openModal}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>{t('dialog.title')}</DialogTitle>
-						<DialogDescription className='select-none'>{t('dialog.description')}</DialogDescription>
-					</DialogHeader>
-					<Input
-						value={uid}
-						type='number'
-						onChange={(e) => handleInputUID(e.target.value)}
-						onKeyDown={(e) => {
-							if (e.key === 'Enter') {
-								handleSave()
-							}
-						}}
-						placeholder={t('dialog.input_placeholder')}
+
+			<Suspense fallback={<LoadingContainer className='h-24' />}>
+				{openModal && (
+					<ServerDialog
+						open={openModal}
+						onClose={() => setOpenModal(false)}
+						uid={uid}
+						onUidChange={handleInputUID}
+						onSave={handleSave}
 					/>
-					<DialogFooter>
-						<DialogClose asChild>
-							<Button variant={'outline'} onClick={() => setOpenModal(false)}>
-								{t('dialog.button.cancel')}
-							</Button>
-						</DialogClose>
-						<Button onClick={handleSave}>{t('dialog.button.save')}</Button>
-					</DialogFooter>
-				</DialogContent>
-			</Dialog>
+				)}
+			</Suspense>
 		</>
 	)
 })

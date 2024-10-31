@@ -11,10 +11,17 @@ import { useCookies } from 'react-cookie'
 import { Trans, useTranslation } from 'react-i18next'
 import { CiWarning } from 'react-icons/ci'
 import expiresInAMonth from '../index/components/cookieExpires'
-import ListServerAvailable from './components/ListServerAvailable'
-import SelectAccount from './components/SelectAccount'
-import Output from './components/output'
+import { lazy, Suspense } from 'react'
+import { LoadingContainer } from '@/components/ui/loading'
 import type { State } from './components/types'
+
+// Lazy load components
+const ListServerAvailable = lazy(() => import('./components/ListServerAvailable'))
+const SelectAccount = lazy(() => import('./components/SelectAccount'))
+const Output = lazy(() => import('./components/output'))
+
+// Use LoadingContainer as fallback
+const LoadingFallback = () => <LoadingContainer className='h-24' />
 
 const Settings: React.FC = () => {
 	const { t } = useTranslation()
@@ -266,27 +273,33 @@ const Settings: React.FC = () => {
 						{state.successCheckPlayer && state.listServer.length > 0 && (
 							<div className='mt-6'>
 								<Separator className='my-4' />
-								<SelectAccount
-									listServer={state.listServer}
-									handleSelectAccount={handleSelectAccount}
-								/>
+								<Suspense fallback={<LoadingFallback />}>
+									<SelectAccount
+										listServer={state.listServer}
+										handleSelectAccount={handleSelectAccount}
+									/>
+								</Suspense>
 							</div>
 						)}
 
 						{!state.isFailedCheckAccount && state.successCheckPlayer && state.listServerAvailable && (
 							<div className='mt-6'>
 								<Separator className='my-4' />
-								<ListServerAvailable
-									handleSelectAccount={handleSelectAccount}
-									listServerAvailable={state.listServerAvailable}
-								/>
+								<Suspense fallback={<LoadingFallback />}>
+									<ListServerAvailable
+										handleSelectAccount={handleSelectAccount}
+										listServerAvailable={state.listServerAvailable}
+									/>
+								</Suspense>
 							</div>
 						)}
 
 						{state.output.length > 0 && (
 							<div className='mt-6'>
 								<Separator className='my-4' />
-								<Output state={state} setState={setState} />
+								<Suspense fallback={<LoadingFallback />}>
+									<Output state={state} setState={setState} />
+								</Suspense>
 							</div>
 						)}
 
