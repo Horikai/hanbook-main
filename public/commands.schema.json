@@ -122,16 +122,19 @@
                                             "remove": {
                                                 "oneOf": [
                                                     {
-                                                        "type": "boolean"
+                                                        "type": "boolean",
+                                                        "description": "Remove all other options"
                                                     },
                                                     {
                                                         "type": "array",
                                                         "items": {
-                                                            "type": "string"
+                                                            "type": "string",
+                                                            "description": "Remove certain options"
                                                         }
                                                     },
                                                     {
-                                                        "type": "string"
+                                                        "type": "string",
+                                                        "description": "Remove only 1 option"
                                                     }
                                                 ],
                                                 "description": "Remove option configuration"
@@ -191,7 +194,19 @@
                         "name",
                         "description",
                         "type"
-                    ]
+                    ],
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "const": "select"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": [
+                            "options"
+                        ]
+                    }
                 }
             }
         },
