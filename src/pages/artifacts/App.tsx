@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Slider } from '@/components/ui/slider'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,7 +15,7 @@ import {
 } from './utils'
 import type { ArtifactStat, FormData } from './types'
 import { MultiSelect } from '@/components/ui/multi-select'
-import { Search, Loader2, Copy, Plus, Minus } from 'lucide-react'
+import { Search, Loader2, Copy, Plus, Minus, StarIcon } from 'lucide-react'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { debounce } from 'lodash'
 import elaxanApi from '@/api/elaxanApi'
@@ -28,6 +28,7 @@ interface SearchResult {
 	name: string
 	description?: string
 	image?: string
+	rarity?: number
 }
 
 const App = () => {
@@ -160,6 +161,7 @@ const App = () => {
 						id: result.id.toString(),
 						description: result.description,
 						image: typeof result.image === 'string' ? result.image : result.image?.icon,
+						rarity: result.rarity,
 					}))
 				)
 				setShowResults(true)
@@ -198,7 +200,16 @@ const App = () => {
 				e.preventDefault()
 				if (selectedIndex >= 0 && selectedIndex < searchResults.length) {
 					const result = searchResults[selectedIndex]
-					setFormData((prev) => ({ ...prev, artifactId: result.id }))
+					setFormData((prev) => ({
+						...prev,
+						artifactId: result.id,
+						artifactDetails: {
+							name: result.name,
+							description: result.description,
+							image: result.image,
+							rarity: result.rarity,
+						},
+					}))
 					setInputValue(result.name)
 					setShowResults(false)
 					setSelectedIndex(-1)
@@ -207,6 +218,19 @@ const App = () => {
 				setShowResults(false)
 				setSelectedIndex(-1)
 			}
+		}
+	}
+
+	const getRarityClass = (rarity?: number) => {
+		switch (rarity) {
+			case 5:
+				return 'bg-rarityFive'
+			case 4:
+				return 'bg-rarityFour'
+			case 3:
+				return 'bg-rarityThree'
+			default:
+				return ''
 		}
 	}
 
@@ -251,7 +275,16 @@ const App = () => {
 										}`}
 										onMouseEnter={() => setSelectedIndex(index)}
 										onClick={() => {
-											setFormData((prev) => ({ ...prev, artifactId: result.id }))
+											setFormData((prev) => ({
+												...prev,
+												artifactId: result.id,
+												artifactDetails: {
+													name: result.name,
+													description: result.description,
+													image: result.image,
+													rarity: result.rarity,
+												},
+											}))
 											setInputValue(result.name)
 											setShowResults(false)
 											setSelectedIndex(-1)
@@ -259,7 +292,16 @@ const App = () => {
 										onKeyDown={(e) => {
 											if (e.key === 'Enter' || e.key === ' ') {
 												e.preventDefault()
-												setFormData((prev) => ({ ...prev, artifactId: result.id }))
+												setFormData((prev) => ({
+													...prev,
+													artifactId: result.id,
+													artifactDetails: {
+														name: result.name,
+														description: result.description,
+														image: result.image,
+														rarity: result.rarity,
+													},
+												}))
 												setInputValue(result.name)
 												setShowResults(false)
 												setSelectedIndex(-1)
@@ -270,7 +312,9 @@ const App = () => {
 											<img
 												src={result.image}
 												alt=''
-												className='w-8 h-8 rounded'
+												className={`w-8 h-8 rounded ${
+													result.rarity && getRarityClass(result.rarity)
+												}`}
 												aria-hidden='true'
 											/>
 										)}
@@ -334,6 +378,57 @@ const App = () => {
 			</Select>
 		</div>
 	)
+
+	const renderArtifactDetails = () => {
+		if (!formData.artifactDetails) return null
+
+		const getRarityClass = (rarity?: number) => {
+			switch (rarity) {
+				case 5:
+					return 'bg-rarityFive'
+				case 4:
+					return 'bg-rarityFour'
+				case 3:
+					return 'bg-rarityThree'
+				default:
+					return
+			}
+		}
+
+		return (
+			<Card className={`${getRarityClass(formData.artifactDetails.rarity)} bg-opacity-10`}>
+				<CardHeader className='flex flex-row items-center gap-4'>
+					{formData.artifactDetails.image && (
+						<div className='p-1 rounded-lg'>
+							<img
+								src={formData.artifactDetails.image}
+								alt={formData.artifactDetails.name}
+								className={`w-16 h-16 rounded-lg object-cover ${
+									formData.artifactDetails.rarity && getRarityClass(formData.artifactDetails.rarity)
+								}`}
+							/>
+						</div>
+					)}
+					<div className='space-y-1'>
+						<h3 className='font-semibold text-foreground'>{formData.artifactDetails.name}</h3>
+						{formData.artifactDetails.description && (
+							<p className='text-sm text-foreground/80'>{formData.artifactDetails.description}</p>
+						)}
+						{formData.artifactDetails.rarity && (
+							<div className='flex items-center gap-1'>
+								{Array.from({ length: formData.artifactDetails.rarity }).map((_, i) => (
+									<StarIcon
+										key={`star-${formData.artifactDetails?.rarity}-${i}`}
+										className='w-4 h-4 text-yellow-400 fill-current'
+									/>
+								))}
+							</div>
+						)}
+					</div>
+				</CardHeader>
+			</Card>
+		)
+	}
 
 	return (
 		<div className='min-h-screen p-4 md:p-8 space-y-8'>
@@ -405,6 +500,9 @@ const App = () => {
 									</div>
 									{renderMainStatSelect()}
 								</div>
+
+								{/* Artifact Details */}
+								{renderArtifactDetails()}
 
 								{/* Amount and Level */}
 								<div className='grid sm:grid-cols-2 gap-6'>

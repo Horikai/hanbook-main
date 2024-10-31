@@ -27,4 +27,10 @@ export interface FormData {
 	stats: SelectedStat[]
 	artifactType: string
 	mainStatId: string
+	artifactDetails?: {
+		name: string
+		description?: string
+		image?: string
+		rarity?: number
+	}
 }
