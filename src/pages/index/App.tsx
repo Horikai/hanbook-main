@@ -1,17 +1,21 @@
-import ElaXanAPI from '@/api/elaxanApi'
-import YuukiPS from '@/api/yuukips'
-import { Button } from '@/components/ui/button'
-import type { Description, GmhandbookGI } from '@/types/gm'
-import { invoke, isTauri } from '@tauri-apps/api/core'
-import { error } from '@tauri-apps/plugin-log'
+import { Suspense, lazy } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import { useTranslation } from 'react-i18next'
-import DataCard from './components/DataCard'
-import DataCardSR from './components/DataCardSR'
-import Search from './components/Search'
-import expiresInAMonth from './components/cookieExpires'
+import { invoke, isTauri } from '@tauri-apps/api/core'
+import { error } from '@tauri-apps/plugin-log'
+import YuukiPS from '@/api/yuukips'
+import ElaXanAPI from '@/api/elaxanApi'
+import { Button } from '@/components/ui/button'
+import { LoadingContainer } from '@/components/ui/loading'
+import type { Description, GmhandbookGI } from '@/types/gm'
 import type { CurrentType, State } from './components/types'
+import expiresInAMonth from './components/cookieExpires'
+
+// Lazy load components
+const Search = lazy(() => import('./components/Search'))
+const DataCard = lazy(() => import('./components/DataCard'))
+const DataCardSR = lazy(() => import('./components/DataCardSR'))
 
 function App() {
 	const { t } = useTranslation()
@@ -213,40 +217,43 @@ function App() {
 		>
 			{/* search function */}
 			<div className='mb-8'>
-				<Search
-					setState={setState}
-					state={state}
-					currentLanguage={currentLanguage}
-					loadGI={loadGI}
-					loadSR={loadSR}
-					isHandbookLoading={state.isHandbookLoading}
-				/>
+				<Suspense fallback={<LoadingContainer className='h-20' />}>
+					<Search
+						setState={setState}
+						state={state}
+						currentLanguage={currentLanguage}
+						loadGI={loadGI}
+						loadSR={loadSR}
+						isHandbookLoading={state.isHandbookLoading}
+					/>
+				</Suspense>
 			</div>
 			{/* end search function */}
 
 			{/* Show Data List */}
 			{!state.error && (
 				<div className='mb-8'>
-					{state.currentType === 'Genshin Impact' ? (
-						<DataCard
-							code={cookies.code}
-							uid={cookies.uid}
-							server={cookies.server}
-							currentLanguage={currentLanguage}
-							stateApp={state}
-							setStateApp={setState}
-						/>
-					) : (
-						<DataCardSR
-							code={cookies.code}
-							uid={cookies.uid}
-							server={cookies.server}
-							// biome-ignore lint/suspicious/noExplicitAny: using any as placeholder since it's not implemented yet
-							currentLanguage={currentLanguage as any}
-							stateApp={state}
-							setStateApp={setState}
-						/>
-					)}
+					<Suspense fallback={<LoadingContainer />}>
+						{state.currentType === 'Genshin Impact' ? (
+							<DataCard
+								code={cookies.code}
+								uid={cookies.uid}
+								server={cookies.server}
+								currentLanguage={currentLanguage}
+								stateApp={state}
+								setStateApp={setState}
+							/>
+						) : (
+							<DataCardSR
+								code={cookies.code}
+								uid={cookies.uid}
+								server={cookies.server}
+								currentLanguage={currentLanguage as any}
+								stateApp={state}
+								setStateApp={setState}
+							/>
+						)}
+					</Suspense>
 				</div>
 			)}
 			{/* End of Show Data List */}

@@ -1,23 +1,26 @@
 import YuukiPS from '@/api/yuukips'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import Collapse from '@/components/ui/collapse'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
+import { LoadingContainer } from '@/components/ui/loading'
 import type { Command, Datum, ImageClass } from '@/types/hsr'
 import { isTauri } from '@tauri-apps/api/core'
 import { writeText } from '@tauri-apps/plugin-clipboard-manager'
 import type React from 'react'
-import { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useState, Suspense, lazy } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FaStar } from 'react-icons/fa'
 import { MdOutlineContentCopy } from 'react-icons/md'
 import { RiSlashCommands2 } from 'react-icons/ri'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import type { State } from './types'
+
+// Lazy load components
+const Collapse = lazy(() => import('@/components/ui/collapse'))
 
 const defaultImage = 'https://api.elaxan.com/images/genshin-impact/not-found.png'
 
@@ -80,6 +83,39 @@ interface DataCardSRProps {
 	setStateApp: React.Dispatch<React.SetStateAction<State>>
 }
 
+const CommandSection = memo(
+	({
+		data,
+		handleApplyCommand,
+		handleCommandCopy,
+	}: {
+		data: Command
+		handleApplyCommand: (value: string) => void
+		handleCommandCopy: (command: string) => void
+	}) => (
+		<div className='rounded-box border-base-300 p-6'>
+			{Object.entries(data).map(([key, value]: [string, Command[keyof Command]]) => (
+				<div key={key}>
+					<h3 className='font-bold'>{value?.name}</h3>
+					<div className='mt-2 flex items-center justify-between rounded-lg bg-gray-300 p-2 dark:bg-gray-700'>
+						<div className='group flex w-full items-center justify-between'>
+							<code>{value?.value}</code>
+							<div className='flex items-center'>
+								<div className='mr-2 cursor-pointer rounded-lg border-2 border-gray-600 p-2 transition-opacity duration-300 group-hover:opacity-100 md:opacity-0 lg:opacity-0'>
+									<RiSlashCommands2 onClick={() => handleApplyCommand(value?.value || '')} />
+								</div>
+								<div className='cursor-pointer rounded-lg border-2 border-gray-600 p-2 transition-opacity duration-300 group-hover:opacity-100 md:opacity-0 lg:opacity-0'>
+									<MdOutlineContentCopy onClick={() => handleCommandCopy(value?.value || '')} />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			))}
+		</div>
+	)
+)
+
 const DataCardSR: React.FC<DataCardSRProps> = ({ currentLanguage, code, server, uid, setStateApp, stateApp }) => {
 	const { t } = useTranslation('translation', { keyPrefix: 'card' })
 	const { t: tToast } = useTranslation('translation', { keyPrefix: 'toast' })
@@ -93,8 +129,7 @@ const DataCardSR: React.FC<DataCardSRProps> = ({ currentLanguage, code, server, 
 		(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			const { value } = e.currentTarget
 			const [name, id] = value.split(' || ')
-			navigator.clipboard
-				.writeText(id)
+			;(isTauri() ? writeText(id) : navigator.clipboard.writeText(id))
 				.then(() => {
 					toast({
 						title: tToast('copied_id.title'),
@@ -139,34 +174,37 @@ const DataCardSR: React.FC<DataCardSRProps> = ({ currentLanguage, code, server, 
 		[toast, tToast]
 	)
 
-	const handleApplyCommand = (value: string) => {
-		if (!uid || !code || !server) {
-			toast({
-				title: tToast('apply_command_no_configured.title'),
-				description: tToast('apply_command_no_configured.description'),
-				action: (
-					<ToastAction
-						onClick={() => {
-							document.location.href = '/settings.html'
-						}}
-						altText={tToast('apply_command_no_configured.action.text')}
-					>
-						{tToast('apply_command_no_configured.action.url_text')}
-					</ToastAction>
-				),
-			})
-			return
-		}
-		const formatCommand = YuukiPS.extractFormattedPlaceholders(value)
-		setState((prev) => ({
-			...prev,
-			args: formatCommand,
-			command: value,
-			openModal: true,
-		}))
-	}
+	const handleApplyCommand = useCallback(
+		(value: string) => {
+			if (!uid || !code || !server) {
+				toast({
+					title: tToast('apply_command_no_configured.title'),
+					description: tToast('apply_command_no_configured.description'),
+					action: (
+						<ToastAction
+							onClick={() => {
+								document.location.href = '/settings.html'
+							}}
+							altText={tToast('apply_command_no_configured.action.text')}
+						>
+							{tToast('apply_command_no_configured.action.url_text')}
+						</ToastAction>
+					),
+				})
+				return
+			}
+			const formatCommand = YuukiPS.extractFormattedPlaceholders(value)
+			setState((prev) => ({
+				...prev,
+				args: formatCommand,
+				command: value,
+				openModal: true,
+			}))
+		},
+		[code, server, tToast, toast, uid]
+	)
 
-	const handleModalExecute = () => {
+	const handleModalExecute = useCallback(() => {
 		if (!stateApp.yuukips) {
 			setStateApp((prev) => ({
 				...prev,
@@ -188,35 +226,10 @@ const DataCardSR: React.FC<DataCardSRProps> = ({ currentLanguage, code, server, 
 			output: [...prev.output, tOutput('executing_command', { command: generateCommand })],
 		}))
 		stateApp.yuukips.sendCommand(uid, code, server, generateCommand)
-	}
-
-	const commandList = (data: Command) => {
-		return (
-			<div className='rounded-box border-base-300 p-6'>
-				{Object.entries(data).map(([key, value]: [string, Command[keyof Command]]) => (
-					<div key={key}>
-						<h3 className='font-bold'>{value?.name}</h3>
-						<div className='mt-2 flex items-center justify-between rounded-lg bg-gray-300 p-2 dark:bg-gray-700'>
-							<div className='group flex w-full items-center justify-between'>
-								<code>{value?.value}</code>
-								<div className='flex items-center'>
-									<div className='mr-2 cursor-pointer rounded-lg border-2 border-gray-600 p-2 transition-opacity duration-300 group-hover:opacity-100 md:opacity-0 lg:opacity-0'>
-										<RiSlashCommands2 onClick={() => handleApplyCommand(value?.value || '')} />
-									</div>
-									<div className='cursor-pointer rounded-lg border-2 border-gray-600 p-2 transition-opacity duration-300 group-hover:opacity-100 md:opacity-0 lg:opacity-0'>
-										<MdOutlineContentCopy onClick={() => handleCommandCopy(value?.value || '')} />
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				))}
-			</div>
-		)
-	}
+	}, [code, server, setStateApp, state.args, state.command, stateApp.yuukips, tOutput, uid])
 
 	return (
-		<>
+		<Suspense fallback={<LoadingContainer />}>
 			{stateApp.mainDataSR.slice(0, stateApp.currentLimit).map((item) => (
 				<div className='mt-5 flex items-center justify-center' key={`card-sr-${item.id}`}>
 					<div className='w-full rounded-lg bg-slate-300 p-6 shadow-lg dark:bg-slate-800 md:max-w-md lg:max-w-lg xl:max-w-xl'>
@@ -279,15 +292,23 @@ const DataCardSR: React.FC<DataCardSRProps> = ({ currentLanguage, code, server, 
 						</div>
 						{stateApp.showCommandsSR && (
 							<div className='mt-4 rounded-lg bg-slate-300 p-4 dark:bg-slate-800'>
-								<Collapse title={t('show_the_commands')} className='w-full'>
-									<Card className='space-x-2'>
-										<CardHeader>
-											<CardTitle>{t('title.lc')}</CardTitle>
-											<CardDescription>{t('description.lc')}</CardDescription>
-										</CardHeader>
-										<CardContent>{commandList(item.command)}</CardContent>
-									</Card>
-								</Collapse>
+								<Suspense fallback={<LoadingContainer className='h-20' />}>
+									<Collapse title={t('show_the_commands')} className='w-full'>
+										<Card className='space-x-2'>
+											<CardHeader>
+												<CardTitle>{t('title.lc')}</CardTitle>
+												<CardDescription>{t('description.lc')}</CardDescription>
+											</CardHeader>
+											<CardContent>
+												<CommandSection
+													data={item.command}
+													handleApplyCommand={handleApplyCommand}
+													handleCommandCopy={handleCommandCopy}
+												/>
+											</CardContent>
+										</Card>
+									</Collapse>
+								</Suspense>
 							</div>
 						)}
 					</div>
@@ -377,8 +398,8 @@ const DataCardSR: React.FC<DataCardSRProps> = ({ currentLanguage, code, server, 
 					</div>
 				</DialogContent>
 			</Dialog>
-		</>
+		</Suspense>
 	)
 }
 
-export default DataCardSR
+export default memo(DataCardSR)

@@ -1,7 +1,8 @@
 import YuukiPS from '@/api/yuukips'
 import { Button } from '@/components/ui/button'
+import { LoadingContainer } from '@/components/ui/loading'
+import { useToast } from '@/components/ui/use-toast'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import Collapse from '@/components/ui/collapse'
 import {
 	Dialog,
 	DialogContent,
@@ -10,20 +11,22 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog'
-import { Label } from '@/components/ui/label.tsx'
+import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useToast } from '@/components/ui/use-toast'
-import CommandList from '@/pages/index/components/CommandList.tsx'
 import type { Description, GmhandbookGI } from '@/types/gm'
 import { isTauri } from '@tauri-apps/api/core'
 import { writeText } from '@tauri-apps/plugin-clipboard-manager'
 import type React from 'react'
-import { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useState, Suspense, lazy } from 'react'
 import { useCookies } from 'react-cookie'
 import { useTranslation } from 'react-i18next'
 import { FaStar } from 'react-icons/fa'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import type { State } from './types'
+
+// Lazy load components
+const CommandList = lazy(() => import('./CommandList'))
+const Collapse = lazy(() => import('@/components/ui/collapse'))
 
 const ImageComponent = memo(({ data }: { data: GmhandbookGI }) => {
 	const defaultImage = 'https://api.elaxan.com/images/genshin-impact/not-found.png'
@@ -34,7 +37,12 @@ const ImageComponent = memo(({ data }: { data: GmhandbookGI }) => {
 		imageSrc = (data.image as unknown as { icon: string }).icon
 		isAvatar = true
 	} else if (data.category !== 'Characters' && 'image' in data) {
-		imageSrc = typeof data.image === 'string' ? data.image : typeof data.image === 'object' ? data.image.icon : defaultImage
+		imageSrc =
+			typeof data.image === 'string'
+				? data.image
+				: typeof data.image === 'object'
+					? data.image.icon
+					: defaultImage
 	}
 
 	return (
@@ -144,7 +152,7 @@ const DataCard: React.FC<DataCardProps> = ({ currentLanguage, code, uid, server,
 	}
 
 	return (
-		<>
+		<Suspense fallback={<LoadingContainer />}>
 			{stateApp.mainData.slice(0, stateApp.currentLimit).map((data) => (
 				<div className='mt-5 flex items-center justify-center' key={`data-card-${data.id}`}>
 					<div className='w-full bg-gray-300 dark:bg-slate-800 md:max-w-md lg:max-w-lg xl:max-w-xl'>
@@ -356,8 +364,8 @@ const DataCard: React.FC<DataCardProps> = ({ currentLanguage, code, uid, server,
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
-		</>
+		</Suspense>
 	)
 }
 
-export default DataCard
+export default memo(DataCard)
