@@ -17,7 +17,7 @@ export interface ParsedStat {
 
 export interface MainStatOption {
 	name: string
-	id: string
+	id: number
 }
 
 export interface FormData {

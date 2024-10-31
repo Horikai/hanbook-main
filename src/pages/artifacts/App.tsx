@@ -58,7 +58,7 @@ const App = () => {
 		const defaultMainStat = MAIN_STAT_OPTIONS[formData.artifactType][0]
 		setFormData((prev) => ({
 			...prev,
-			mainStatId: defaultMainStat.id,
+			mainStatId: defaultMainStat.id.toString(),
 		}))
 	}, [formData.artifactType])
 
@@ -178,21 +178,23 @@ const App = () => {
 				e.preventDefault()
 				setSelectedIndex((prevIndex) => {
 					const newIndex = prevIndex < searchResults.length - 1 ? prevIndex + 1 : prevIndex
-					// Scroll the selected item into view
-					const selectedElement = document.querySelector(`[data-index="${newIndex}"]`)
-					selectedElement?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+					setTimeout(() => {
+						const selectedElement = document.querySelector(`[data-index="${newIndex}"]`)
+						selectedElement?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+					}, 0)
 					return newIndex
 				})
 			} else if (e.key === 'ArrowUp') {
 				e.preventDefault()
 				setSelectedIndex((prevIndex) => {
 					const newIndex = prevIndex > 0 ? prevIndex - 1 : -1
-					// Scroll the selected item into view
-					const selectedElement = document.querySelector(`[data-index="${newIndex}"]`)
-					selectedElement?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+					setTimeout(() => {
+						const selectedElement = document.querySelector(`[data-index="${newIndex}"]`)
+						selectedElement?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+					}, 0)
 					return newIndex
 				})
-			} else if (e.key === 'Enter' || e.key === 'Tab') {
+			} else if (e.key === 'Enter') {
 				e.preventDefault()
 				if (selectedIndex >= 0 && selectedIndex < searchResults.length) {
 					const result = searchResults[selectedIndex]
@@ -220,7 +222,6 @@ const App = () => {
 					}}
 					onKeyDown={handleKeyDown}
 					onFocus={() => setShowResults(true)}
-					onBlur={() => setTimeout(() => setShowResults(false), 200)}
 					placeholder='Search artifact...'
 					className='w-full px-4 py-2 pl-10 pr-4'
 				/>
@@ -237,49 +238,46 @@ const App = () => {
 				<div className='absolute z-10 w-full mt-1 bg-background border rounded-lg shadow-lg'>
 					<ScrollArea className='h-[200px] w-full'>
 						<div className='p-1'>
-							<select
-								tabIndex={0}
-								className='w-full bg-transparent outline-none'
-								size={Math.min(searchResults.length, 5)}
-								value={selectedIndex}
-								onChange={(e) => {
-									const index = Number(e.target.value)
-									const result = searchResults[index]
-									setFormData((prev) => ({ ...prev, artifactId: result.id }))
-									setInputValue(result.name)
-									setShowResults(false)
-								}}
-								onKeyDown={(e) => {
-									if (e.key === 'Escape') {
-										setShowResults(false)
-										setSelectedIndex(-1)
-									}
-								}}
-							>
+							<div className='w-full'>
 								{searchResults.map((result, index) => (
-									<option
+									<button
 										key={result.id}
-										value={index}
-										className={`flex items-center gap-2 px-4 py-2 cursor-pointer rounded-sm transition-colors ${
+										type='button'
+										data-index={index}
+										className={`w-full flex items-center gap-2 px-4 py-2 cursor-pointer rounded-sm transition-colors text-left ${
 											index === selectedIndex
 												? 'bg-primary text-primary-foreground'
 												: 'hover:bg-accent'
 										}`}
+										onMouseEnter={() => setSelectedIndex(index)}
+										onClick={() => {
+											setFormData((prev) => ({ ...prev, artifactId: result.id }))
+											setInputValue(result.name)
+											setShowResults(false)
+											setSelectedIndex(-1)
+										}}
+										onKeyDown={(e) => {
+											if (e.key === 'Enter' || e.key === ' ') {
+												e.preventDefault()
+												setFormData((prev) => ({ ...prev, artifactId: result.id }))
+												setInputValue(result.name)
+												setShowResults(false)
+												setSelectedIndex(-1)
+											}
+										}}
 									>
-										<div className='flex items-center gap-2'>
-											{result.image && (
-												<img
-													src={result.image}
-													alt=''
-													className='w-8 h-8 rounded'
-													aria-hidden='true'
-												/>
-											)}
-											<span>{result.name}</span>
-										</div>
-									</option>
+										{result.image && (
+											<img
+												src={result.image}
+												alt=''
+												className='w-8 h-8 rounded'
+												aria-hidden='true'
+											/>
+										)}
+										<span>{result.name}</span>
+									</button>
 								))}
-							</select>
+							</div>
 						</div>
 					</ScrollArea>
 				</div>
@@ -328,7 +326,7 @@ const App = () => {
 				</SelectTrigger>
 				<SelectContent>
 					{MAIN_STAT_OPTIONS[formData.artifactType].map((option) => (
-						<SelectItem key={option.id} value={option.id}>
+						<SelectItem key={option.id} value={option.id.toString()}>
 							{option.name}
 						</SelectItem>
 					))}
