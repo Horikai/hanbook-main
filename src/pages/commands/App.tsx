@@ -3,11 +3,10 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
-import Tabs from './components/Tabs'
+import { Suspense, lazy } from 'react'
 import axios from 'axios'
 import { AlertTriangle, Loader2 } from 'lucide-react'
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import ArgumentsContainer from './components/ArgsContainer'
 import { Input } from '@/components/ui/input'
 import { useCookies } from 'react-cookie'
 import {
@@ -136,6 +135,10 @@ export type CommandLists = {
 	 */
 	description?: string
 }
+
+// Lazy load components
+const Tabs = lazy(() => import('./components/Tabs'))
+const ArgumentsContainer = lazy(() => import('./components/ArgsContainer'))
 
 export default function App() {
 	const [commands, setCommands] = useState<CommandLists[]>([])
@@ -307,7 +310,11 @@ export default function App() {
 					we are working on.
 				</AlertDescription>
 			</Alert>
-			<Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+
+			<Suspense fallback={<Loader2 className='w-8 h-8 animate-spin text-gray-400 dark:text-gray-500' />}>
+				<Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+			</Suspense>
+
 			<Card className='mb-6'>
 				<CardHeader>
 					<CardTitle>Command List</CardTitle>
@@ -366,21 +373,29 @@ export default function App() {
 										</Button>
 									)}
 									{visibleArgs[cmd.id] && (
-										<div className='space-y-2'>
-											{cmd.args?.map((arg) => (
-												<ArgumentsContainer
-													key={`${cmd.id}-${arg.key}`}
-													cmd={cmd}
-													arg={arg}
-													handleArgSelect={handleArgSelect}
-													selectedArgs={selectedArgs}
-													showResults={showResults}
-													searchResults={searchResults}
-													setShowResults={setShowResults}
-													setSearchResults={setSearchResults}
-												/>
-											))}
-										</div>
+										<Suspense
+											fallback={
+												<div className='space-y-2 p-4'>
+													<Loader2 className='w-6 h-6 animate-spin text-gray-400 dark:text-gray-500' />
+												</div>
+											}
+										>
+											<div className='space-y-2'>
+												{cmd.args?.map((arg) => (
+													<ArgumentsContainer
+														key={`${cmd.id}-${arg.key}`}
+														cmd={cmd}
+														arg={arg}
+														handleArgSelect={handleArgSelect}
+														selectedArgs={selectedArgs}
+														showResults={showResults}
+														searchResults={searchResults}
+														setShowResults={setShowResults}
+														setSearchResults={setSearchResults}
+													/>
+												))}
+											</div>
+										</Suspense>
 									)}
 								</CardContent>
 							</Card>

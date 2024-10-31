@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Suspense, lazy } from 'react'
 import { Loader2, Search } from 'lucide-react'
 import type React from 'react'
 import { memo, useRef, useState, type Dispatch, type SetStateAction, useEffect, useCallback } from 'react'
@@ -11,6 +11,13 @@ import type { GmhandbookGI } from '@/types/gm'
 import { useToast } from '@/components/ui/use-toast'
 import elaxanApi from '@/api/elaxanApi'
 import type { Hsr } from '@/types/hsr'
+
+// Lazy load the UI components
+const Select = lazy(() => import('@/components/ui/select').then((mod) => ({ default: mod.Select })))
+const SelectContent = lazy(() => import('@/components/ui/select').then((mod) => ({ default: mod.SelectContent })))
+const SelectItem = lazy(() => import('@/components/ui/select').then((mod) => ({ default: mod.SelectItem })))
+const SelectTrigger = lazy(() => import('@/components/ui/select').then((mod) => ({ default: mod.SelectTrigger })))
+const SelectValue = lazy(() => import('@/components/ui/select').then((mod) => ({ default: mod.SelectValue })))
 
 interface SelectArgsProps {
 	handleArgSelect: (commandId: number, argKey: string, value: string) => void
@@ -44,22 +51,24 @@ const SelectArgs = memo(({ handleArgSelect, cmd, arg, selectedArgs, description 
 
 	return (
 		<>
-			<Select
-				onValueChange={(value) => handleArgSelect(cmd.id, arg.key, value)}
-				value={selectedArgs[cmd.id]?.[arg.key] || ''}
-			>
-				<SelectTrigger id={`${cmd.id}-${arg.key}`}>
-					<SelectValue placeholder={`Select ${arg.name}`} />
-				</SelectTrigger>
-				<SelectContent>
-					<SelectItem value='none-selected'>None</SelectItem>
-					{resolveOptions().map((option) => (
-						<SelectItem key={option.value} value={option.value}>
-							{option.description} ({option.value})
-						</SelectItem>
-					))}
-				</SelectContent>
-			</Select>
+			<Suspense fallback={<div className='h-10 w-full bg-gray-200 animate-pulse rounded-md' />}>
+				<Select
+					onValueChange={(value) => handleArgSelect(cmd.id, arg.key, value)}
+					value={selectedArgs[cmd.id]?.[arg.key] || ''}
+				>
+					<SelectTrigger id={`${cmd.id}-${arg.key}`}>
+						<SelectValue placeholder={`Select ${arg.name}`} />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value='none-selected'>None</SelectItem>
+						{resolveOptions().map((option) => (
+							<SelectItem key={option.value} value={option.value}>
+								{option.description} ({option.value})
+							</SelectItem>
+						))}
+					</SelectContent>
+				</Select>
+			</Suspense>
 			<p className='text-sm text-muted-foreground'>{description}</p>
 		</>
 	)
