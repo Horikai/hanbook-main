@@ -103,6 +103,18 @@ interface MultiSelectProps
 	 * Optional, can be used to add custom styles.
 	 */
 	className?: string
+
+	/**
+	 * Maximum number of items that can be selected.
+	 * Optional, defaults to unlimited.
+	 */
+	selectLimit?: number
+
+	/**
+	 * Text to display when selection limit is reached.
+	 * Optional, defaults to "Selection limit reached".
+	 */
+	limitReachedMessage?: string
 }
 
 export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
@@ -118,6 +130,8 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
 			modalPopover = false,
 			asChild = false,
 			className,
+			selectLimit,
+			limitReachedMessage = 'Selection limit reached',
 			...props
 		},
 		ref
@@ -145,7 +159,13 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
 		}
 
 		const toggleOption = (value: string) => {
-			const newSelectedValues = selectedValues.includes(value)
+			const isSelected = selectedValues.includes(value)
+
+			if (!isSelected && selectLimit && selectedValues.length >= selectLimit) {
+				return
+			}
+
+			const newSelectedValues = isSelected
 				? selectedValues.filter((v) => v !== value)
 				: [...selectedValues, value]
 			setSelectedValues(newSelectedValues)
@@ -168,6 +188,17 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
 		}
 
 		const toggleAll = () => {
+			if (selectLimit) {
+				if (selectedValues.length === options.length) {
+					handleClear()
+				} else {
+					const allValues = options.slice(0, selectLimit).map((option) => option.value)
+					setSelectedValues(allValues)
+					onValueChange(allValues)
+				}
+				return
+			}
+
 			if (selectedValues.length === options.length) {
 				handleClear()
 			} else {
@@ -268,11 +299,14 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
 						<CommandList>
 							<CommandEmpty>{t('no_result')}</CommandEmpty>
 							<CommandGroup>
+								{selectLimit && selectedValues.length >= selectLimit && (
+									<div className='px-2 py-1 text-sm text-muted-foreground'>{limitReachedMessage}</div>
+								)}
 								<CommandItem key='all' onSelect={toggleAll} className='cursor-pointer'>
 									<div
 										className={cn(
 											'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
-											selectedValues.length === options.length
+											selectedValues.length === (selectLimit || options.length)
 												? 'bg-primary text-primary-foreground'
 												: 'opacity-50 [&_svg]:invisible'
 										)}
