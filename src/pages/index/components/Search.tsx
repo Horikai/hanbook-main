@@ -283,7 +283,10 @@ const Search: React.FC<SearchProps> = ({ loadGI, loadSR, currentLanguage, state,
 		const path = await open({
 			directory: false,
 			title: 'Select GM Handbook path',
-			filters: currentPlatform === 'windows' ? [{ name: 'GM Handbook', extensions: ['json', 'txt'] }] : undefined,
+			filters:
+				currentPlatform === 'windows' || currentPlatform === 'linux'
+					? [{ name: 'GM Handbook', extensions: ['json', 'txt'] }]
+					: undefined,
 		})
 		if (!path) {
 			toast({
@@ -299,15 +302,32 @@ const Search: React.FC<SearchProps> = ({ loadGI, loadSR, currentLanguage, state,
 				...prevState,
 				isHandbookLoading: true,
 			}))
-			if (!Array.isArray(path)) return
-			toast({
-				title: 'Updating path',
-				description: `Path: ${(path as any).path}`,
-			})
-			await invoke('update_path_handbook', {
-				path: (path as any).path,
-				force: forceUpdatePath,
-			})
+			if (typeof path === 'string') {
+				toast({
+					title: 'Updating path',
+					description: `Path: ${path}`,
+				})
+				await invoke('update_path_handbook', {
+					path: path,
+					force: forceUpdatePath,
+				})
+			} else if (Array.isArray(path)) {
+				toast({
+					title: 'Updating path',
+					description: `Path: ${path[0]}`,
+				})
+				await invoke('update_path_handbook', {
+					path: path[0],
+					force: forceUpdatePath,
+				})
+			} else {
+				toast({
+					title: 'Error',
+					description: 'Path is not a string or array',
+					variant: 'destructive',
+				})
+				return
+			}
 			const newPath = await invoke<string>('get_path_handbook')
 			setPathHandbook(newPath)
 			const listCategory = await invoke<string[]>('get_category')
@@ -322,7 +342,6 @@ const Search: React.FC<SearchProps> = ({ loadGI, loadSR, currentLanguage, state,
 				title: 'Path updated',
 				description: 'Path updated successfully',
 			})
-			setPathHandbook(newPath)
 		} catch (error) {
 			toast({
 				title: 'Error',
