@@ -1,0 +1,26 @@
+{
+    "toast": {
+        "copied": "Đã sao chép!",
+        "command_copied": "Đã sao chép lệnh vào bộ nhớ tạm.",
+        "success": "Thành công",
+        "command_applied": "Đã áp dụng lệnh.",
+        "error": {
+            "title": "Lỗi",
+            "description": "Không thể tải lệnh. Vui lòng thử lại."
+        }
+    },
+    "title": "Danh sách lệnh",
+    "search_placeholder": "Tìm kiếm lệnh...",
+    "copy_command": "Sao chép lệnh",
+    "apply_command": "Áp dụng lệnh",
+    "arguments": {
+        "show": "Hiện tham số",
+        "hide": "Ẩn tham số"
+    },
+    "dialog": {
+        "title": "Vui lòng thiết lập UID, Máy chủ và Mã của bạn",
+        "description": "Vui lòng thiết lập UID, Máy chủ và Mã của bạn trong trang cài đặt.",
+        "close": "Đóng",
+        "go_to_settings": "Đi tới Cài đặt"
+    }
+}

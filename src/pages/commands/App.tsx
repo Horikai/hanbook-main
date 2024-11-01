@@ -1,11 +1,10 @@
 import YuukiPS from '@/api/yuukips'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
 import { Suspense, lazy } from 'react'
 import axios from 'axios'
-import { AlertTriangle, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { Input } from '@/components/ui/input'
 import { useCookies } from 'react-cookie'
@@ -18,6 +17,7 @@ import {
 	DialogDescription,
 } from '@/components/ui/dialog'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Option for select type argument
@@ -156,18 +156,19 @@ export default function App() {
 	const [cookies] = useCookies(['uid', 'server', 'code'])
 	const navigate = useNavigate()
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
+	const { t } = useTranslation()
 
 	const copyToClipboard = useCallback(
 		(text: string) => {
 			const command = YuukiPS.generateResultCommand(text, {})
 			navigator.clipboard.writeText(command).then(() => {
 				toast({
-					title: 'Copied!',
-					description: 'Command copied to clipboard.',
+					title: t('toast.copied'),
+					description: t('toast.command_copied'),
 				})
 			})
 		},
-		[toast]
+		[toast, t]
 	)
 
 	useEffect(() => {
@@ -175,11 +176,11 @@ export default function App() {
 		setYuukips(yuukips)
 		yuukips.getResponseCommand((response) => {
 			toast({
-				title: 'Success',
+				title: t('toast.success'),
 				description: response.message,
 			})
 		})
-	}, [toast])
+	}, [toast, t])
 
 	const applyCommand = useCallback(
 		(command: string) => {
@@ -190,11 +191,11 @@ export default function App() {
 			const resultCommand = YuukiPS.generateResultCommand(command, {})
 			yuukips?.sendCommand(cookies.uid, cookies.code, cookies.server, resultCommand)
 			toast({
-				title: 'Success',
-				description: 'Command applied.',
+				title: t('toast.success'),
+				description: t('toast.command_applied'),
 			})
 		},
-		[cookies, toast, yuukips]
+		[cookies, toast, yuukips, t]
 	)
 
 	const toggleArgsVisibility = useCallback((commandId: number) => {
@@ -288,8 +289,8 @@ export default function App() {
 			} catch (error) {
 				console.error('Failed to fetch commands:', error)
 				toast({
-					title: 'Error',
-					description: 'Failed to fetch commands. Please try again.',
+					title: t('toast.error.title'),
+					description: t('toast.error.description'),
 					variant: 'destructive',
 				})
 			} finally {
@@ -297,30 +298,20 @@ export default function App() {
 			}
 		}
 		fetchCommands()
-	}, [toast, activeTab])
+	}, [toast, activeTab, t])
 
 	return (
 		<div className='container mx-auto p-4'>
-			<Alert variant='default' className='mb-6'>
-				<AlertTriangle className='h-4 w-4' />
-				<AlertTitle>Work in Progress</AlertTitle>
-				<AlertDescription>
-					This feature is currently under development. Expect bugs or errors to occur. The UI and current
-					functionality may change in the future as we continue to work on it. This is just a preview of what
-					we are working on.
-				</AlertDescription>
-			</Alert>
-
 			<Suspense fallback={<Loader2 className='w-8 h-8 animate-spin text-gray-400 dark:text-gray-500' />}>
 				<Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
 			</Suspense>
 
 			<Card className='mb-6'>
 				<CardHeader>
-					<CardTitle>Command List</CardTitle>
+					<CardTitle>{t('title')}</CardTitle>
 					<Input
 						type='text'
-						placeholder='Search commands...'
+						placeholder={t('search_placeholder')}
 						value={searchQuery}
 						onChange={(e) => setSearchQuery(e.target.value)}
 						className='w-full'
@@ -352,7 +343,7 @@ export default function App() {
 											className='w-full rounded-r-none'
 											onClick={() => copyToClipboard(getUpdatedCommand(cmd))}
 										>
-											Copy Command
+											{t('copy_command')}
 										</Button>
 										<Button
 											variant='secondary'
@@ -360,7 +351,7 @@ export default function App() {
 											className='w-full rounded-l-none'
 											onClick={() => applyCommand(getUpdatedCommand(cmd))}
 										>
-											Apply Command
+											{t('apply_command')}
 										</Button>
 									</div>
 									{cmd.args && cmd.args.length > 0 && (
@@ -369,7 +360,7 @@ export default function App() {
 											className='w-full'
 											onClick={() => toggleArgsVisibility(cmd.id)}
 										>
-											{visibleArgs[cmd.id] ? 'Hide' : 'Show'} Arguments
+											{visibleArgs[cmd.id] ? t('arguments.hide') : t('arguments.show')}
 										</Button>
 									)}
 									{visibleArgs[cmd.id] && (
@@ -406,14 +397,14 @@ export default function App() {
 			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 				<DialogContent>
 					<DialogHeader>
-						<DialogTitle>Please set your UID, Server, and Code</DialogTitle>
+						<DialogTitle>{t('dialog.title')}</DialogTitle>
 					</DialogHeader>
 					<DialogDescription>
-						<p>Please set your UID, Server, and Code in the settings page.</p>
+						<p>{t('dialog.description')}</p>
 					</DialogDescription>
 					<DialogFooter>
 						<Button variant={'outline'} onClick={() => setIsDialogOpen(false)}>
-							Close
+							{t('dialog.close')}
 						</Button>
 						<Button
 							variant={'outline'}
@@ -423,7 +414,7 @@ export default function App() {
 								window.location.reload()
 							}}
 						>
-							Go to Settings
+							{t('dialog.go_to_settings')}
 						</Button>
 					</DialogFooter>
 				</DialogContent>

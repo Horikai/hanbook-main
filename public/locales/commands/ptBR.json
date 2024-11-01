@@ -1,0 +1,26 @@
+{
+    "toast": {
+        "copied": "Copiado!",
+        "command_copied": "Comando copiado para área de transferência.",
+        "success": "Sucesso",
+        "command_applied": "Comando aplicado.",
+        "error": {
+            "title": "Erro",
+            "description": "Falha ao buscar comandos. Por favor, tente novamente."
+        }
+    },
+    "title": "Lista de Comandos",
+    "search_placeholder": "Pesquisar comandos...",
+    "copy_command": "Copiar Comando",
+    "apply_command": "Aplicar Comando",
+    "arguments": {
+        "show": "Mostrar Argumentos",
+        "hide": "Ocultar Argumentos"
+    },
+    "dialog": {
+        "title": "Por favor, defina seu UID, Servidor e Código",
+        "description": "Por favor, defina seu UID, Servidor e Código na página de configurações.",
+        "close": "Fechar",
+        "go_to_settings": "Ir para Configurações"
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "toast": {
+        "copied": "Copied!",
+        "command_copied": "Command copied to clipboard.",
+        "success": "Success",
+        "command_applied": "Command applied.",
+        "error": {
+            "title": "Error",
+            "description": "Failed to fetch commands. Please try again."
+        }
+    },
+    "title": "Command List",
+    "search_placeholder": "Search commands...",
+    "copy_command": "Copy Command",
+    "apply_command": "Apply Command",
+    "arguments": {
+        "show": "Show Arguments",
+        "hide": "Hide Arguments"
+    },
+    "dialog": {
+        "title": "Please set your UID, Server, and Code",
+        "description": "Please set your UID, Server, and Code in the settings page.",
+        "close": "Close",
+        "go_to_settings": "Go to Settings"
+    }
+}

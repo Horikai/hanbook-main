@@ -1,0 +1,26 @@
+{
+    "toast": {
+        "copied": "已复制！",
+        "command_copied": "命令已复制到剪贴板。",
+        "success": "成功",
+        "command_applied": "命令已应用。",
+        "error": {
+            "title": "错误",
+            "description": "获取命令失败。请重试。"
+        }
+    },
+    "title": "命令列表",
+    "search_placeholder": "搜索命令...",
+    "copy_command": "复制命令",
+    "apply_command": "应用命令",
+    "arguments": {
+        "show": "显示参数",
+        "hide": "隐藏参数"
+    },
+    "dialog": {
+        "title": "请设置您的UID、服务器和代码",
+        "description": "请在设置页面中设置您的UID、服务器和代码。",
+        "close": "关闭",
+        "go_to_settings": "前往设置"
+    }
+}

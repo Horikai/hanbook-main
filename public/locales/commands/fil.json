@@ -1,0 +1,26 @@
+{
+    "toast": {
+        "copied": "Nakopya na!",
+        "command_copied": "Nakopya na ang command sa clipboard.",
+        "success": "Matagumpay",
+        "command_applied": "Nai-apply na ang command.",
+        "error": {
+            "title": "May Error",
+            "description": "Hindi makuha ang mga command. Pakisubukan muli."
+        }
+    },
+    "title": "Listahan ng mga Command",
+    "search_placeholder": "Maghanap ng mga command...",
+    "copy_command": "Kopyahin ang Command",
+    "apply_command": "I-apply ang Command",
+    "arguments": {
+        "show": "Ipakita ang mga Argumento",
+        "hide": "Itago ang mga Argumento"
+    },
+    "dialog": {
+        "title": "Mangyaring i-set ang iyong UID, Server, at Code",
+        "description": "Mangyaring i-set ang iyong UID, Server, at Code sa settings page.",
+        "close": "Isara",
+        "go_to_settings": "Pumunta sa Settings"
+    }
+}

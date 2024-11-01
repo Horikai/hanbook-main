@@ -1,0 +1,26 @@
+{
+    "toast": {
+        "copied": "Tersalin!",
+        "command_copied": "Perintah telah disalin ke clipboard.",
+        "success": "Berhasil",
+        "command_applied": "Perintah telah diterapkan.",
+        "error": {
+            "title": "Kesalahan",
+            "description": "Gagal mengambil daftar perintah. Silakan coba lagi."
+        }
+    },
+    "title": "Daftar Perintah",
+    "search_placeholder": "Cari perintah...",
+    "copy_command": "Salin Perintah",
+    "apply_command": "Terapkan Perintah",
+    "arguments": {
+        "show": "Tampilkan Argumen",
+        "hide": "Sembunyikan Argumen"
+    },
+    "dialog": {
+        "title": "Harap atur UID, Server, dan Kode Anda",
+        "description": "Harap atur UID, Server, dan Kode Anda di halaman pengaturan.",
+        "close": "Tutup",
+        "go_to_settings": "Pergi ke Pengaturan"
+    }
+}

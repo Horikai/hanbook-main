@@ -1,0 +1,26 @@
+{
+    "toast": {
+        "copied": "コピーしました！",
+        "command_copied": "コマンドをクリップボードにコピーしました。",
+        "success": "成功",
+        "command_applied": "コマンドを適用しました。",
+        "error": {
+            "title": "エラー",
+            "description": "コマンドの取得に失敗しました。もう一度お試しください。"
+        }
+    },
+    "title": "コマンド一覧",
+    "search_placeholder": "コマンドを検索...",
+    "copy_command": "コマンドをコピー",
+    "apply_command": "コマンドを適用",
+    "arguments": {
+        "show": "引数を表示",
+        "hide": "引数を非表示"
+    },
+    "dialog": {
+        "title": "UID、サーバー、コードを設定してください",
+        "description": "設定ページでUID、サーバー、コードを設定してください。",
+        "close": "閉じる",
+        "go_to_settings": "設定へ移動"
+    }
+}
