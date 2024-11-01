@@ -382,19 +382,6 @@ const App = () => {
 	const renderArtifactDetails = () => {
 		if (!formData.artifactDetails) return null
 
-		const getRarityClass = (rarity?: number) => {
-			switch (rarity) {
-				case 5:
-					return 'bg-rarityFive'
-				case 4:
-					return 'bg-rarityFour'
-				case 3:
-					return 'bg-rarityThree'
-				default:
-					return
-			}
-		}
-
 		return (
 			<Card className={`${getRarityClass(formData.artifactDetails.rarity)} bg-opacity-10`}>
 				<CardHeader className='flex flex-row items-center gap-4'>
