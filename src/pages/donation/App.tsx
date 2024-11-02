@@ -58,7 +58,7 @@ function App() {
 								<p className='mb-4 flex-grow'>{t('saweriaDescription')}</p>
 								<Button
 									className='w-full mt-auto'
-									onClick={() => window.open('https://saweria.co/ElaXan', '_blank')}
+									onClick={() => window.open('https://saweria.co/ElashXander', '_blank')}
 								>
 									{t('saweriaButton')}
 								</Button>
