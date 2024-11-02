@@ -54,6 +54,7 @@
             "gc": "GC",
             "gio": "GIO"
         },
+        "show_the_relics": "Hiển thị Các Relic",
         "level_stage": "Cấp độ {{level}}",
         "show_the_commands": "Hiển thị Các Lệnh",
         "next_mission": "Nhiệm vụ tiếp theo: {{id}}",

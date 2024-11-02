@@ -3,7 +3,7 @@
 export interface Hsr {
     status: number;
     message: string;
-    data: Datum[];
+    data: Data[];
 }
 
 export enum MainMissionType {
@@ -14,7 +14,7 @@ export enum MainMissionType {
     Main = "Main",
 }
 
-export interface Datum {
+export interface Data {
     id: number;
     name: NameClass;
     image: ImageClass | string | undefined;
@@ -22,8 +22,9 @@ export interface Datum {
     baseType?: string;
     damageType?: string;
     description: NameClass | undefined;
-    command: Command;
+    command?: Command;
     category: string;
+    list?: ListRelicItem[];
     nextMission: number | undefined;
     type: MainMissionType | undefined;
     level?: number;
@@ -56,4 +57,12 @@ export interface NameClass {
     chs: string;
     cht: string;
     fr: string;
+}
+
+export interface ListRelicItem {
+    id: number;
+    name: NameClass;
+    image?: string | ImageClass;
+    rarity: number;
+    command: Command;
 }

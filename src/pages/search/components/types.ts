@@ -1,12 +1,12 @@
 import type YuukiPS from "@/api/yuukips";
 import type { GmhandbookGI } from "@/types/gm";
-import type { Datum } from "@/types/hsr";
+import type { Data } from "@/types/hsr";
 
 export type CurrentType = "Genshin Impact" | "Star Rail";
 
 export interface State {
     mainData: GmhandbookGI[];
-    mainDataSR: Datum[];
+    mainDataSR: Data[];
     searchTerm: string;
     searchInputValue: string;
     loading: boolean;

@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 import { LoadingContainer } from '@/components/ui/loading'
-import type { Command, Datum, ImageClass } from '@/types/hsr'
+import type { Command, Data, ImageClass, ListRelicItem } from '@/types/hsr'
 import { isTauri } from '@tauri-apps/api/core'
 import { writeText } from '@tauri-apps/plugin-clipboard-manager'
 import type React from 'react'
@@ -48,7 +48,7 @@ const getImageSrc = (image: string | ImageClass): string => {
 }
 
 const ImageComponent: React.FC<{
-	item: Datum
+	item: Data
 	currentLanguage: DataCardSRProps['currentLanguage']
 }> = memo(({ item, currentLanguage }) => {
 	const imageSrc = getImageSrc(item.image || '')
@@ -114,6 +114,95 @@ const CommandSection = memo(
 			))}
 		</div>
 	)
+)
+
+const RelicListSection = memo(
+	({
+		list,
+		currentLanguage,
+		handleButtonCopy,
+		handleApplyCommand,
+		handleCommandCopy,
+		showCommand,
+	}: {
+		list: ListRelicItem[]
+		currentLanguage: DataCardSRProps['currentLanguage']
+		handleButtonCopy: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+		handleApplyCommand: (value: string) => void
+		handleCommandCopy: (command: string) => void
+		showCommand: boolean
+	}) => {
+		const [showCommands, setShowCommands] = useState<{ [key: number]: boolean }>({})
+		const { t } = useTranslation('translation', { keyPrefix: 'card' })
+
+		const toggleShowCommand = (id: number) => {
+			setShowCommands((prev) => ({
+				...prev,
+				[id]: !prev[id],
+			}))
+		}
+
+		return (
+			<div className='mt-4'>
+				<h2 className='mb-3 text-xl font-semibold text-gray-700 dark:text-gray-300'>{t('relic_items')}</h2>
+				<div className='space-y-4'>
+					{list.map((relic) => (
+						<div key={relic.id} className='rounded-lg bg-slate-200 p-4 dark:bg-slate-700'>
+							<div className='flex items-start space-x-4'>
+								{relic.image && (
+									<div className='flex-shrink-0'>
+										<LazyLoadImage
+											src={getImageSrc(relic.image)}
+											alt={relic.name[currentLanguage] || ''}
+											className={`w-20 rounded-lg ${convertNumberToText(relic.rarity)}`}
+											effect='opacity'
+											onError={(e) => {
+												e.currentTarget.style.display = 'none'
+											}}
+										/>
+									</div>
+								)}
+								<div className='flex-grow'>
+									<div className='flex items-center'>
+										<FaStar className='text-yellow-500' />
+										<p className='ml-2 font-bold text-yellow-500'>{relic.rarity}</p>
+									</div>
+									<p className='text-gray-500 dark:text-gray-400'>{relic.id}</p>
+									<h3 className='text-lg font-semibold text-gray-700 dark:text-gray-300'>
+										{relic.name[currentLanguage.toLowerCase() as keyof typeof relic.name] || ''}
+									</h3>
+									<div className='mt-2 flex justify-between'>
+										<Button
+											className='rounded-lg bg-blue-600 px-3 py-1 text-sm text-white transition duration-300 hover:bg-blue-700'
+											value={`${relic.name[currentLanguage] || ''} || ${relic.id}`}
+											onClick={handleButtonCopy}
+										>
+											{t('button.copy_id')}
+										</Button>
+										<Button
+											className='rounded-lg bg-gray-600 px-3 py-1 text-sm text-white transition duration-300 hover:bg-gray-700'
+											onClick={() => toggleShowCommand(relic.id)}
+										>
+											{t('show_the_commands')}
+										</Button>
+									</div>
+								</div>
+							</div>
+							<div className='mt-3'>
+								{showCommands[relic.id] && showCommand && relic.command && (
+									<CommandSection
+										data={relic.command}
+										handleApplyCommand={handleApplyCommand}
+										handleCommandCopy={handleCommandCopy}
+									/>
+								)}
+							</div>
+						</div>
+					))}
+				</div>
+			</div>
+		)
+	}
 )
 
 const DataCardSR: React.FC<DataCardSRProps> = ({ currentLanguage, code, server, uid, setStateApp, stateApp }) => {
@@ -290,7 +379,7 @@ const DataCardSR: React.FC<DataCardSRProps> = ({ currentLanguage, code, server, 
 								</div>
 							</div>
 						</div>
-						{stateApp.showCommandsSR && (
+						{stateApp.showCommandsSR && item.command && (
 							<div className='mt-4 rounded-lg bg-slate-300 p-4 dark:bg-slate-800'>
 								<Suspense fallback={<LoadingContainer className='h-20' />}>
 									<Collapse title={t('show_the_commands')} className='w-full'>
@@ -307,6 +396,22 @@ const DataCardSR: React.FC<DataCardSRProps> = ({ currentLanguage, code, server, 
 												/>
 											</CardContent>
 										</Card>
+									</Collapse>
+								</Suspense>
+							</div>
+						)}
+						{item.list && item.list.length > 0 && (
+							<div className='mt-4 rounded-lg bg-slate-300 p-4 dark:bg-slate-800'>
+								<Suspense fallback={<LoadingContainer className='h-20' />}>
+									<Collapse title={t('show_the_relics')} className='w-full'>
+										<RelicListSection
+											list={item.list}
+											currentLanguage={currentLanguage}
+											handleButtonCopy={handleButtonCopy}
+											handleApplyCommand={handleApplyCommand}
+											handleCommandCopy={handleCommandCopy}
+											showCommand={stateApp.showCommandsSR}
+										/>
 									</Collapse>
 								</Suspense>
 							</div>

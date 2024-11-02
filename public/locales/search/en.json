@@ -54,6 +54,8 @@
 			"gc": "GC",
 			"gio": "GIO"
 		},
+		"show_the_relics": "Show The Relics",
+		"relic_items": "Relic Items",
 		"level_stage": "Level {{level}}",
 		"show_the_commands": "Show The Commands",
 		"next_mission": "Next mission: {{id}}",

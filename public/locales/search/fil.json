@@ -54,6 +54,7 @@
             "gc": "GC",
             "gio": "GIO"
         },
+        "show_the_relics": "Ipakita ang Mga Relikaryo",
         "level_stage": "Antas {{level}}",
         "show_the_commands": "Ipakita ang Mga Command",
         "next_mission": "Susunod na misyon: {{id}}",
