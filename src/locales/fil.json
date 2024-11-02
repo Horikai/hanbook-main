@@ -11,6 +11,7 @@
         "button_home": "Pumunta sa Home"
     },
     "drawer": {
+        "home": "Home",
         "search_id": "Maghanap ng ID",
         "commands": "Mga Utos",
         "artifacts": "Mga Artifacto",

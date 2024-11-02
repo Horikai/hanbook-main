@@ -1,0 +1,33 @@
+{
+    "title": "Sổ Tay Tra Cứu",
+    "description": "Người bạn đồng hành đắc lực giúp bạn tìm ID và thực thi lệnh trong game",
+    "features": {
+        "title": "Tính Năng",
+        "access": "Truy Cập",
+        "search": {
+            "title": "Tìm Vật Phẩm",
+            "description": "Tìm kiếm vật phẩm, nhân vật, vũ khí và nhiều thứ khác cùng với ID và lệnh tương ứng"
+        },
+        "commands": {
+            "title": "Lệnh Game",
+            "description": "Duyệt và thực thi các lệnh để chỉnh sửa nhân vật, thế giới và người chơi"
+        },
+        "artifacts": {
+            "title": "Tạo Thánh Di Vật",
+            "description": "Tạo thánh di vật hoàn hảo với chỉ số và cấp độ tùy chỉnh cho nhân vật của bạn"
+        },
+        "player_settings": {
+            "title": "Quản Lý Tài Khoản",
+            "description": "Liên kết và quản lý tài khoản YuukiPS để kích hoạt lệnh và tính năng"
+        }
+    },
+    "donation": {
+        "title": "Ủng Hộ Dự Án",
+        "description": "Hãy giúp chúng tôi duy trì và cải thiện Sổ Tay Tra Cứu bằng cách đóng góp hoặc ủng hộ nhé."
+    },
+    "open_source": {
+        "title": "Dự Án Mã Nguồn Mở",
+        "description": "Đây là một dự án mã nguồn mở. Hãy thoải mái đóng góp, báo lỗi, hoặc đề xuất cải tiến trên kho GitHub của chúng tôi nhé.",
+        "button": "Xem trên GitHub"
+    }
+}

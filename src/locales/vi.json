@@ -11,6 +11,7 @@
         "button_home": "Về trang chủ"
     },
     "drawer": {
+        "home": "Trang chủ",
         "search_id": "Tìm kiếm ID",
         "commands": "Lệnh",
         "artifacts": "Artifact Custom",

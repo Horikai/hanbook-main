@@ -11,6 +11,7 @@
 		"button_home": "ホームに移動"
 	},
 	"drawer": {
+		"home": "ホーム",
 		"search_id": "ID検索",
 		"commands": "コマンド",
 		"artifacts": "カスタムアーティファクト",

@@ -1,0 +1,33 @@
+{
+    "title": "Handbook Finder",
+    "description": "Your comprehensive companion for finding game IDs and executing commands",
+    "features": {
+        "title": "Features",
+        "access": "Access",
+        "search": {
+            "title": "Find Game Items",
+            "description": "Search for items, characters, weapons and more with their IDs and commands"
+        },
+        "commands": {
+            "title": "Game Commands",
+            "description": "Browse and execute commands for character, world, and player modifications"
+        },
+        "artifacts": {
+            "title": "Artifact Generator",
+            "description": "Create perfect artifacts with custom stats and levels for your characters"
+        },
+        "player_settings": {
+            "title": "Account Manager",
+            "description": "Link and manage your YuukiPS account to enable commands and features"
+        }
+    },
+    "donation": {
+        "title": "Support Our Project",
+        "description": "Help us maintain and improve Handbook Finder by contributing or donating."
+    },
+    "open_source": {
+        "title": "Open Source Project",
+        "description": "This project is open source. Feel free to contribute, report issues, or suggest improvements on our GitHub repository.",
+        "button": "View on GitHub"
+    }
+}

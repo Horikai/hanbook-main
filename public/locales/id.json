@@ -1,0 +1,33 @@
+{
+    "title": "Pencari Handbook",
+    "description": "Teman setia kamu untuk mencari ID game dan menjalankan perintah",
+    "features": {
+        "title": "Fitur-Fitur",
+        "access": "Akses",
+        "search": {
+            "title": "Cari Item Game",
+            "description": "Cari item, karakter, senjata dan lainnya dengan ID dan perintahnya"
+        },
+        "commands": {
+            "title": "Perintah Game",
+            "description": "Jelajahi dan jalankan perintah untuk modifikasi karakter, dunia, dan pemain"
+        },
+        "artifacts": {
+            "title": "Pembuat Artifact",
+            "description": "Bikin artifact sempurna dengan stat dan level yang bisa kamu atur sendiri"
+        },
+        "player_settings": {
+            "title": "Pengaturan Akun",
+            "description": "Hubungkan dan atur akun YuukiPS kamu untuk menggunakan perintah dan fitur"
+        }
+    },
+    "donation": {
+        "title": "Dukung Proyek Kami",
+        "description": "Bantu kami merawat dan mengembangkan Handbook Finder dengan kontribusi atau donasi kamu."
+    },
+    "open_source": {
+        "title": "Proyek Open Source",
+        "description": "Proyek ini bersifat open source. Silakan berkontribusi, laporkan masalah, atau berikan saran di repositori GitHub kami.",
+        "button": "Lihat di GitHub"
+    }
+}

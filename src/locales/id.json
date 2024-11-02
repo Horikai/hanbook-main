@@ -11,6 +11,7 @@
 		"button_home": "Ke Beranda"
 	},
 	"drawer": {
+		"home": "Beranda",
 		"search_id": "Cari ID",
 		"commands": "Perintah",
 		"artifacts": "Artifact Custom",

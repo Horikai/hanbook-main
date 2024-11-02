@@ -1,0 +1,33 @@
+{
+    "title": "Handbook Finder",
+    "description": "Ang iyong katulong sa paghahanap ng mga game ID at paggamit ng mga command",
+    "features": {
+        "title": "Mga Feature",
+        "access": "Buksan",
+        "search": {
+            "title": "Maghanap ng mga Gamit sa Laro",
+            "description": "Maghanap ng mga item, karakter, sandata at iba pa kasama ang kanilang mga ID at command"
+        },
+        "commands": {
+            "title": "Mga Command sa Laro",
+            "description": "Mag-browse at gumamit ng mga command para sa karakter, mundo, at mga pagbabago sa player"
+        },
+        "artifacts": {
+            "title": "Artifact Generator",
+            "description": "Gumawa ng perpektong artifact na may custom na stats at level para sa iyong mga karakter"
+        },
+        "player_settings": {
+            "title": "Account Manager",
+            "description": "I-connect at i-manage ang iyong YuukiPS account para magamit ang mga command at feature"
+        }
+    },
+    "donation": {
+        "title": "Suportahan ang Aming Proyekto",
+        "description": "Tulungan kaming panatilihin at pagandahin pa ang Handbook Finder sa pamamagitan ng pag-ambag o pagdo-donate."
+    },
+    "open_source": {
+        "title": "Open Source na Proyekto",
+        "description": "Ang proyektong ito ay open source. Malaya kang mag-ambag, mag-report ng mga issue, o magmungkahi ng mga pagpapabuti sa aming GitHub repository.",
+        "button": "Tingnan sa GitHub"
+    }
+}

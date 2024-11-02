@@ -1,0 +1,33 @@
+{
+    "title": "Localizador de Manual",
+    "description": "Seu companheiro completo para encontrar IDs do jogo e executar comandos",
+    "features": {
+        "title": "Recursos",
+        "access": "Acessar",
+        "search": {
+            "title": "Encontrar Itens do Jogo",
+            "description": "Procure por itens, personagens, armas e mais com seus IDs e comandos"
+        },
+        "commands": {
+            "title": "Comandos do Jogo",
+            "description": "Navegue e execute comandos para modificações de personagem, mundo e jogador"
+        },
+        "artifacts": {
+            "title": "Gerador de Artefatos",
+            "description": "Crie artefatos perfeitos com estatísticas e níveis personalizados para seus personagens"
+        },
+        "player_settings": {
+            "title": "Gerenciador de Conta",
+            "description": "Vincule e gerencie sua conta YuukiPS para ativar comandos e recursos"
+        }
+    },
+    "donation": {
+        "title": "Apoie Nosso Projeto",
+        "description": "Ajude a gente a manter e melhorar o Localizador de Manual contribuindo ou doando."
+    },
+    "open_source": {
+        "title": "Projeto de Código Aberto",
+        "description": "Este projeto é de código aberto. Fique à vontade para contribuir, reportar problemas ou sugerir melhorias no nosso repositório do GitHub.",
+        "button": "Ver no GitHub"
+    }
+}

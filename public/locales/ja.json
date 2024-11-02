@@ -1,0 +1,33 @@
+{
+    "title": "ハンドブックファインダー",
+    "description": "ゲームIDやコマンドを簡単に見つけられる便利なツール",
+    "features": {
+        "title": "機能一覧",
+        "access": "アクセス",
+        "search": {
+            "title": "アイテム検索",
+            "description": "アイテム、キャラクター、武器などのIDとコマンドを検索できます"
+        },
+        "commands": {
+            "title": "ゲームコマンド",
+            "description": "キャラクター、ワールド、プレイヤーの設定を変更するコマンドを実行できます"
+        },
+        "artifacts": {
+            "title": "聖遺物ジェネレーター",
+            "description": "キャラクター用の理想的な聖遺物をステータスとレベルを指定して作成できます"
+        },
+        "player_settings": {
+            "title": "アカウント管理",
+            "description": "YuukiPSアカウントを連携して、各種コマンドや機能を利用できます"
+        }
+    },
+    "donation": {
+        "title": "プロジェクトを支援する",
+        "description": "ハンドブックファインダーの開発・運営を支援していただけると嬉しいです"
+    },
+    "open_source": {
+        "title": "オープンソースプロジェクト",
+        "description": "このプロジェクトはオープンソースで開発されています。GitHubで機能改善や不具合の報告にご協力ください",
+        "button": "GitHubで見る"
+    }
+}

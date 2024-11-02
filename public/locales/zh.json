@@ -1,0 +1,33 @@
+{
+    "title": "游戏指南工具",
+    "description": "你的游戏ID查询和指令执行的得力助手",
+    "features": {
+        "title": "功能特色",
+        "access": "访问权限",
+        "search": {
+            "title": "游戏物品查询",
+            "description": "轻松搜索物品、角色、武器等的ID和指令"
+        },
+        "commands": {
+            "title": "游戏指令",
+            "description": "浏览和使用角色、世界和玩家修改指令"
+        },
+        "artifacts": {
+            "title": "圣遗物生成器",
+            "description": "为你的角色生成完美属性和等级的圣遗物"
+        },
+        "player_settings": {
+            "title": "账号管理",
+            "description": "关联并管理你的YuukiPS账号以启用指令和功能"
+        }
+    },
+    "donation": {
+        "title": "支持我们",
+        "description": "通过捐赠或贡献来帮助我们维护和改进游戏指南工具"
+    },
+    "open_source": {
+        "title": "开源项目",
+        "description": "这是一个开源项目，欢迎在我们的GitHub仓库提交贡献、反馈问题或提出建议",
+        "button": "查看GitHub"
+    }
+}

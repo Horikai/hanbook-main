@@ -11,6 +11,7 @@
         "button_home": "Início/Home"
     },
     "drawer": {
+        "home": "Início/Home",
         "search_id": "ID de pesquisa",
         "commands": "Comandos",
         "artifacts": "Artifactos Customizados",

@@ -11,6 +11,7 @@
 		"button_home": "На главную"
 	},
 	"drawer": {
+		"home": "Главная",
 		"search_id": "Поиск ID",
 		"commands": "Команды",
 		"artifacts": "Кастомные артефакты",
