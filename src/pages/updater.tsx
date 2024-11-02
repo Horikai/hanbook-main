@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { useToast } from '@/components/ui/use-toast'
-import expiresInAMonth from '@/pages/index/components/cookieExpires'
+import expiresInAMonth from '@/pages/search/components/cookieExpires'
 import { isTauri } from '@tauri-apps/api/core'
 import { type Update, check } from '@tauri-apps/plugin-updater'
 import { AnimatePresence, motion } from 'framer-motion'
