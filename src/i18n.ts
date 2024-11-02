@@ -15,6 +15,9 @@ const getLoadPath = (): string => {
     if (path.startsWith("/donation")) {
         return "/locales/donation/{{lng}}.json";
     }
+    if (path.startsWith("/search")) {
+        return "/locales/search/{{lng}}.json";
+    }
     return "/locales/{{lng}}.json";
 };
 
