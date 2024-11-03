@@ -21,7 +21,6 @@ import {
 	SunMoonIcon,
 	UserIcon,
 	BookIcon,
-	HomeIcon,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import ErrorHandling from './error'
@@ -65,7 +64,6 @@ const Drawer: React.FC<DrawerProps> = memo(({ children }) => {
 	const currentTheme = theme === 'system' ? systemTheme : theme
 
 	const navItems = [
-		{ href: '/', icon: HomeIcon, label: 'home' },
 		{ href: '/search', icon: SearchIcon, label: 'search_id' },
 		{ href: '/commands', icon: CommandIcon, label: 'commands' },
 		{ href: '/artifacts', icon: BookIcon, label: 'artifacts' },
