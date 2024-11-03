@@ -93,18 +93,18 @@ const CommandSection = memo(
 		handleApplyCommand: (value: string) => void
 		handleCommandCopy: (command: string) => void
 	}) => (
-		<div className='rounded-box border-base-300 p-6'>
+		<div className='rounded-box border-base-300 p-3 sm:p-6'>
 			{Object.entries(data).map(([key, value]: [string, Command[keyof Command]]) => (
 				<div key={key}>
-					<h3 className='font-bold'>{value?.name}</h3>
+					<h3 className='text-sm sm:text-base font-bold'>{value?.name}</h3>
 					<div className='mt-2 flex items-center justify-between rounded-lg bg-gray-300 p-2 dark:bg-gray-700'>
 						<div className='group flex w-full items-center justify-between'>
-							<code>{value?.value}</code>
-							<div className='flex items-center'>
-								<div className='mr-2 cursor-pointer rounded-lg border-2 border-gray-600 p-2 transition-opacity duration-300 group-hover:opacity-100 md:opacity-0 lg:opacity-0'>
+							<code className='text-xs sm:text-sm break-all sm:break-normal'>{value?.value}</code>
+							<div className='flex items-center ml-2'>
+								<div className='mr-2 cursor-pointer rounded-lg border-2 border-gray-600 p-1 sm:p-2'>
 									<RiSlashCommands2 onClick={() => handleApplyCommand(value?.value || '')} />
 								</div>
-								<div className='cursor-pointer rounded-lg border-2 border-gray-600 p-2 transition-opacity duration-300 group-hover:opacity-100 md:opacity-0 lg:opacity-0'>
+								<div className='cursor-pointer rounded-lg border-2 border-gray-600 p-1 sm:p-2'>
 									<MdOutlineContentCopy onClick={() => handleCommandCopy(value?.value || '')} />
 								</div>
 							</div>
@@ -147,14 +147,14 @@ const RelicListSection = memo(
 				<h2 className='mb-3 text-xl font-semibold text-gray-700 dark:text-gray-300'>{t('relic_items')}</h2>
 				<div className='space-y-4'>
 					{list.map((relic) => (
-						<div key={relic.id} className='rounded-lg bg-slate-200 p-4 dark:bg-slate-700'>
-							<div className='flex items-start space-x-4'>
+						<div key={relic.id} className='rounded-lg bg-slate-200 p-3 sm:p-4 dark:bg-slate-700'>
+							<div className='flex flex-col sm:flex-row sm:items-start sm:space-x-4'>
 								{relic.image && (
-									<div className='flex-shrink-0'>
+									<div className='mb-3 sm:mb-0 flex-shrink-0'>
 										<LazyLoadImage
 											src={getImageSrc(relic.image)}
 											alt={relic.name[currentLanguage] || ''}
-											className={`w-20 rounded-lg ${convertNumberToText(relic.rarity)}`}
+											className={`w-full sm:w-20 rounded-lg ${convertNumberToText(relic.rarity)}`}
 											effect='opacity'
 											onError={(e) => {
 												e.currentTarget.style.display = 'none'
@@ -167,20 +167,20 @@ const RelicListSection = memo(
 										<FaStar className='text-yellow-500' />
 										<p className='ml-2 font-bold text-yellow-500'>{relic.rarity}</p>
 									</div>
-									<p className='text-gray-500 dark:text-gray-400'>{relic.id}</p>
-									<h3 className='text-lg font-semibold text-gray-700 dark:text-gray-300'>
+									<p className='text-sm sm:text-base text-gray-500 dark:text-gray-400'>{relic.id}</p>
+									<h3 className='text-base sm:text-lg font-semibold text-gray-700 dark:text-gray-300'>
 										{relic.name[currentLanguage.toLowerCase() as keyof typeof relic.name] || ''}
 									</h3>
-									<div className='mt-2 flex justify-between'>
+									<div className='mt-2 flex flex-col sm:flex-row gap-2 sm:justify-between'>
 										<Button
-											className='rounded-lg bg-blue-600 px-3 py-1 text-sm text-white transition duration-300 hover:bg-blue-700'
+											className='w-full sm:w-auto rounded-lg bg-blue-600 px-3 py-1 text-sm text-white transition duration-300 hover:bg-blue-700'
 											value={`${relic.name[currentLanguage] || ''} || ${relic.id}`}
 											onClick={handleButtonCopy}
 										>
 											{t('button.copy_id')}
 										</Button>
 										<Button
-											className='rounded-lg bg-gray-600 px-3 py-1 text-sm text-white transition duration-300 hover:bg-gray-700'
+											className='w-full sm:w-auto rounded-lg bg-gray-600 px-3 py-1 text-sm text-white transition duration-300 hover:bg-gray-700'
 											onClick={() => toggleShowCommand(relic.id)}
 										>
 											{t('show_the_commands')}
