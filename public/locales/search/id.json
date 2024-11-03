@@ -55,6 +55,7 @@
 			"gio": "GIO"
 		},
 		"show_the_relics": "Tampilkan Relik",
+		"relic_items": "Relik",
 		"level_stage": "Tingkat {{level}}",
 		"show_the_commands": "Tampilkan Perintah",
 		"next_mission": "Misi selanjutnya: {{id}}",

@@ -55,7 +55,8 @@
 			"gio": "GIO"
 		},
 		"show_the_relics": "レリックを表示",
-		"level_stage": "レベル {{level}}",
+		"relic_items": "レリック",
+		"level_stage": "レベル {{level}}",
 		"show_the_commands": "コマンドを表示",
 		"next_mission": "次のミッション：{{id}}",
 		"button": {

@@ -55,6 +55,7 @@
 			"gio": "GIO"
 		},
 		"show_the_relics": "แสดงรูปเครื่องประดับ",
+		"relic_items": "เครื่องประดับ",
 		"level_stage": "ระดับ {{level}}",
 		"show_the_commands": "แสดงคำสั่ง",
 		"next_mission": "ภารกิจถัดไป: {{id}}",

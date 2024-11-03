@@ -55,6 +55,7 @@
 			"gio": "GIO"
 		},
 		"show_the_relics": "Mostrar os Reliquias",
+		"relic_items": "Reliquias",
 		"level_stage": "Nível {{level}}",
 		"show_the_commands": "Mostrar os comandos",
 		"next_mission": "Próxima missão: {{id}}",
