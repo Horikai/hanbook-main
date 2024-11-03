@@ -4,9 +4,9 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Suspense, lazy } from 'react'
 import { Loader2, Search } from 'lucide-react'
 import type React from 'react'
-import { memo, useRef, useState, type Dispatch, type SetStateAction, useEffect, useCallback } from 'react'
+import { memo, useRef, useState, type Dispatch, type SetStateAction, useEffect } from 'react'
 import type { Argument, CommandLists } from '../App'
-import { debounce } from 'lodash'
+import { useDebouncedCallback } from 'use-debounce'
 import type { GmhandbookGI } from '@/types/gm'
 import { useToast } from '@/components/ui/use-toast'
 import elaxanApi from '@/api/elaxanApi'
@@ -168,75 +168,71 @@ const SearchArgs = memo(
 			inputRef.current?.focus()
 		}
 
-		// biome-ignore lint/correctness/useExhaustiveDependencies: This useCallback hook intentionally omits some dependencies to prevent unnecessary re-renders. The omitted dependencies (setSearchResults, setShowResults, setLocalIsLoading) are state setters that don't change between renders, and including them would cause the callback to be recreated on every render, defeating the purpose of memoization.
-		const handleSearch = useCallback(
-			debounce(async (query: string) => {
-				if (!query.trim()) {
-					setSearchResults([])
-					setShowResults(false)
-					return
+		const handleSearch = useDebouncedCallback(async (query: string) => {
+			if (!query.trim()) {
+				setSearchResults([])
+				setShowResults(false)
+				return
+			}
+
+			if (arg.type !== 'search' || !arg.api) return
+
+			try {
+				setLocalIsLoading(true)
+				const updatedJsonBody = { ...arg.api.jsonBody }
+
+				for (const [key, value] of Object.entries(updatedJsonBody)) {
+					if (Array.isArray(value)) {
+						updatedJsonBody[key] = value.map((v) => (v === `${arg.key}` ? query : v))
+					} else if (value === `${arg.key}`) {
+						updatedJsonBody[key] = query
+					}
 				}
-
-				if (arg.type !== 'search' || !arg.api) return
-
-				try {
-					setLocalIsLoading(true)
-					const updatedJsonBody = { ...arg.api.jsonBody }
-
-					for (const [key, value] of Object.entries(updatedJsonBody)) {
-						if (Array.isArray(value)) {
-							updatedJsonBody[key] = value.map((v) => (v === `${arg.key}` ? query : v))
-						} else if (value === `${arg.key}`) {
-							updatedJsonBody[key] = query
-						}
-					}
-					let results: GmhandbookGI[] | Hsr
-					const baseURL = 'https://api.elaxan.xyz'
-					if (arg.api.game === 'gi') {
-						results = await elaxanApi.getHandbook(baseURL, 'gi', {
-							search: updatedJsonBody.search as string[],
-							limit: Number(updatedJsonBody.limit) || 10,
-							category: updatedJsonBody.category as string[],
-							command: false,
-						})
-					} else {
-						results = await elaxanApi.getHandbook(baseURL, 'sr', {
-							search: updatedJsonBody.search as string[],
-							limit: Number(updatedJsonBody.limit) || 10,
-							category: updatedJsonBody.category as string[],
-							command: false,
-						})
-					}
-
-					setSearchResults(
-						(Array.isArray(results) ? results : results.data).map((result) => ({
-							name: typeof result.name === 'string' ? result.name : result.name.en,
-							id: result.id.toString(),
-							description:
-								typeof result.description === 'string' ? result.description : result.description?.en,
-							image:
-								typeof result.image === 'string'
-									? result.image
-									: result.image && typeof result.image === 'object'
-										? result.image.icon
-										: undefined,
-						}))
-					)
-					setShowResults(true)
-				} catch (error) {
-					console.error('Failed to fetch search results:', error)
-					toast({
-						title: 'Error',
-						description: 'Failed to fetch search results. Please try again.',
-						variant: 'destructive',
+				let results: GmhandbookGI[] | Hsr
+				const baseURL = 'https://api.elaxan.xyz'
+				if (arg.api.game === 'gi') {
+					results = await elaxanApi.getHandbook(baseURL, 'gi', {
+						search: updatedJsonBody.search as string[],
+						limit: Number(updatedJsonBody.limit) || 10,
+						category: updatedJsonBody.category as string[],
+						command: false,
 					})
-					setShowResults(false)
-				} finally {
-					setLocalIsLoading(false)
+				} else {
+					results = await elaxanApi.getHandbook(baseURL, 'sr', {
+						search: updatedJsonBody.search as string[],
+						limit: Number(updatedJsonBody.limit) || 10,
+						category: updatedJsonBody.category as string[],
+						command: false,
+					})
 				}
-			}, 500),
-			[arg, toast, setSearchResults, setShowResults]
-		)
+
+				setSearchResults(
+					(Array.isArray(results) ? results : results.data).map((result) => ({
+						name: typeof result.name === 'string' ? result.name : result.name.en,
+						id: result.id.toString(),
+						description:
+							typeof result.description === 'string' ? result.description : result.description?.en,
+						image:
+							typeof result.image === 'string'
+								? result.image
+								: result.image && typeof result.image === 'object'
+									? result.image.icon
+									: undefined,
+					}))
+				)
+				setShowResults(true)
+			} catch (error) {
+				console.error('Failed to fetch search results:', error)
+				toast({
+					title: 'Error',
+					description: 'Failed to fetch search results. Please try again.',
+					variant: 'destructive',
+				})
+				setShowResults(false)
+			} finally {
+				setLocalIsLoading(false)
+			}
+		}, 500)
 
 		const dropDownResults = () => (
 			<div className='absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-lg'>

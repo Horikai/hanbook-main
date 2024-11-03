@@ -23,7 +23,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { invoke, isTauri } from '@tauri-apps/api/core'
 import { open } from '@tauri-apps/plugin-dialog'
 import { platform } from '@tauri-apps/plugin-os'
-import debounce from 'lodash/debounce'
+import { useDebouncedCallback } from 'use-debounce'
 import { FolderIcon, HelpCircle } from 'lucide-react'
 import type React from 'react'
 import { memo } from 'react'
@@ -186,15 +186,12 @@ const Search: React.FC<SearchProps> = ({ loadGI, loadSR, currentLanguage, state,
 		state.currentType === 'Genshin Impact' ? loadGI() : loadSR()
 	}, [state.searchTerm, state.currentType, handleSearch, loadGI, loadSR, setState, isHandbookLoading])
 
-	const debouncedSetSliderValue = useCallback(
-		debounce((value: number[]) => {
-			setState((prevState) => ({
-				...prevState,
-				limitsResult: value[0],
-			}))
-		}, 1000),
-		[]
-	)
+	const debouncedSetSliderValue = useDebouncedCallback((value: number[]) => {
+		setState((prevState) => ({
+			...prevState,
+			limitsResult: value[0],
+		}))
+	}, 1000)
 
 	const [, setCookie] = useCookies(['language', 'type'])
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -17,7 +17,7 @@ import type { ArtifactStat, FormData } from './types'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { Search, Loader2, Copy, Plus, Minus, StarIcon } from 'lucide-react'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { debounce } from 'lodash'
+import { useDebouncedCallback } from 'use-debounce'
 import elaxanApi from '@/api/elaxanApi'
 import { Badge } from '@/components/ui/badge'
 import { toast } from '@/components/ui/use-toast'
@@ -93,12 +93,23 @@ const App = () => {
 	}
 
 	const copyCommand = () => {
-		navigator.clipboard.writeText(command)
-		toast({
-			title: 'Copied!',
-			description: 'Command copied to clipboard',
-			duration: 2000,
-		})
+		navigator.clipboard
+			.writeText(command)
+			.then(() => {
+				toast({
+					title: 'Copied!',
+					description: 'Command copied to clipboard',
+					duration: 2000,
+				})
+			})
+			.catch((err) => {
+				console.error('Failed to copy text: ', err)
+				toast({
+					title: 'Failed to copy!',
+					description: `Failed to copy command: ${err.message}`,
+					duration: 2000,
+				})
+			})
 	}
 
 	const renderStatPreview = () => {
@@ -138,41 +149,38 @@ const App = () => {
 		})
 	}
 
-	const handleSearch = useCallback(
-		debounce(async (query: string) => {
-			if (!query.trim()) {
-				setSearchResults([])
-				setShowResults(false)
-				return
-			}
+	const handleSearch = useDebouncedCallback(async (query: string) => {
+		if (!query.trim()) {
+			setSearchResults([])
+			setShowResults(false)
+			return
+		}
 
-			try {
-				setIsLoading(true)
-				const results = await elaxanApi.getHandbook('https://api.elaxan.xyz', 'gi', {
-					search: [query],
-					limit: 10,
-					category: ['artifact'],
-					command: false,
-				})
+		try {
+			setIsLoading(true)
+			const results = await elaxanApi.getHandbook('https://api.elaxan.xyz', 'gi', {
+				search: [query],
+				limit: 10,
+				category: ['artifact'],
+				command: false,
+			})
 
-				setSearchResults(
-					results.map((result) => ({
-						name: result.name,
-						id: result.id.toString(),
-						description: result.description,
-						image: typeof result.image === 'string' ? result.image : result.image?.icon,
-						rarity: result.rarity,
-					}))
-				)
-				setShowResults(true)
-			} catch (error) {
-				console.error('Failed to fetch search results:', error)
-			} finally {
-				setIsLoading(false)
-			}
-		}, 500),
-		[]
-	)
+			setSearchResults(
+				results.map((result) => ({
+					name: result.name,
+					id: result.id.toString(),
+					description: result.description,
+					image: typeof result.image === 'string' ? result.image : result.image?.icon,
+					rarity: result.rarity,
+				}))
+			)
+			setShowResults(true)
+		} catch (error) {
+			console.error('Failed to fetch search results:', error)
+		} finally {
+			setIsLoading(false)
+		}
+	}, 500)
 
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (showResults) {
