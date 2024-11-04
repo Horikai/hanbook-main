@@ -3,8 +3,17 @@ import { Button } from '@/components/ui/button'
 import { FaGithub } from 'react-icons/fa'
 import { useTranslation } from 'react-i18next'
 import { icons } from 'lucide-react'
+import { useInView } from '@/hooks/useInView'
+import type { RefObject } from 'react'
 
-const cards = [
+interface Cards {
+	title: string
+	description: string
+	link: string
+	icon: string
+}
+
+const cards: Array<Cards> = [
 	{
 		title: 'search.title',
 		description: 'search.description',
@@ -33,32 +42,57 @@ const cards = [
 
 export default function Home() {
 	const { t } = useTranslation()
+	const [heroRef, heroInView] = useInView()
+	const [cardsRef, cardsInView] = useInView()
+	const [openSourceRef, openSourceInView] = useInView()
+	const [ctaRef, ctaInView] = useInView()
+
 	return (
 		<main className='min-h-screen bg-gradient-to-b from-gray-100 to-white dark:from-gray-900 dark:to-gray-800'>
 			<section
-				className='relative py-20 px-4 sm:px-6 lg:px-8 text-center min-h-[60vh] flex items-center justify-center bg-cover bg-center'
+				ref={heroRef as RefObject<HTMLElement>}
+				className={`relative py-20 px-4 sm:px-6 lg:px-8 text-center min-h-[60vh] flex items-center justify-center bg-cover bg-center ${
+					heroInView ? 'fade-enter-active' : 'fade-enter'
+				}`}
 				style={{ backgroundImage: "url('/homepage-bg.png')" }}
 			>
-				<div className='absolute inset-0 bg-gradient-to-b from-black/70 to-black/40' />
-				<div className='relative z-10'>
-					<h1 className='text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4'>{t('title')}</h1>
-					<p className='text-xl sm:text-2xl text-gray-200 mb-8'>{t('description')}</p>
-					<Button size='lg' asChild>
+				<div className='absolute inset-0 bg-black/75' />
+				<div className='relative z-20 max-w-4xl mx-auto'>
+					<h1 className='text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 animate-slide-in-bottom'>
+						{t('title')}
+					</h1>
+					<p className='text-xl sm:text-2xl text-gray-200 mb-8 animate-slide-in-bottom delay-200'>
+						{t('description')}
+					</p>
+					<Button
+						size='lg'
+						asChild
+						className='animate-slide-in-bottom delay-400 bg-white text-black hover:bg-gray-200'
+					>
 						<a href='/search'>{t('features.search.title')}</a>
 					</Button>
 				</div>
 			</section>
 
 			{/* Cards Section */}
-			<section className='py-16 px-4 sm:px-6 lg:px-8'>
-				<h2 className='text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white'>
+			<section
+				ref={cardsRef as RefObject<HTMLElement>}
+				className={`py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900 ${
+					cardsInView ? 'fade-enter-active' : 'fade-enter'
+				}`}
+			>
+				<h2 className='text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white animate-slide-in-bottom'>
 					{t('features.title')}
 				</h2>
 				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
-					{cards.map((card) => {
+					{cards.map((card, index) => {
 						const Icon = icons[card.icon as keyof typeof icons] || icons.FileQuestion
 						return (
-							<Card key={card.link} className='flex flex-col'>
+							<Card
+								key={card.link}
+								className='flex flex-col animate-slide-in-bottom'
+								style={{ animationDelay: `${0.2 * (index + 1)}s` }}
+							>
 								<CardHeader>
 									<div className='flex items-center gap-2'>
 										{Icon && <Icon className='h-5 w-5' />}
@@ -78,10 +112,19 @@ export default function Home() {
 			</section>
 
 			{/* Open Source Section */}
-			<section className='bg-gray-100 dark:bg-gray-800 py-16 px-4 sm:px-6 lg:px-8 text-center'>
-				<h2 className='text-3xl font-bold mb-4 text-gray-900 dark:text-white'>{t('open_source.title')}</h2>
-				<p className='text-xl mb-8 text-gray-600 dark:text-gray-300'>{t('open_source.description')}</p>
-				<Button size='lg' variant='outline' asChild>
+			<section
+				ref={openSourceRef as RefObject<HTMLElement>}
+				className={`bg-gray-100 dark:bg-gray-800 py-16 px-4 sm:px-6 lg:px-8 text-center ${
+					openSourceInView ? 'fade-enter-active' : 'fade-enter'
+				}`}
+			>
+				<h2 className='text-3xl font-bold mb-4 text-gray-900 dark:text-white animate-slide-in-bottom'>
+					{t('open_source.title')}
+				</h2>
+				<p className='text-xl mb-8 text-gray-600 dark:text-gray-300 animate-slide-in-bottom delay-200'>
+					{t('open_source.description')}
+				</p>
+				<Button size='lg' variant='outline' asChild className='animate-slide-in-bottom delay-400'>
 					<a href='https://github.com/YuukiPS/Handbook' target='_blank' rel='noopener noreferrer'>
 						<FaGithub className='mr-2 h-5 w-5' /> {t('open_source.button')}
 					</a>
@@ -89,10 +132,17 @@ export default function Home() {
 			</section>
 
 			{/* Call to Action */}
-			<section className='bg-primary text-primary-foreground py-16 px-4 sm:px-6 lg:px-8 text-center'>
-				<h2 className='text-3xl font-bold mb-4'>Support Our Project</h2>
-				<p className='text-xl mb-8'>{t('donation.description')}</p>
-				<Button size='lg' variant='secondary' asChild>
+			<section
+				ref={ctaRef as RefObject<HTMLElement>}
+				className={`bg-primary text-primary-foreground py-16 px-4 sm:px-6 lg:px-8 text-center ${
+					ctaInView ? 'fade-enter-active' : 'fade-enter'
+				}`}
+			>
+				<h2 className='text-3xl font-bold mb-4 animate-slide-in-bottom'>Support Our Project</h2>
+				<p className='text-xl mb-8 animate-slide-in-bottom delay-200' style={{ animationDelay: '0.2s' }}>
+					{t('donation.description')}
+				</p>
+				<Button size='lg' variant='secondary' asChild className='animate-slide-in-bottom delay-400'>
 					<a href='/donation'>Support Us</a>
 				</Button>
 			</section>
