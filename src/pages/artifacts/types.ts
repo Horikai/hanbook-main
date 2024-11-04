@@ -6,7 +6,9 @@ export interface ArtifactStat {
 
 export interface SelectedStat {
 	id: string
+	targetId?: string
 	level: number
+	valueIndex: number
 }
 
 export interface ParsedStat {

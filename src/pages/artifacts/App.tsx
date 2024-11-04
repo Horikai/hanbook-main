@@ -10,8 +10,9 @@ import {
 	generateCommand,
 	parseStatName,
 	calculateStatValue,
-	ARTIFACT_TYPES,
 	MAIN_STAT_OPTIONS,
+	getStatIdsByName,
+	getStatValue,
 } from './utils'
 import type { ArtifactStat, FormData } from './types'
 import { MultiSelect } from '@/components/ui/multi-select'
@@ -22,6 +23,7 @@ import elaxanApi from '@/api/elaxanApi'
 import { Badge } from '@/components/ui/badge'
 import { toast } from '@/components/ui/use-toast'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import YuukiPS from '@/api/yuukips'
 
 interface SearchResult {
 	id: string
@@ -34,15 +36,13 @@ interface SearchResult {
 const App = () => {
 	const [stats, setStats] = useState<ArtifactStat[]>([])
 	const [command, setCommand] = useState<string>('')
-	// a placeholder data for testing
-	// TODO: refactor this to use a select artifact id by it's name
 	const [formData, setFormData] = useState<FormData>({
-		artifactId: '32543',
-		level: 20,
+		artifactId: '<artifact_id>',
+		level: 1,
 		amount: 1,
 		stats: [],
 		artifactType: 'FLOWER',
-		mainStatId: '15001',
+		mainStatId: '',
 	})
 	const [searchResults, setSearchResults] = useState<SearchResult[]>([])
 	const [showResults, setShowResults] = useState(false)
@@ -56,19 +56,21 @@ const App = () => {
 	}, [])
 
 	useEffect(() => {
-		const defaultMainStat = MAIN_STAT_OPTIONS[formData.artifactType][0]
 		setFormData((prev) => ({
 			...prev,
-			mainStatId: defaultMainStat.id.toString(),
+			mainStatId: MAIN_STAT_OPTIONS.HP.toString() || '',
 		}))
-	}, [formData.artifactType])
+	}, [])
 
 	useEffect(() => {
 		const cmd = generateCommand(
 			formData.artifactId,
 			formData.level,
 			formData.amount,
-			formData.stats,
+			formData.stats.map((stat) => ({
+				...stat,
+				id: stat.targetId || stat.id,
+			})),
 			formData.mainStatId
 		)
 		setCommand(cmd)
@@ -77,7 +79,22 @@ const App = () => {
 	const handleStatSelect = (selectedValues: string[]) => {
 		setFormData((prev) => ({
 			...prev,
-			stats: selectedValues.map((id) => ({ id, level: 1 })),
+			stats: selectedValues.map((id) => {
+				const stat = stats.find((s) => s.id === id)
+				if (!stat) return { id, level: 1, valueIndex: 0 }
+
+				const parsedStat = parseStatName(stat.name)
+				const availableIds = getStatIdsByName(parsedStat.name)
+				const sortedIds = [...availableIds].sort()
+				const initialId = sortedIds[0] || id
+
+				return {
+					id: stat.id,
+					targetId: initialId,
+					level: 1,
+					valueIndex: 0,
+				}
+			}),
 		}))
 	}
 
@@ -92,9 +109,24 @@ const App = () => {
 		})
 	}
 
+	const handleStatValueChange = (index: number, newId: string) => {
+		setFormData((prev) => ({
+			...prev,
+			stats: prev.stats.map((stat, i) =>
+				i === index
+					? {
+							...stat,
+							targetId: newId,
+						}
+					: stat
+			),
+		}))
+	}
+
 	const copyCommand = () => {
+		const formattedCommand = YuukiPS.generateResultCommand(command, {})
 		navigator.clipboard
-			.writeText(command)
+			.writeText(formattedCommand)
 			.then(() => {
 				toast({
 					title: 'Copied!',
@@ -118,30 +150,68 @@ const App = () => {
 			if (!stat) return null
 
 			const parsedStat = parseStatName(stat.name)
-			const calculatedValue = calculateStatValue(
-				parsedStat.value,
-				selectedStat.level,
-				parsedStat.type,
-				parsedStat.name
-			)
+			const availableIds = getStatIdsByName(parsedStat.name)
+			const sortedIds = [...availableIds].sort()
+			const currentId = selectedStat.targetId || sortedIds[0]
+			const currentIndex = sortedIds.indexOf(currentId)
+
+			const calculatedValue = calculateStatValue(currentId, selectedStat.level, parsedStat.type, parsedStat.name)
+
+			const currentValue = getStatValue(currentId)
+			const maxValue = Math.max(0, sortedIds.length - 1)
 
 			return (
 				<Card key={`preview-${selectedStat.id}-${index}`} className='bg-secondary/50'>
-					<CardContent className='flex items-center justify-between p-4'>
-						<div className='flex items-center gap-2'>
-							<Badge variant='outline' className='font-medium'>
-								{parsedStat.name}
-							</Badge>
-							<span className='text-primary'>+{calculatedValue}</span>
+					<CardContent className='flex flex-col gap-4 p-4'>
+						<div className='flex items-center justify-between'>
+							<div className='flex items-center gap-2'>
+								<Badge variant='outline' className='font-medium'>
+									{parsedStat.name}
+								</Badge>
+								<span className='text-primary'>
+									{parsedStat.type === '%' ? calculatedValue : `+${calculatedValue}`}
+								</span>
+							</div>
+							<div className='flex items-center gap-2'>
+								<Button
+									variant='outline'
+									size='icon'
+									onClick={() => handleStatLevelChange(index, false)}
+								>
+									<Minus className='h-4 w-4' />
+								</Button>
+								<span className='w-8 text-center font-medium'>{selectedStat.level}</span>
+								<Button
+									variant='outline'
+									size='icon'
+									onClick={() => handleStatLevelChange(index, true)}
+								>
+									<Plus className='h-4 w-4' />
+								</Button>
+							</div>
 						</div>
-						<div className='flex items-center gap-2'>
-							<Button variant='outline' size='icon' onClick={() => handleStatLevelChange(index, false)}>
-								<Minus className='h-4 w-4' />
-							</Button>
-							<span className='w-8 text-center font-medium'>{selectedStat.level}</span>
-							<Button variant='outline' size='icon' onClick={() => handleStatLevelChange(index, true)}>
-								<Plus className='h-4 w-4' />
-							</Button>
+
+						<div className='space-y-2'>
+							<div className='flex justify-between text-sm'>
+								<span className='text-muted-foreground'>Value</span>
+								<span className='font-medium'>
+									{currentValue}
+									{parsedStat.type}
+								</span>
+							</div>
+							<Slider
+								value={[currentIndex >= 0 ? currentIndex : 0]}
+								onValueChange={(value) => {
+									const newId = sortedIds[value[0]]
+									if (newId) {
+										handleStatValueChange(index, newId)
+									}
+								}}
+								max={maxValue}
+								min={0}
+								step={1}
+								className='w-full'
+							/>
 						</div>
 					</CardContent>
 				</Card>
@@ -377,9 +447,9 @@ const App = () => {
 					<SelectValue placeholder='Select main stat' />
 				</SelectTrigger>
 				<SelectContent>
-					{MAIN_STAT_OPTIONS[formData.artifactType].map((option) => (
-						<SelectItem key={option.id} value={option.id.toString()}>
-							{option.name}
+					{Object.entries(MAIN_STAT_OPTIONS).map(([key, value]) => (
+						<SelectItem key={value} value={value.toString()}>
+							{key}
 						</SelectItem>
 					))}
 				</SelectContent>
@@ -434,18 +504,6 @@ const App = () => {
 					<p className='text-muted-foreground'>
 						Create perfect artifacts with custom stats and levels for your characters
 					</p>
-					<p className='text-sm text-muted-foreground/60'>
-						This site uses data from{' '}
-						<a
-							href='https://null-grasscutter-tools.vercel.app'
-							target='_blank'
-							rel='noopener noreferrer'
-							className='underline hover:text-primary'
-						>
-							Null Grasscutter Tools
-						</a>{' '}
-						by Null. All credit for the artifact data goes to them.
-					</p>
 				</div>
 			</div>
 
@@ -472,26 +530,6 @@ const App = () => {
 									<div className='space-y-2'>
 										<Label>Artifact Name</Label>
 										{renderArtifactSearch()}
-									</div>
-									<div className='space-y-2'>
-										<Label>Artifact Type</Label>
-										<Select
-											value={formData.artifactType}
-											onValueChange={(value: string) =>
-												setFormData((prev) => ({ ...prev, artifactType: value }))
-											}
-										>
-											<SelectTrigger>
-												<SelectValue placeholder='Select type' />
-											</SelectTrigger>
-											<SelectContent>
-												{Object.keys(ARTIFACT_TYPES).map((type) => (
-													<SelectItem key={type} value={type}>
-														{type.charAt(0) + type.slice(1).toLowerCase()}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
 									</div>
 									{renderMainStatSelect()}
 								</div>
@@ -558,12 +596,15 @@ const App = () => {
 							<div className='space-y-6'>
 								{/* Stats Preview */}
 								<div className='rounded-lg border bg-card p-6'>
-									<h2 className='text-lg font-medium mb-4 flex items-center gap-2'>
+									<h2 className='text-lg font-medium flex items-center gap-2'>
 										Stats Preview
 										<span className='text-xs text-muted-foreground font-normal'>
 											(Up to 4 stats)
 										</span>
 									</h2>
+									<p className='text-sm text-muted-foreground/60 mb-4'>
+										The result may can be random on the game.
+									</p>
 									<div className='space-y-3'>
 										{formData.stats.length > 0 ? (
 											renderStatPreview()
