@@ -11,13 +11,15 @@ import type { Command, Data, ImageClass, ListRelicItem } from '@/types/hsr'
 import { isTauri } from '@tauri-apps/api/core'
 import { writeText } from '@tauri-apps/plugin-clipboard-manager'
 import type React from 'react'
-import { memo, useCallback, useState, Suspense, lazy } from 'react'
+import { memo, useCallback, useState, Suspense, lazy, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FaStar } from 'react-icons/fa'
 import { MdOutlineContentCopy } from 'react-icons/md'
 import { RiSlashCommands2 } from 'react-icons/ri'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import type { State } from './types'
+import { useInView } from '@/hooks/useInView'
+import { useVirtualization } from '@/hooks/useVirtualization'
 
 // Lazy load components
 const Collapse = lazy(() => import('@/components/ui/collapse'))
@@ -205,6 +207,154 @@ const RelicListSection = memo(
 	}
 )
 
+const CardItem = memo(
+	({
+		item,
+		currentLanguage,
+		handleButtonCopy,
+		handleApplyCommand,
+		handleCommandCopy,
+		stateApp,
+	}: {
+		item: Data
+		currentLanguage: DataCardSRProps['currentLanguage']
+		handleButtonCopy: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+		handleApplyCommand: (value: string) => void
+		handleCommandCopy: (command: string) => void
+		stateApp: State
+		uid: string
+		code: string
+		server: string
+		setStateApp: React.Dispatch<React.SetStateAction<State>>
+	}) => {
+		const { t } = useTranslation('translation', { keyPrefix: 'card' })
+		const [ref, isInView] = useInView<HTMLDivElement>({
+			threshold: 0.1,
+			rootMargin: '200px 0px',
+		})
+		const [hasAnimated, setHasAnimated] = useState(false)
+
+		useEffect(() => {
+			if (isInView && !hasAnimated) {
+				setHasAnimated(true)
+			}
+		}, [isInView, hasAnimated])
+
+		if (!isInView && !hasAnimated) {
+			return <div ref={ref} style={{ height: '300px' }} />
+		}
+
+		return (
+			<div
+				ref={ref}
+				className={`mt-5 flex items-center justify-center ${
+					!hasAnimated && isInView ? 'animate-slide-in-bottom' : ''
+				} ${isInView || hasAnimated ? 'visible opacity-100' : 'opacity-0'}`}
+				style={{
+					transition: 'opacity 0.3s ease-out',
+				}}
+			>
+				<div className='w-full rounded-lg bg-slate-300 p-6 shadow-lg dark:bg-slate-800 md:max-w-md lg:max-w-lg xl:max-w-xl'>
+					<div className='flex flex-col md:flex-row'>
+						{stateApp.showImage && <ImageComponent item={item} currentLanguage={currentLanguage} />}
+						<div className='ml-3 flex flex-grow flex-col justify-between'>
+							<div>
+								{item.rarity && (
+									<div className='mb-2 flex items-center'>
+										<FaStar className='text-yellow-500' />
+										<p className='ml-2 mt-[1px] select-none font-bold text-yellow-500'>
+											{item.rarity}
+										</p>
+									</div>
+								)}
+								<h1 className='text-2xl font-semibold text-gray-700 dark:text-gray-300'>
+									{item.name[currentLanguage.toLowerCase() as keyof typeof item.name]}
+									{item.type && (
+										<span className='ml-2 text-[1rem] font-bold text-gray-400 dark:text-gray-600'>
+											{item.type}
+										</span>
+									)}
+									{item.level && (
+										<span className='ml-2 text-[1rem] font-bold text-gray-400 dark:text-gray-600'>
+											{t('level_stage', { level: item.level })}
+										</span>
+									)}
+								</h1>
+								<p className='font-bold text-gray-400 dark:text-gray-600'>{item.id}</p>
+								{item.nextMission && (
+									<p className='font-bold text-gray-400 dark:text-gray-600'>
+										{t('next_mission', {
+											id: item.nextMission,
+										})}
+									</p>
+								)}
+								{item.description && (
+									<p className='text-gray-500'>
+										{
+											item.description[
+												currentLanguage.toLowerCase() as keyof typeof item.description
+											]
+										}
+									</p>
+								)}
+							</div>
+							<div className='mt-4 flex items-end justify-between md:mt-0'>
+								<div className='select-none text-lg font-bold text-gray-800 dark:text-gray-300'>
+									{item.category}
+								</div>
+								<Button
+									className='mt-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition duration-300 hover:bg-blue-700'
+									value={`${item.name[currentLanguage]} || ${item.id}`}
+									onClick={handleButtonCopy}
+								>
+									{t('button.copy_id')}
+								</Button>
+							</div>
+						</div>
+					</div>
+					{stateApp.showCommandsSR && item.command && (
+						<div className='mt-4 rounded-lg bg-slate-300 p-4 dark:bg-slate-800'>
+							<Suspense fallback={<LoadingContainer className='h-20' />}>
+								<Collapse title={t('show_the_commands')} className='w-full'>
+									<Card className='space-x-2'>
+										<CardHeader>
+											<CardTitle>{t('title.lc')}</CardTitle>
+											<CardDescription>{t('description.lc')}</CardDescription>
+										</CardHeader>
+										<CardContent>
+											<CommandSection
+												data={item.command}
+												handleApplyCommand={handleApplyCommand}
+												handleCommandCopy={handleCommandCopy}
+											/>
+										</CardContent>
+									</Card>
+								</Collapse>
+							</Suspense>
+						</div>
+					)}
+					{item.list && item.list.length > 0 && (
+						<div className='mt-4 rounded-lg bg-slate-300 p-4 dark:bg-slate-800'>
+							<Suspense fallback={<LoadingContainer className='h-20' />}>
+								<Collapse title={t('show_the_relics')} className='w-full'>
+									<RelicListSection
+										list={item.list}
+										currentLanguage={currentLanguage}
+										handleButtonCopy={handleButtonCopy}
+										handleApplyCommand={handleApplyCommand}
+										handleCommandCopy={handleCommandCopy}
+										showCommand={stateApp.showCommandsSR}
+									/>
+								</Collapse>
+							</Suspense>
+						</div>
+					)}
+				</div>
+			</div>
+		)
+	}
+)
+
 const DataCardSR: React.FC<DataCardSRProps> = ({ currentLanguage, code, server, uid, setStateApp, stateApp }) => {
 	const { t } = useTranslation('translation', { keyPrefix: 'card' })
 	const { t: tToast } = useTranslation('translation', { keyPrefix: 'toast' })
@@ -213,6 +363,35 @@ const DataCardSR: React.FC<DataCardSRProps> = ({ currentLanguage, code, server, 
 	})
 	const { toast } = useToast()
 	const [state, setState] = useState<typeof initialState>(initialState)
+	const [itemHeight, setItemHeight] = useState(50)
+
+	const { containerHeight, visibleRange } = useVirtualization({
+		itemHeight,
+		overscan: 5,
+		totalItems: stateApp.mainDataSR.slice(0, stateApp.currentLimit).length,
+	})
+
+	useEffect(() => {
+		const updateItemHeight = () => {
+			const width = window.innerWidth
+			let newHeight = 300 // default height
+			if (width < 640) {
+				// sm
+				newHeight = 400
+			} else if (width < 768) {
+				// md
+				newHeight = 350
+			}
+			setItemHeight(newHeight)
+		}
+
+		window.addEventListener('resize', updateItemHeight)
+		updateItemHeight() // Initial call
+
+		return () => window.removeEventListener('resize', updateItemHeight)
+	}, [])
+
+	const visibleData = stateApp.mainDataSR.slice(0, stateApp.currentLimit).slice(visibleRange.start, visibleRange.end)
 
 	const handleButtonCopy = useCallback(
 		(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -319,106 +498,30 @@ const DataCardSR: React.FC<DataCardSRProps> = ({ currentLanguage, code, server, 
 
 	return (
 		<Suspense fallback={<LoadingContainer />}>
-			{stateApp.mainDataSR.slice(0, stateApp.currentLimit).map((item) => (
-				<div className='mt-5 flex items-center justify-center' key={`card-sr-${item.id}`}>
-					<div className='w-full rounded-lg bg-slate-300 p-6 shadow-lg dark:bg-slate-800 md:max-w-md lg:max-w-lg xl:max-w-xl'>
-						<div className='flex flex-col md:flex-row'>
-							{stateApp.showImage && <ImageComponent item={item} currentLanguage={currentLanguage} />}
-							<div className='ml-3 flex flex-grow flex-col justify-between'>
-								<div>
-									{item.rarity && (
-										<div className='mb-2 flex items-center'>
-											<FaStar className='text-yellow-500' />
-											<p className='ml-2 mt-[1px] select-none font-bold text-yellow-500'>
-												{item.rarity}
-											</p>
-										</div>
-									)}
-									<h1 className='text-2xl font-semibold text-gray-700 dark:text-gray-300'>
-										{item.name[currentLanguage.toLowerCase() as keyof typeof item.name]}
-										{item.type && (
-											<span className='ml-2 text-[1rem] font-bold text-gray-400 dark:text-gray-600'>
-												{item.type}
-											</span>
-										)}
-										{item.level && (
-											<span className='ml-2 text-[1rem] font-bold text-gray-400 dark:text-gray-600'>
-												{t('level_stage', { level: item.level })}
-											</span>
-										)}
-									</h1>
-									<p className='font-bold text-gray-400 dark:text-gray-600'>{item.id}</p>
-									{item.nextMission && (
-										<p className='font-bold text-gray-400 dark:text-gray-600'>
-											{t('next_mission', {
-												id: item.nextMission,
-											})}
-										</p>
-									)}
-									{item.description && (
-										<p className='text-gray-500'>
-											{
-												item.description[
-													currentLanguage.toLowerCase() as keyof typeof item.description
-												]
-											}
-										</p>
-									)}
-								</div>
-								<div className='mt-4 flex items-end justify-between md:mt-0'>
-									<div className='select-none text-lg font-bold text-gray-800 dark:text-gray-300'>
-										{item.category}
-									</div>
-									<Button
-										className='mt-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition duration-300 hover:bg-blue-700'
-										value={`${item.name[currentLanguage]} || ${item.id}`}
-										onClick={handleButtonCopy}
-									>
-										{t('button.copy_id')}
-									</Button>
-								</div>
-							</div>
-						</div>
-						{stateApp.showCommandsSR && item.command && (
-							<div className='mt-4 rounded-lg bg-slate-300 p-4 dark:bg-slate-800'>
-								<Suspense fallback={<LoadingContainer className='h-20' />}>
-									<Collapse title={t('show_the_commands')} className='w-full'>
-										<Card className='space-x-2'>
-											<CardHeader>
-												<CardTitle>{t('title.lc')}</CardTitle>
-												<CardDescription>{t('description.lc')}</CardDescription>
-											</CardHeader>
-											<CardContent>
-												<CommandSection
-													data={item.command}
-													handleApplyCommand={handleApplyCommand}
-													handleCommandCopy={handleCommandCopy}
-												/>
-											</CardContent>
-										</Card>
-									</Collapse>
-								</Suspense>
-							</div>
-						)}
-						{item.list && item.list.length > 0 && (
-							<div className='mt-4 rounded-lg bg-slate-300 p-4 dark:bg-slate-800'>
-								<Suspense fallback={<LoadingContainer className='h-20' />}>
-									<Collapse title={t('show_the_relics')} className='w-full'>
-										<RelicListSection
-											list={item.list}
-											currentLanguage={currentLanguage}
-											handleButtonCopy={handleButtonCopy}
-											handleApplyCommand={handleApplyCommand}
-											handleCommandCopy={handleCommandCopy}
-											showCommand={stateApp.showCommandsSR}
-										/>
-									</Collapse>
-								</Suspense>
-							</div>
-						)}
-					</div>
+			<div style={{ height: containerHeight, position: 'relative' }}>
+				<div
+					style={{
+						position: 'absolute',
+						top: 0,
+						left: 0,
+						width: '100%',
+						transform: `translateY(${visibleRange.start * itemHeight}px)`,
+					}}
+				>
+					{visibleData.map((item) => (
+						<CardItem
+							key={`card-sr-${item.id}`}
+							item={item}
+							currentLanguage={currentLanguage}
+							handleButtonCopy={handleButtonCopy}
+							handleApplyCommand={handleApplyCommand}
+							handleCommandCopy={handleCommandCopy}
+							stateApp={stateApp}
+							{...{ uid, code, server, setStateApp }}
+						/>
+					))}
 				</div>
-			))}
+			</div>
 			{/* TODO: Create new components for apply commands */}
 			<Dialog open={state.openModal}>
 				<DialogContent>

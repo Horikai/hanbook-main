@@ -17,12 +17,14 @@ import type { Description, GmhandbookGI } from '@/types/gm'
 import { isTauri } from '@tauri-apps/api/core'
 import { writeText } from '@tauri-apps/plugin-clipboard-manager'
 import type React from 'react'
-import { memo, useCallback, useState, Suspense, lazy } from 'react'
+import { memo, useCallback, useState, Suspense, lazy, useEffect } from 'react'
 import { useCookies } from 'react-cookie'
 import { useTranslation } from 'react-i18next'
 import { FaStar } from 'react-icons/fa'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import type { State } from './types'
+import { useInView } from '@/hooks/useInView'
+import { useVirtualization } from '@/hooks/useVirtualization'
 
 // Lazy load components
 const CommandList = lazy(() => import('./CommandList'))
@@ -90,6 +92,170 @@ interface DataCardProps {
 	setStateApp: React.Dispatch<React.SetStateAction<State>>
 }
 
+interface CardItemProps {
+	data: GmhandbookGI
+	currentLanguage: keyof Description
+	handleButtonCopy: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+	stateApp: State
+	uid: string
+	code: string
+	server: string
+	setStateApp: React.Dispatch<React.SetStateAction<State>>
+}
+
+const CardItem = memo(({ data, currentLanguage, handleButtonCopy, stateApp, ...props }: CardItemProps) => {
+	const { t } = useTranslation('translation', { keyPrefix: 'card' })
+	const [ref, isInView] = useInView<HTMLDivElement>({
+		threshold: 0.1,
+		rootMargin: '200px 0px',
+	})
+	const [hasAnimated, setHasAnimated] = useState(false)
+
+	useEffect(() => {
+		if (isInView && !hasAnimated) {
+			setHasAnimated(true)
+		}
+	}, [isInView, hasAnimated])
+
+	if (!isInView && !hasAnimated) {
+		return <div ref={ref} style={{ height: '300px' }} />
+	}
+
+	return (
+		<div
+			ref={ref}
+			className={`mt-5 flex items-center justify-center ${
+				!hasAnimated && isInView ? 'animate-slide-in-bottom' : ''
+			} ${isInView || hasAnimated ? 'visible opacity-100' : 'opacity-0'}`}
+			style={{
+				transition: 'opacity 0.3s ease-out',
+			}}
+		>
+			<div className='w-full bg-gray-300 dark:bg-slate-800 md:max-w-md lg:max-w-lg xl:max-w-xl'>
+				<div className='flex flex-col rounded-lg p-5 shadow-lg md:flex-row'>
+					{stateApp.showImage && 'image' in data && data.image ? <ImageComponent data={data} /> : null}
+					<div className='ml-3 flex flex-grow flex-col justify-between'>
+						<div>
+							{'rarity' in data && (
+								<div className='flex items-center'>
+									<FaStar className='text-yellow-600 dark:text-yellow-400' />
+									<p className='ml-2 mt-[1px] select-none font-bold text-yellow-600 dark:text-yellow-400'>
+										{data.rarity}
+									</p>
+								</div>
+							)}
+							<h1 className='text-2xl font-semibold'>
+								{typeof data.name === 'object' ? data.name[currentLanguage] : data.name}
+							</h1>
+							<p className='font-bold text-gray-400 dark:text-gray-600'>{data.id}</p>
+							<p className='text-gray-500'>
+								{'description' in data &&
+									(typeof data.description === 'object'
+										? data.description[currentLanguage]
+										: data.description)}
+							</p>
+						</div>
+						<div className='mt-4 flex items-end justify-between md:mt-0'>
+							<div className='select-none text-lg font-bold'>{data.category}</div>
+							<Button
+								className='mt-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700'
+								value={`${data.name} || ${data.id}`}
+								onClick={handleButtonCopy}
+							>
+								{t('button.copy_id')}
+							</Button>
+						</div>
+					</div>
+				</div>
+				{stateApp.showCommands &&
+					('commands' in data || 'command' in data) &&
+					(data.commands || data.command) && (
+						<div className={'mb-4 flex justify-center bg-gray-300 dark:bg-slate-800'}>
+							<Collapse title={t('show_the_commands')} className='w-full'>
+								<Tabs defaultValue='GC'>
+									<TabsList className='grid w-full grid-cols-2'>
+										<TabsTrigger value='GC'>{t('tabs_title.gc')}</TabsTrigger>
+										<TabsTrigger value='GIO'>{t('tabs_title.gio')}</TabsTrigger>
+									</TabsList>
+									<TabsContent value='GC'>
+										<Card>
+											<CardHeader>
+												<CardTitle>{t('title.gc')}</CardTitle>
+												<CardDescription>{t('description.gc')}</CardDescription>
+											</CardHeader>
+											<CardContent className='space-y-2'>
+												<CommandList
+													data={data}
+													uid={props.uid}
+													setOpenModal={(open) =>
+														props.setStateApp((prev) => ({
+															...prev,
+															openModal: open as boolean,
+														}))
+													}
+													setCommand={(command) =>
+														props.setStateApp((prev) => ({
+															...prev,
+															command: command.toString(),
+														}))
+													}
+													code={props.code}
+													server={props.server}
+													type={'gc'}
+													setArgs={(args) =>
+														props.setStateApp((prev) => ({
+															...prev,
+															args: args as string[],
+														}))
+													}
+												/>
+											</CardContent>
+										</Card>
+									</TabsContent>
+									<TabsContent value='GIO'>
+										<Card>
+											<CardHeader>
+												<CardTitle>{t('title.gio')}</CardTitle>
+												<CardDescription>{t('description.gio')}</CardDescription>
+											</CardHeader>
+											<CardContent className='space-y-2'>
+												<CommandList
+													data={data}
+													uid={props.uid}
+													setOpenModal={(open) =>
+														props.setStateApp((prev) => ({
+															...prev,
+															openModal: open as boolean,
+														}))
+													}
+													setCommand={(command) =>
+														props.setStateApp((prev) => ({
+															...prev,
+															command: command as string,
+														}))
+													}
+													code={props.code}
+													server={props.server}
+													type={'gio'}
+													setArgs={(args) =>
+														props.setStateApp((prev) => ({
+															...prev,
+															args: args as string[],
+														}))
+													}
+												/>
+											</CardContent>
+										</Card>
+									</TabsContent>
+								</Tabs>
+							</Collapse>
+						</div>
+					)}
+			</div>
+		</div>
+	)
+})
+
 const DataCard: React.FC<DataCardProps> = ({ currentLanguage, code, uid, server, stateApp, setStateApp }) => {
 	const { t } = useTranslation('translation', { keyPrefix: 'card' })
 	const { t: tOutput } = useTranslation('translation', {
@@ -101,6 +267,7 @@ const DataCard: React.FC<DataCardProps> = ({ currentLanguage, code, uid, server,
 
 	const [cookies] = useCookies(['uid', 'server'])
 	const [state, setState] = useState<typeof initialState>(initialState)
+	const [itemHeight, setItemHeight] = useState(50)
 
 	const handleButtonCopy = useCallback(
 		(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -151,135 +318,58 @@ const DataCard: React.FC<DataCardProps> = ({ currentLanguage, code, uid, server,
 		stateApp.yuukips.sendCommand(uid, code, server, generateCommand)
 	}
 
+	const { containerHeight, visibleRange } = useVirtualization({
+		itemHeight,
+		overscan: 5,
+		totalItems: stateApp.mainData.slice(0, stateApp.currentLimit).length,
+	})
+
+	const visibleData = stateApp.mainData.slice(0, stateApp.currentLimit).slice(visibleRange.start, visibleRange.end)
+
+	useEffect(() => {
+		const updateItemHeight = () => {
+			const width = window.innerWidth
+			let newHeight = 300 // default height
+			if (width < 640) {
+				// sm
+				newHeight = 400
+			} else if (width < 768) {
+				// md
+				newHeight = 350
+			}
+			setItemHeight(newHeight)
+		}
+
+		window.addEventListener('resize', updateItemHeight)
+		updateItemHeight() // Initial call
+
+		return () => window.removeEventListener('resize', updateItemHeight)
+	}, [])
+
 	return (
 		<Suspense fallback={<LoadingContainer />}>
-			{stateApp.mainData.slice(0, stateApp.currentLimit).map((data) => (
-				<div className='mt-5 flex items-center justify-center' key={`data-card-${data.id}`}>
-					<div className='w-full bg-gray-300 dark:bg-slate-800 md:max-w-md lg:max-w-lg xl:max-w-xl'>
-						<div className='flex flex-col rounded-lg p-5 shadow-lg md:flex-row'>
-							{stateApp.showImage && 'image' in data && data.image ? (
-								<ImageComponent data={data} />
-							) : null}
-							<div className='ml-3 flex flex-grow flex-col justify-between'>
-								<div>
-									{'rarity' in data && (
-										<div className='flex items-center'>
-											<FaStar className='text-yellow-600 dark:text-yellow-400' />
-											<p className='ml-2 mt-[1px] select-none font-bold text-yellow-600 dark:text-yellow-400'>
-												{data.rarity}
-											</p>
-										</div>
-									)}
-									<h1 className='text-2xl font-semibold'>
-										{typeof data.name === 'object' ? data.name[currentLanguage] : data.name}
-									</h1>
-									<p className='font-bold text-gray-400 dark:text-gray-600'>{data.id}</p>
-									<p className='text-gray-500'>
-										{'description' in data &&
-											(typeof data.description === 'object'
-												? data.description[currentLanguage]
-												: data.description)}
-									</p>
-								</div>
-								<div className='mt-4 flex items-end justify-between md:mt-0'>
-									<div className='select-none text-lg font-bold'>{data.category}</div>
-									<Button
-										className='mt-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700'
-										value={`${data.name} || ${data.id}`}
-										onClick={handleButtonCopy}
-									>
-										{t('button.copy_id')}
-									</Button>
-								</div>
-							</div>
-						</div>
-						{stateApp.showCommands &&
-							('commands' in data || 'command' in data) &&
-							(data.commands || data.command) && (
-								<div className={'mb-4 flex justify-center bg-gray-300 dark:bg-slate-800'}>
-									<Collapse title={t('show_the_commands')} className='w-full'>
-										<Tabs defaultValue='GC'>
-											<TabsList className='grid w-full grid-cols-2'>
-												<TabsTrigger value='GC'>{t('tabs_title.gc')}</TabsTrigger>
-												<TabsTrigger value='GIO'>{t('tabs_title.gio')}</TabsTrigger>
-											</TabsList>
-											<TabsContent value='GC'>
-												<Card>
-													<CardHeader>
-														<CardTitle>{t('title.gc')}</CardTitle>
-														<CardDescription>{t('description.gc')}</CardDescription>
-													</CardHeader>
-													<CardContent className='space-y-2'>
-														<CommandList
-															data={data}
-															uid={uid}
-															setOpenModal={(open) =>
-																setState((prev) => ({
-																	...prev,
-																	openModal: open as boolean,
-																}))
-															}
-															setCommand={(command) =>
-																setState((prev) => ({
-																	...prev,
-																	command: command.toString(),
-																}))
-															}
-															code={code}
-															server={server}
-															type={'gc'}
-															setArgs={(args) =>
-																setState((prev) => ({
-																	...prev,
-																	args: args as string[],
-																}))
-															}
-														/>
-													</CardContent>
-												</Card>
-											</TabsContent>
-											<TabsContent value='GIO'>
-												<Card>
-													<CardHeader>
-														<CardTitle>{t('title.gio')}</CardTitle>
-														<CardDescription>{t('description.gio')}</CardDescription>
-													</CardHeader>
-													<CardContent className='space-y-2'>
-														<CommandList
-															data={data}
-															uid={uid}
-															setOpenModal={(open) =>
-																setState((prev) => ({
-																	...prev,
-																	openModal: open as boolean,
-																}))
-															}
-															setCommand={(command) =>
-																setState((prev) => ({
-																	...prev,
-																	command: command as string,
-																}))
-															}
-															code={code}
-															server={server}
-															type={'gio'}
-															setArgs={(args) =>
-																setState((prev) => ({
-																	...prev,
-																	args: args as string[],
-																}))
-															}
-														/>
-													</CardContent>
-												</Card>
-											</TabsContent>
-										</Tabs>
-									</Collapse>
-								</div>
-							)}
-					</div>
+			<div style={{ height: containerHeight, position: 'relative' }}>
+				<div
+					style={{
+						position: 'absolute',
+						top: 0,
+						left: 0,
+						width: '100%',
+						transform: `translateY(${visibleRange.start * itemHeight}px)`,
+					}}
+				>
+					{visibleData.map((data) => (
+						<CardItem
+							key={`data-card-${data.id}`}
+							data={data}
+							currentLanguage={currentLanguage}
+							handleButtonCopy={handleButtonCopy}
+							stateApp={stateApp}
+							{...{ uid, code, server, setStateApp }}
+						/>
+					))}
 				</div>
-			))}
+			</div>
 			<Dialog open={state.openModal}>
 				<DialogContent>
 					<DialogHeader>
