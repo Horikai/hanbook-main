@@ -121,7 +121,7 @@
 			"title": "帮助/如何搜索",
 			"description": [
 				"搜索物品，输入名称或 ID。例如，输入 'Primogem' 或 '201'。",
-				"使用逗号一次搜索多个物品。例如：'Primogem, Mora, Hero's Wit'。",
+				"使用 ';;' 一次搜索多个物品。例如：'Primogem;;Mora;;Hero's Wit'。",
 				"您可以同时搜索多个类别。",
 				"通过从下拉菜单中选择特定类别来细化搜索。",
 				"搜索不区分大小写，因此 'primogem' 和 'Primogem' 会产生相同的结果。"

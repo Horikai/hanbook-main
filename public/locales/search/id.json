@@ -121,7 +121,7 @@
 			"title": "Bantuan/Cara mencari",
 			"description": [
 				"Cari item dengan mengetik nama atau ID. Misalnya, ketik 'Primogem' atau '201'.",
-				"Gunakan koma untuk mencari beberapa item sekaligus. Misalnya: 'Primogem, Mora, Hero's Wit'.",
+				"Gunakan ';;' untuk mencari beberapa item sekaligus. Misalnya: 'Primogem;;Mora;;Hero's Wit'.",
 				"Anda dapat mencari di beberapa kategori sekaligus.",
 				"Mengurangi pencarian dengan memilih kategori tertentu dari menu dropdown.",
 				"Pencarian tidak case-sensitive, jadi 'primogem' dan 'Primogem' akan menghasilkan hasil yang sama."

@@ -121,7 +121,7 @@
             "title": "Trợ giúp/Cách tìm kiếm",
             "description": [
                 "Tìm kiếm vật phẩm bằng tên hoặc ID. Ví dụ, gõ 'Nguyên Thạch' hoặc '201'.",
-                "Dùng dấu phẩy để tìm nhiều vật phẩm cùng lúc. Ví dụ: 'Nguyên Thạch, Mora, Sách Kinh Nghiệm Anh Hùng'.",
+                "Dùng ';;' để tìm nhiều vật phẩm cùng lúc. Ví dụ: 'Nguyên Thạch;;Mora;;Sách Kinh Nghiệm Anh Hùng'.",
                 "Bạn có thể tìm kiếm trong nhiều danh mục cùng một lúc.",
                 "Lọc kết quả bằng cách chọn danh mục cụ thể từ menu thả xuống.",
                 "Tìm kiếm không phân biệt chữ hoa chữ thường, nên 'nguyên thạch' và 'Nguyên Thạch' sẽ cho kết quả giống nhau."

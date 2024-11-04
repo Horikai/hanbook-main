@@ -121,7 +121,7 @@
             "title": "Tulong/Paano maghanap",
             "description": [
                 "Maghanap ng mga item gamit ang pangalan o ID. Halimbawa, i-type ang 'Primogem' o '201'.",
-                "Gumamit ng mga kuwit para maghanap ng maraming item nang sabay-sabay. Halimbawa: 'Primogem, Mora, Hero's Wit'.",
+                "Gumamit ng ';;' para maghanap ng maraming item nang sabay-sabay. Halimbawa: 'Primogem;;Mora;;Hero's Wit'.",
                 "Maaari kang maghanap sa maraming kategorya nang sabay-sabay.",
                 "I-refine ang iyong paghahanap sa pamamagitan ng pagpili ng mga tiyak na kategorya mula sa dropdown menu.",
                 "Ang paghahanap ay hindi case-sensitive, kaya ang 'primogem' at 'Primogem' ay magbibigay ng parehong mga resulta."

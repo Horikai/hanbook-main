@@ -64,13 +64,13 @@ function App() {
 			let response: GmhandbookGI[] = []
 			if (isTauri()) {
 				response = await invoke<GmhandbookGI[]>('find', {
-					search: state.searchTerm.split(',').map((e) => e.trim()),
+					search: state.searchTerm.split(';;').map((e) => e.trim()),
 					language: currentLanguage,
 					limit: state.currentLimit,
 				})
 			} else {
 				response = await ElaXanAPI.getHandbook(state.baseURL, 'gi', {
-					search: state.searchTerm.split(',').map((e) => e.trim()),
+					search: state.searchTerm.split(';;').map((e) => e.trim()),
 					limit: state.currentLimit,
 					category: state.selectedCategory,
 					command: state.showCommands,

@@ -121,7 +121,7 @@
 			"title": "Ajuda/Como procurar",
 			"description": [
 				"Pesquise por itens digitando o nome ou ID. Por exemplo, digite 'Primogem' ou '201'.",
-				"Use vírgulas para pesquisar vários itens ao mesmo tempo. Por exemplo: 'Primogem, Mora, Hero's Wit'.",
+				"Use ';;' para pesquisar vários itens ao mesmo tempo. Por exemplo: 'Primogem;;Mora;;Hero's Wit'.",
 				"Você pode pesquisar em várias categorias simultaneamente.",
 				"Refine sua pesquisa selecionando categorias específicas do menu suspenso.",
 				"A pesquisa não diferencia maiúsculas de minúsculas, então 'primogem' e 'Primogem' produzem o mesmo resultado."
