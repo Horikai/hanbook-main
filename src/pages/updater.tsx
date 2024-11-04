@@ -28,7 +28,6 @@ const Updater: React.FC = (): JSX.Element => {
 				if (!update) return
 				setUpdateAvailable(true)
 				setUpdateInfo(update)
-				console.log(`Found update ${update.version} from ${update.date} with notes ${update.body}`)
 			} catch (error) {
 				console.error('Error checking for updates:', error)
 			}
@@ -71,7 +70,6 @@ const Updater: React.FC = (): JSX.Element => {
 				}
 			})
 
-			console.log('Update installed')
 			setIsUpdating(false)
 			setUpdateAvailable(false)
 		} catch (error) {

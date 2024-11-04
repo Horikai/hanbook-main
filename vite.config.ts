@@ -39,9 +39,11 @@ export default defineConfig({
 						const indexPath = path.join(folderPath, 'index.html')
 						if (existsSync(indexPath)) {
 							const pathToMove = `dist/${folder}.html`
+							// biome-ignore lint/suspicious/noConsoleLog: Logging file moves during build process for debugging
 							console.log(`${indexPath} -> ${pathToMove}`)
 							renameSync(indexPath, pathToMove)
 						} else {
+							// biome-ignore lint/suspicious/noConsoleLog: Logging missing index.html files during build process for debugging
 							console.log(`${folder} does not have an index.html file`)
 						}
 					}

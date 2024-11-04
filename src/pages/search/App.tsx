@@ -248,6 +248,7 @@ function App() {
 								code={cookies.code}
 								uid={cookies.uid}
 								server={cookies.server}
+								// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 								currentLanguage={currentLanguage as any}
 								stateApp={state}
 								setStateApp={setState}
