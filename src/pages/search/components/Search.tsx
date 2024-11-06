@@ -45,6 +45,7 @@ import {
 	DialogTrigger,
 } from '@/components/ui/dialog'
 import i18n from '@/i18n'
+import { FlipWords } from '@/components/ui/flip-words'
 
 interface SearchProps {
 	currentLanguage: string
@@ -156,6 +157,11 @@ const Search: React.FC<SearchProps> = ({ loadGI, loadSR, currentLanguage, state,
 	const [forceUpdatePath, setForceUpdatePath] = useState<boolean>(false)
 	const [isOpen, setIsOpen] = useState(false)
 	const [isHelpOpen, setIsHelpOpen] = useState(false)
+	const textAutocomplete = useMemo(() => {
+		return state.currentType === 'Genshin Impact'
+			? ['Zhongli', 'Mora', '10000070']
+			: ['Firefly', 'Whereabouts Should Dreams Rest', '1310']
+	}, [state.currentType])
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setState((prevState) => ({
@@ -447,15 +453,27 @@ const Search: React.FC<SearchProps> = ({ loadGI, loadSR, currentLanguage, state,
 									<TooltipContent>{t('tooltip.help')}</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
-							<Input
-								type='text'
-								placeholder={t('input_placeholder')}
-								className='w-full rounded-none'
-								value={state.searchTerm}
-								onChange={handleInputChange}
-								onKeyDown={handleSearchInputKeyDown}
-								disabled={isHandbookLoading}
-							/>
+							<div className='flex relative w-full items-center'>
+								<Input
+									type='text'
+									className='w-full rounded-none'
+									value={state.searchTerm}
+									onChange={handleInputChange}
+									onKeyDown={handleSearchInputKeyDown}
+									disabled={isHandbookLoading}
+								/>
+								<div className='absolute inset-0 pointer-events-none flex items-center px-3 -ml-2'>
+									{!state.searchTerm && (
+										<FlipWords
+											words={textAutocomplete}
+											duration={3000}
+											className='select-none'
+											classNameWords='text-gray-500'
+											animateExit={false}
+										/>
+									)}
+								</div>
+							</div>
 							<TooltipProvider>
 								<Tooltip>
 									<TooltipTrigger asChild>
