@@ -12,19 +12,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Deploy and restart server
-    uses: appleboy/ssh-action@master
-    with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        script: |
+      - name: Deploy and restart server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
             cd ${{ secrets.PROJECT_PATH }}
-
             git checkout Development
             git pull origin Development
             yarn install --frozen-lockfile
             yarn build || exit 1
             screen -X -S handbook quit || true
-
             screen -dmS handbook bash -c 'serve dist -l 3000'
