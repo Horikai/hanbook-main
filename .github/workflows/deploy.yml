@@ -2,7 +2,7 @@ name: Deploy Application
 
 on:
   push:
-    branches: [ "Development" ]  # or your default branch
+    branches: [ "Development" ]
   pull_request:
     branches: [ "Development" ]
 
@@ -11,23 +11,7 @@ jobs:
     if: github.repository == 'ElaXan/Handbook-Finder'
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Build project
-        run: yarn build
-
-      # Add deployment steps here. For example, if deploying to a server:
+     steps:
       - name: Deploy and restart server
         uses: appleboy/ssh-action@master
         with:
@@ -35,7 +19,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd ${{ secret.PROJECT_PATH }}
+            cd ${{ secrets.PROJECT_PATH }}
 
             git checkout Development
             git pull origin Development
