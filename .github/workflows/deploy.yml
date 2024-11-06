@@ -19,12 +19,12 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
-        cd ${{ secrets.PROJECT_PATH }}
+            cd ${{ secrets.PROJECT_PATH }}
 
-        git checkout Development
-        git pull origin Development
-        yarn install --frozen-lockfile
-        yarn build || exit 1
-        screen -X -S handbook quit || true
+            git checkout Development
+            git pull origin Development
+            yarn install --frozen-lockfile
+            yarn build || exit 1
+            screen -X -S handbook quit || true
 
-        screen -dmS handbook bash -c 'serve dist -l 3000'
+            screen -dmS handbook bash -c 'serve dist -l 3000'
