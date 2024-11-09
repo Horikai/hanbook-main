@@ -1,6 +1,4 @@
 import { cn } from '@/lib/utils'
-import { isTauri } from '@tauri-apps/api/core'
-import { open } from '@tauri-apps/plugin-shell'
 import { cva } from 'class-variance-authority'
 import * as React from 'react'
 
@@ -29,13 +27,7 @@ const LinkVariants = cva('text-sm font-medium text-blue-500 underline hover:text
 const Link = React.forwardRef<HTMLButtonElement, LinkProps>(
 	({ className, href, children, variant = 'default', ...props }) => {
 		const openBrowser = () => {
-			if (isTauri()) {
-				open(href).catch((e) => {
-					console.error(e)
-				})
-			} else {
-				window.open(href, '_blank')
-			}
+			window.open(href, '_blank')
 		}
 		return (
 			<button type='button' className={cn(LinkVariants({ variant }), className)} {...props} onClick={openBrowser}>

@@ -2,8 +2,6 @@ import YuukiPS from '@/api/yuukips'
 import { ToastAction } from '@/components/ui/toast.tsx'
 import { useToast } from '@/components/ui/use-toast'
 import type { Command, GmhandbookGI } from '@/types/gm'
-import { isTauri } from '@tauri-apps/api/core'
-import { writeText } from '@tauri-apps/plugin-clipboard-manager'
 import type React from 'react'
 import { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -31,7 +29,7 @@ const CommandList: React.FC<CommandListProps> = memo(
 				if (action === 'copy') {
 					const copyCommand = async (value: string) => {
 						try {
-							await (isTauri() ? writeText(value) : navigator.clipboard.writeText(value))
+							await navigator.clipboard.writeText(value)
 							toast({
 								title: t('command_copied.title'),
 								description: t('command_copied.description', {

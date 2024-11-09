@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button'
 import type React from 'react'
 import { useEffect, useState } from 'react'
 import { memo } from 'react'
-import Updater from './updater'
 
 import '@/i18n'
 import {
@@ -179,7 +178,6 @@ const Drawer: React.FC<DrawerProps> = memo(({ children }) => {
 						isDesktopSidebarMinimized ? 'lg:pl-20' : 'lg:pl-64'
 					}`}
 				>
-					<Updater />
 					{!error && children}
 					{error && <ErrorHandling error={error} />}
 				</main>

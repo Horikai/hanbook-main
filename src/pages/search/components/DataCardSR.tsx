@@ -8,8 +8,6 @@ import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 import { LoadingContainer } from '@/components/ui/loading'
 import type { Command, Data, ImageClass, ListRelicItem } from '@/types/hsr'
-import { isTauri } from '@tauri-apps/api/core'
-import { writeText } from '@tauri-apps/plugin-clipboard-manager'
 import type React from 'react'
 import { memo, useCallback, useState, Suspense, lazy, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -397,7 +395,8 @@ const DataCardSR: React.FC<DataCardSRProps> = ({ currentLanguage, code, server, 
 		(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			const { value } = e.currentTarget
 			const [name, id] = value.split(' || ')
-			;(isTauri() ? writeText(id) : navigator.clipboard.writeText(id))
+			navigator.clipboard
+				.writeText(id)
 				.then(() => {
 					toast({
 						title: tToast('copied_id.title'),
@@ -421,7 +420,8 @@ const DataCardSR: React.FC<DataCardSRProps> = ({ currentLanguage, code, server, 
 
 	const handleCommandCopy = useCallback(
 		(command: string) => {
-			;(isTauri() ? writeText(command) : navigator.clipboard.writeText(command))
+			navigator.clipboard
+				.writeText(command)
 				.then(() => {
 					toast({
 						title: tToast('copied_command.title'),

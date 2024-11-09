@@ -1,9 +1,0 @@
-pub mod achievement;
-pub mod artifacts;
-pub mod characters;
-pub mod dungeons;
-pub mod main_quests;
-pub mod materials;
-pub mod monsters;
-pub mod scenes;
-pub mod weapons;

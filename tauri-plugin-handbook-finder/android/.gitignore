@@ -1,5 +1,0 @@
-/build
-/.tauri
-.gradle
-# Android SDK paths
-local.properties

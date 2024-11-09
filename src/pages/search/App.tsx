@@ -2,15 +2,14 @@ import { Suspense, lazy } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import { useTranslation } from 'react-i18next'
-import { invoke, isTauri } from '@tauri-apps/api/core'
-import { error } from '@tauri-apps/plugin-log'
 import YuukiPS from '@/api/yuukips'
 import ElaXanAPI from '@/api/elaxanApi'
 import { Button } from '@/components/ui/button'
 import { LoadingContainer } from '@/components/ui/loading'
-import type { Description, GmhandbookGI } from '@/types/gm'
+import type { Description } from '@/types/gm'
 import type { CurrentType, State } from './components/types'
 import expiresInAMonth from './components/cookieExpires'
+import { CardExpandable } from '@/components/ui/card-expandable'
 
 // Lazy load components
 const Search = lazy(() => import('./components/Search'))
@@ -61,23 +60,14 @@ function App() {
 			mainDataSR: [],
 		}))
 		try {
-			let response: GmhandbookGI[] = []
-			if (isTauri()) {
-				response = await invoke<GmhandbookGI[]>('find', {
-					search: state.searchTerm.split(';;').map((e) => e.trim()),
-					language: currentLanguage,
-					limit: state.currentLimit,
-				})
-			} else {
-				response = await ElaXanAPI.getHandbook(state.baseURL, 'gi', {
-					search: state.searchTerm.split(';;').map((e) => e.trim()),
-					limit: state.currentLimit,
-					category: state.selectedCategory,
-					command: state.showCommands,
-					image: state.showImage,
-					language: currentLanguage.toLowerCase(),
-				})
-			}
+			const response = await ElaXanAPI.getHandbook(state.baseURL, 'gi', {
+				search: state.searchTerm.split(';;').map((e) => e.trim()),
+				limit: state.currentLimit,
+				category: state.selectedCategory,
+				command: state.showCommands,
+				image: state.showImage,
+				language: currentLanguage.toLowerCase(),
+			})
 			setState((prevState) => ({
 				...prevState,
 				loading: false,
@@ -162,14 +152,9 @@ function App() {
 		const getCategory = async () => {
 			try {
 				const server: string = cookies.type || 'Genshin Impact'
-				let response: string[]
-				if (isTauri()) {
-					response = await invoke<string[]>('get_category')
-				} else {
-					const currentType = server.includes('Genshin Impact') ? 'gi' : 'sr'
-					const { data } = await ElaXanAPI.getCategoryList(state.baseURL, currentType)
-					response = data || []
-				}
+				const currentType = server.includes('Genshin Impact') ? 'gi' : 'sr'
+				const { data } = await ElaXanAPI.getCategoryList(state.baseURL, currentType)
+				const response = data || []
 				setState((prevState) => ({
 					...prevState,
 					listCategory: response.map((item) => ({
@@ -178,7 +163,7 @@ function App() {
 					})),
 				}))
 			} catch (e) {
-				await error(`Error getting category list: ${e}`)
+				console.error(e)
 			}
 		}
 		getCategory()
@@ -229,6 +214,18 @@ function App() {
 				</Suspense>
 			</div>
 			{/* end search function */}
+			<CardExpandable
+				cards={[
+					{
+						title: 'test',
+						description: 'test',
+						content: () => <div>test</div>,
+						ctaLink: 'https://elaxan.xyz',
+						ctaText: 'test',
+						src: 'https://elaxan.xyz',
+					},
+				]}
+			/>
 
 			{/* Show Data List */}
 			{!state.error && (

@@ -14,8 +14,6 @@ import {
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { Description, GmhandbookGI } from '@/types/gm'
-import { isTauri } from '@tauri-apps/api/core'
-import { writeText } from '@tauri-apps/plugin-clipboard-manager'
 import type React from 'react'
 import { memo, useCallback, useState, Suspense, lazy, useEffect } from 'react'
 import { useCookies } from 'react-cookie'
@@ -273,7 +271,8 @@ const DataCard: React.FC<DataCardProps> = ({ currentLanguage, code, uid, server,
 		(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			const { value } = e.currentTarget
 			const [name, id] = value.split(' || ')
-			;(isTauri() ? writeText(id) : navigator.clipboard.writeText(id))
+			navigator.clipboard
+				.writeText(id)
 				.then(() => {
 					toast({
 						title: tToast('copied_id.title'),
