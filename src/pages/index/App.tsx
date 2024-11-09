@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { FaGithub } from 'react-icons/fa'
@@ -5,6 +6,28 @@ import { useTranslation } from 'react-i18next'
 import { icons } from 'lucide-react'
 import { useInView } from '@/hooks/useInView'
 import type { RefObject } from 'react'
+
+const containerVariants = {
+	hidden: { opacity: 0 },
+	visible: {
+		opacity: 1,
+		transition: { staggerChildren: 0.3 },
+	},
+}
+
+const sectionVariants = {
+	hidden: { opacity: 0, y: 50 },
+	visible: {
+		opacity: 1,
+		y: 0,
+		transition: { duration: 0.5 },
+	},
+}
+
+const hideVariants = {
+	hidden: { opacity: 0, y: -50 },
+	visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+}
 
 interface Cards {
 	title: string
@@ -41,19 +64,28 @@ const cards: Array<Cards> = [
 ]
 
 export default function Home() {
-	const { t } = useTranslation()
 	const [heroRef, heroInView] = useInView()
 	const [cardsRef, cardsInView] = useInView()
 	const [openSourceRef, openSourceInView] = useInView()
 	const [ctaRef, ctaInView] = useInView()
 
+	const { t } = useTranslation()
+
 	return (
-		<main className='min-h-screen bg-gradient-to-b from-gray-100 to-white dark:from-gray-900 dark:to-gray-800'>
-			<section
+		<motion.main
+			className='min-h-screen bg-gradient-to-b from-gray-100 to-white dark:from-gray-900 dark:to-gray-800'
+			variants={containerVariants}
+			initial='hidden'
+			animate='visible'
+		>
+			<motion.section
 				ref={heroRef as RefObject<HTMLElement>}
-				className={`relative py-20 px-4 sm:px-6 lg:px-8 text-center min-h-[60vh] flex items-center justify-center bg-cover bg-center ${
-					heroInView ? 'fade-enter-active' : 'fade-enter'
-				}`}
+				variants={hideVariants}
+				initial='hidden'
+				animate={heroInView ? 'visible' : 'hidden'}
+				className={
+					'relative py-20 px-4 sm:px-6 lg:px-8 text-center min-h-[60vh] flex items-center justify-center bg-cover bg-center'
+				}
 				style={{ backgroundImage: "url('/homepage-bg.png')" }}
 			>
 				<div className='absolute inset-0 bg-black/75' />
@@ -72,14 +104,14 @@ export default function Home() {
 						<a href='/search'>{t('features.search.title')}</a>
 					</Button>
 				</div>
-			</section>
+			</motion.section>
 
 			{/* Cards Section */}
-			<section
+			<motion.section
 				ref={cardsRef as RefObject<HTMLElement>}
-				className={`py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900 ${
-					cardsInView ? 'fade-enter-active' : 'fade-enter'
-				}`}
+				animate={cardsInView ? 'visible' : 'hidden'}
+				className={'py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900'}
+				variants={sectionVariants}
 			>
 				<h2 className='text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white animate-slide-in-bottom'>
 					{t('features.title')}
@@ -109,14 +141,14 @@ export default function Home() {
 						)
 					})}
 				</div>
-			</section>
+			</motion.section>
 
 			{/* Open Source Section */}
-			<section
+			<motion.section
 				ref={openSourceRef as RefObject<HTMLElement>}
-				className={`bg-gray-100 dark:bg-gray-800 py-16 px-4 sm:px-6 lg:px-8 text-center ${
-					openSourceInView ? 'fade-enter-active' : 'fade-enter'
-				}`}
+				animate={openSourceInView ? 'visible' : 'hidden'}
+				className={'bg-gray-100 dark:bg-gray-800 py-16 px-4 sm:px-6 lg:px-8 text-center'}
+				variants={sectionVariants}
 			>
 				<h2 className='text-3xl font-bold mb-4 text-gray-900 dark:text-white animate-slide-in-bottom'>
 					{t('open_source.title')}
@@ -129,14 +161,14 @@ export default function Home() {
 						<FaGithub className='mr-2 h-5 w-5' /> {t('open_source.button')}
 					</a>
 				</Button>
-			</section>
+			</motion.section>
 
 			{/* Call to Action */}
-			<section
+			<motion.section
 				ref={ctaRef as RefObject<HTMLElement>}
-				className={`bg-primary text-primary-foreground py-16 px-4 sm:px-6 lg:px-8 text-center ${
-					ctaInView ? 'fade-enter-active' : 'fade-enter'
-				}`}
+				animate={ctaInView ? 'visible' : 'hidden'}
+				className={'bg-primary text-primary-foreground py-16 px-4 sm:px-6 lg:px-8 text-center'}
+				variants={sectionVariants}
 			>
 				<h2 className='text-3xl font-bold mb-4 animate-slide-in-bottom'>Support Our Project</h2>
 				<p className='text-xl mb-8 animate-slide-in-bottom delay-200' style={{ animationDelay: '0.2s' }}>
@@ -145,7 +177,7 @@ export default function Home() {
 				<Button size='lg' variant='secondary' asChild className='animate-slide-in-bottom delay-400'>
 					<a href='/donation'>Support Us</a>
 				</Button>
-			</section>
-		</main>
+			</motion.section>
+		</motion.main>
 	)
 }
