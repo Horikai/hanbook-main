@@ -1,4 +1,5 @@
 import type { Dispatch, SetStateAction } from 'react'
+import { motion } from 'framer-motion'
 
 interface TabsProps {
 	activeTab: number
@@ -9,12 +10,17 @@ const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab }) => {
 	const listTabs = ['GC', 'GIO', 'LC']
 
 	return (
-		<div className='flex flex-wrap sm:flex-nowrap border-b border-gray-200 dark:border-gray-700'>
+		<motion.div
+			className='flex flex-wrap sm:flex-nowrap border-b border-gray-200 dark:border-gray-700'
+			initial={{ y: -20, opacity: 0 }}
+			animate={{ y: 0, opacity: 1 }}
+			transition={{ duration: 0.3 }}
+		>
 			{listTabs.map((tab, index) => (
-				<button
+				<motion.button
+					key={`tab-${tab}`}
 					type='button'
 					onClick={() => setActiveTab(index)}
-					key={`tab-${tab}`}
 					className={`${
 						activeTab === index
 							? 'border-blue-500 text-blue-600 dark:text-blue-400'
@@ -23,12 +29,12 @@ const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab }) => {
 						flex-1 sm:flex-none px-4 py-2 text-sm font-medium 
 						border-b-2 transition-colors duration-200
 						focus:outline-none whitespace-nowrap
-					`}
+						`}
 				>
 					{tab}
-				</button>
+				</motion.button>
 			))}
-		</div>
+		</motion.div>
 	)
 }
 export default Tabs

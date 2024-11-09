@@ -11,6 +11,7 @@ import type { GmhandbookGI } from '@/types/gm'
 import { useToast } from '@/components/ui/use-toast'
 import elaxanApi from '@/api/elaxanApi'
 import type { Hsr } from '@/types/hsr'
+import { motion } from 'framer-motion'
 
 // Lazy load the UI components
 const Select = lazy(() => import('@/components/ui/select').then((mod) => ({ default: mod.Select })))
@@ -50,7 +51,7 @@ const SelectArgs = memo(({ handleArgSelect, cmd, arg, selectedArgs, description 
 	}
 
 	return (
-		<>
+		<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
 			<Suspense fallback={<div className='h-10 w-full bg-gray-200 animate-pulse rounded-md' />}>
 				<Select
 					onValueChange={(value) => handleArgSelect(cmd.id, arg.key, value)}
@@ -70,7 +71,7 @@ const SelectArgs = memo(({ handleArgSelect, cmd, arg, selectedArgs, description 
 				</Select>
 			</Suspense>
 			<p className='text-sm text-muted-foreground'>{description}</p>
-		</>
+		</motion.div>
 	)
 })
 
@@ -278,7 +279,12 @@ const SearchArgs = memo(
 		)
 
 		return (
-			<div className='relative'>
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				transition={{ delay: 0.3 }}
+				className='relative'
+			>
 				{/* Search Input */}
 				<div className='relative'>
 					<Input
@@ -325,7 +331,7 @@ const SearchArgs = memo(
 						<div className='px-4 py-2 text-sm text-gray-500 dark:text-gray-400'>No results found</div>
 					</div>
 				)}
-			</div>
+			</motion.div>
 		)
 	}
 )

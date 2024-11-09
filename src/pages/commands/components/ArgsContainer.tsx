@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 import { type Dispatch, type SetStateAction, memo } from 'react'
 import { SearchArgs, SelectArgs } from './ArgsType'
+import { motion } from 'framer-motion'
 
 interface ArgumentsContainerProps {
 	cmd: CommandLists
@@ -144,7 +145,14 @@ const ArgumentsContainer = memo(
 		}
 
 		return (
-			<div key={`${cmd.id}-${cmd.name}-${arg.key}`} className='space-y-1'>
+			<motion.div
+				key={`${cmd.id}-${cmd.name}-${arg.key}`}
+				className='space-y-1'
+				initial={{ height: 0, opacity: 0 }}
+				animate={{ height: 'auto', opacity: 1 }}
+				exit={{ height: 0, opacity: 0 }}
+				transition={{ duration: 0.3 }}
+			>
 				<label
 					htmlFor={`${cmd.id}-${arg.name}`}
 					className='block text-sm font-medium text-gray-700 dark:text-gray-300'
@@ -153,7 +161,7 @@ const ArgumentsContainer = memo(
 					<span className='ml-2 text-sm text-gray-500'>({arg.type})</span>
 				</label>
 				{renderArgInput()}
-			</div>
+			</motion.div>
 		)
 	}
 )

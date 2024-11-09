@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/dialog'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { motion } from 'framer-motion'
 
 /**
  * Option for select type argument
@@ -301,7 +302,12 @@ export default function App() {
 	}, [toast, activeTab, t])
 
 	return (
-		<div className='container mx-auto p-4'>
+		<motion.div
+			className='container mx-auto p-4'
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			transition={{ duration: 0.5 }}
+		>
 			<Suspense fallback={<Loader2 className='w-8 h-8 animate-spin text-gray-400 dark:text-gray-500' />}>
 				<Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
 			</Suspense>
@@ -323,9 +329,9 @@ export default function App() {
 							<Loader2 className='w-8 h-8 animate-spin text-gray-400 dark:text-gray-500' />
 						</div>
 					)}
-					<div className='grid gap-4 grid-cols-1 md:grid-cols-2'>
+					<div className='grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
 						{filteredCommands.map((cmd) => (
-							<Card key={cmd.id} className='flex flex-col justify-between flex-grow'>
+							<motion.div key={cmd.id} className='flex flex-col justify-between flex-grow'>
 								<CardHeader>
 									<CardTitle className='text-lg'>{cmd.name}</CardTitle>
 								</CardHeader>
@@ -389,7 +395,7 @@ export default function App() {
 										</Suspense>
 									)}
 								</CardContent>
-							</Card>
+							</motion.div>
 						))}
 					</div>
 				</CardContent>
@@ -419,6 +425,6 @@ export default function App() {
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
-		</div>
+		</motion.div>
 	)
 }
