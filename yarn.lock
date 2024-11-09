@@ -2189,10 +2189,10 @@ i18next-http-backend@^2.6.2:
   dependencies:
     cross-fetch "4.0.0"
 
-i18next@^23.16.4:
-  version "23.16.4"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-23.16.4.tgz#79c07544f6d6fa803fe8427108d547542c1d6cf4"
-  integrity sha512-9NIYBVy9cs4wIqzurf7nLXPyf3R78xYbxExVqHLK9od3038rjpyOEzW+XB130kZ1N4PZ9inTtJ471CRJ4Ituyg==
+i18next@^23.16.5:
+  version "23.16.5"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-23.16.5.tgz#53d48ae9f985fd73fc1fcb96e6c7d90ababf0831"
+  integrity sha512-KTlhE3EP9x6pPTAW7dy0WKIhoCpfOGhRQlO+jttQLgzVaoOjWwBWramu7Pp0i+8wDNduuzXfe3kkVbzrKyrbTA==
   dependencies:
     "@babel/runtime" "^7.23.2"
 
@@ -2439,10 +2439,10 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
-lucide-react@^0.454.0:
-  version "0.454.0"
-  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.454.0.tgz#a81b9c482018720f07ead0503ae502d94d528444"
-  integrity sha512-hw7zMDwykCLnEzgncEEjHeA6+45aeEzRYuKHuyRSOPkhko+J3ySGjGIzu+mmMfDFG1vazHepMaYFYHbTFAZAAQ==
+lucide-react@^0.456.0:
+  version "0.456.0"
+  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.456.0.tgz#14906c3355cc65d3380b7b2294b331aeda1bb392"
+  integrity sha512-DIIGJqTT5X05sbAsQ+OhA8OtJYyD4NsEMCA/HQW/Y6ToPQ7gwbtujIoeAaup4HpHzV35SQOarKAWH8LYglB6eA==
 
 merge-stream@^2.0.0:
   version "2.0.0"
@@ -2795,10 +2795,10 @@ react-dom@^18.3.1:
     loose-envify "^1.1.0"
     scheduler "^0.23.2"
 
-react-i18next@^15.1.0:
-  version "15.1.0"
-  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-15.1.0.tgz#9494e4add2389f04c205dd7628c1aa75747b98a3"
-  integrity sha512-zj3nJynMnZsy2gPZiOTC7XctCY5eQGqT3tcKMmfJWC9FMvgd+960w/adq61j8iPzpwmsXejqID9qC3Mqu1Xu2Q==
+react-i18next@^15.1.1:
+  version "15.1.1"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-15.1.1.tgz#30bc76b39ded6ee37f1457677e46e6d6f11d9f64"
+  integrity sha512-R/Vg9wIli2P3FfeI8o1eNJUJue5LWpFsQePCHdQDmX0Co3zkr6kdT8gAseb/yGeWbNz1Txc4bKDQuZYsC0kQfw==
   dependencies:
     "@babel/runtime" "^7.25.0"
     html-parse-stringify "^3.0.1"
