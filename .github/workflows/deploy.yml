@@ -24,5 +24,3 @@ jobs:
             git pull origin Development
             yarn install --frozen-lockfile
             yarn build || exit 1
-            screen -X -S handbook quit || true
-            screen -dmS handbook bash -c 'serve dist -l 3000'
