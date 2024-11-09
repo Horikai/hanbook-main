@@ -12,13 +12,10 @@ export function useInView<T extends HTMLElement = HTMLElement>(options?: Interse
 
     useEffect(() => {
         const observer = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) {
-                setIsInView(true)
-                observer.unobserve(entry.target)
-            }
+            setIsInView(entry.isIntersecting)
         }, {
             threshold: 0.1,
-            rootMargin: '50px',
+            rootMargin: '0px',
             ...options
         })
 
@@ -35,4 +32,4 @@ export function useInView<T extends HTMLElement = HTMLElement>(options?: Interse
     }, [options])
 
     return [ref, isInView] as const
-} 
+}
