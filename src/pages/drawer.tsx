@@ -164,7 +164,7 @@ const Drawer: React.FC<DrawerProps> = memo(({ children }) => {
 								rel='noreferrer'
 								className={isDesktopSidebarMinimized ? 'lg:hidden' : ''}
 							>
-								Version 0.1.1 (pre-release)
+								Version 0.1.2 (pre-release)
 							</a>
 						</footer>
 					</div>
