@@ -9,12 +9,10 @@ import '@/i18n'
 import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
-	DownloadIcon,
 	GlobeIcon,
 	HeartIcon,
 	MenuIcon,
 	MoonIcon,
-	PickaxeIcon,
 	SearchIcon,
 	CommandIcon,
 	SunMoonIcon,
@@ -67,8 +65,6 @@ const Drawer: React.FC<DrawerProps> = memo(({ children }) => {
 		{ href: '/commands', icon: CommandIcon, label: 'commands' },
 		{ href: '/artifacts', icon: BookIcon, label: 'artifacts' },
 		{ href: '/settings', icon: UserIcon, label: 'player_settings' },
-		{ href: '/generate', icon: PickaxeIcon, label: 'generate' },
-		{ href: '/download', icon: DownloadIcon, label: 'download' },
 		{ href: '/donation', icon: HeartIcon, label: 'donation' },
 		{
 			href: '#',
