@@ -9,7 +9,6 @@ import { LoadingContainer } from '@/components/ui/loading'
 import type { Description } from '@/types/gm'
 import type { CurrentType, State } from './components/types'
 import expiresInAMonth from './components/cookieExpires'
-import { CardExpandable } from '@/components/ui/card-expandable'
 
 // Lazy load components
 const Search = lazy(() => import('./components/Search'))
@@ -214,18 +213,6 @@ function App() {
 				</Suspense>
 			</div>
 			{/* end search function */}
-			<CardExpandable
-				cards={[
-					{
-						title: 'test',
-						description: 'test',
-						content: () => <div>test</div>,
-						ctaLink: 'https://elaxan.xyz',
-						ctaText: 'test',
-						src: 'https://elaxan.xyz',
-					},
-				]}
-			/>
 
 			{/* Show Data List */}
 			{!state.error && (
