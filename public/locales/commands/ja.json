@@ -2,8 +2,6 @@
     "toast": {
         "copied": "コピーしました！",
         "command_copied": "コマンドをクリップボードにコピーしました。",
-        "success": "成功",
-        "command_applied": "コマンドを適用しました。",
         "error": {
             "title": "エラー",
             "description": "コマンドの取得に失敗しました。もう一度お試しください。"

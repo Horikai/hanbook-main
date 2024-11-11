@@ -2,8 +2,6 @@
     "toast": {
         "copied": "Copied!",
         "command_copied": "Command copied to clipboard.",
-        "success": "Success",
-        "command_applied": "Command applied.",
         "error": {
             "title": "Error",
             "description": "Failed to fetch commands. Please try again."

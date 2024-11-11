@@ -2,8 +2,6 @@
     "toast": {
         "copied": "Copiado!",
         "command_copied": "Comando copiado para área de transferência.",
-        "success": "Sucesso",
-        "command_applied": "Comando aplicado.",
         "error": {
             "title": "Erro",
             "description": "Falha ao buscar comandos. Por favor, tente novamente."

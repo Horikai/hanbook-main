@@ -2,8 +2,6 @@
     "toast": {
         "copied": "Nakopya na!",
         "command_copied": "Nakopya na ang command sa clipboard.",
-        "success": "Matagumpay",
-        "command_applied": "Nai-apply na ang command.",
         "error": {
             "title": "May Error",
             "description": "Hindi makuha ang mga command. Pakisubukan muli."

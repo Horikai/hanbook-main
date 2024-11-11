@@ -2,8 +2,6 @@
     "toast": {
         "copied": "Tersalin!",
         "command_copied": "Perintah telah disalin ke clipboard.",
-        "success": "Berhasil",
-        "command_applied": "Perintah telah diterapkan.",
         "error": {
             "title": "Kesalahan",
             "description": "Gagal mengambil daftar perintah. Silakan coba lagi."

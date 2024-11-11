@@ -2,8 +2,6 @@
     "toast": {
         "copied": "Đã sao chép!",
         "command_copied": "Đã sao chép lệnh vào bộ nhớ tạm.",
-        "success": "Thành công",
-        "command_applied": "Đã áp dụng lệnh.",
         "error": {
             "title": "Lỗi",
             "description": "Không thể tải lệnh. Vui lòng thử lại."
