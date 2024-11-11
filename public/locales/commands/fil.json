@@ -7,6 +7,14 @@
             "description": "Hindi makuha ang mga command. Pakisubukan muli."
         }
     },
+    "floating_window": {
+        "title": "Command",
+        "button": {
+            "clear": "Burahin",
+            "send": "Ipadala"
+        },
+        "input_placeholder": "Mag-type ng command..."
+    },
     "title": "Listahan ng mga Command",
     "search_placeholder": "Maghanap ng mga command...",
     "copy_command": "Kopyahin ang Command",

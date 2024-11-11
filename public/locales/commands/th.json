@@ -7,6 +7,14 @@
             "description": "ไม่สามารถดึงข้อมูลคำสั่งได้ กรุณาลองใหม่อีกครั้ง"
         }
     },
+    "floating_window": {
+        "title": "คำสั่ง",
+        "button": {
+            "clear": "ล้าง",
+            "send": "ส่ง"
+        },
+        "input_placeholder": "พิมพ์คำสั่ง..."
+    },
     "title": "รายการคำสั่ง",
     "search_placeholder": "ค้นหาคำสั่ง...",
     "copy_command": "คัดลอกคำสั่ง",

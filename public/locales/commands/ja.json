@@ -7,6 +7,14 @@
             "description": "コマンドの取得に失敗しました。もう一度お試しください。"
         }
     },
+    "floating_window": {
+        "title": "コマンド",
+        "button": {
+            "clear": "クリア",
+            "send": "送信"
+        },
+        "input_placeholder": "コマンドを入力..."
+    },
     "title": "コマンド一覧",
     "search_placeholder": "コマンドを検索...",
     "copy_command": "コマンドをコピー",

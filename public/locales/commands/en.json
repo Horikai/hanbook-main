@@ -7,6 +7,14 @@
             "description": "Failed to fetch commands. Please try again."
         }
     },
+    "floating_window": {
+        "title": "Command",
+        "button": {
+            "clear": "Clear",
+            "send": "Send"
+        },
+        "input_placeholder": "Type a command..."
+    },
     "title": "Command List",
     "search_placeholder": "Search commands...",
     "copy_command": "Copy Command",

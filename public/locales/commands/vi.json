@@ -7,6 +7,14 @@
             "description": "Không thể tải lệnh. Vui lòng thử lại."
         }
     },
+    "floating_window": {
+        "title": "Lệnh",
+        "button": {
+            "clear": "Xóa",
+            "send": "Gửi"
+        },
+        "input_placeholder": "Nhập lệnh..."
+    },
     "title": "Danh sách lệnh",
     "search_placeholder": "Tìm kiếm lệnh...",
     "copy_command": "Sao chép lệnh",

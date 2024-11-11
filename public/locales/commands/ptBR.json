@@ -7,6 +7,14 @@
             "description": "Falha ao buscar comandos. Por favor, tente novamente."
         }
     },
+    "floating_window": {
+        "title": "Comando",
+        "button": {
+            "clear": "Limpar",
+            "send": "Enviar"
+        },
+        "input_placeholder": "Digite um comando..."
+    },
     "title": "Lista de Comandos",
     "search_placeholder": "Pesquisar comandos...",
     "copy_command": "Copiar Comando",

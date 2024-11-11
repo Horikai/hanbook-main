@@ -7,6 +7,14 @@
             "description": "获取命令失败。请重试。"
         }
     },
+    "floating_window": {
+        "title": "命令",
+        "button": {
+            "clear": "清除",
+            "send": "发送"
+        },
+        "input_placeholder": "输入命令..."
+    },
     "title": "命令列表",
     "search_placeholder": "搜索命令...",
     "copy_command": "复制命令",

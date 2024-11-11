@@ -7,6 +7,14 @@
             "description": "Gagal mengambil daftar perintah. Silakan coba lagi."
         }
     },
+    "floating_window": {
+        "title": "Perintah",
+        "button": {
+            "clear": "Bersihkan",
+            "send": "Kirim"
+        },
+        "input_placeholder": "Ketik perintah..."
+    },
     "title": "Daftar Perintah",
     "search_placeholder": "Cari perintah...",
     "copy_command": "Salin Perintah",

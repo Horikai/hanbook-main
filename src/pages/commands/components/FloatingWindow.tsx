@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { ChevronDown } from 'lucide-react'
 import { useCookies } from 'react-cookie'
 import { useFloatingWindow, type Message } from '@/store/useFloatingWindow'
+import { useTranslation } from 'react-i18next'
 
 const FloatingWindow: React.FC = () => {
 	const { isMinimized, messages, toggleMinimize, sendCommand, clearMessages, yuukips, setMessage } =
@@ -12,6 +13,7 @@ const FloatingWindow: React.FC = () => {
 	const [input, setInput] = useState<string>('')
 	const messagesEndRef = useRef<HTMLDivElement>(null)
 	const [cookies] = useCookies(['uid', 'code', 'server'])
+	const { t } = useTranslation('', { keyPrefix: 'floating_window' })
 
 	const scrollToBottom = () => {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -85,7 +87,7 @@ const FloatingWindow: React.FC = () => {
 					type='button'
 					aria-expanded={!isMinimized}
 				>
-					<h3 className='text-base'>Command</h3>
+					<h3 className='text-base'>{t('title')}</h3>
 					<div
 						className={`
                             p-1 rounded-full 
@@ -143,20 +145,20 @@ const FloatingWindow: React.FC = () => {
 										className='px-3 py-1 bg-primary text-primary-foreground rounded-md'
 										onClick={clearMessages}
 									>
-										Clear
+										{t('button.clear')}
 									</button>
 									<input
 										type='text'
 										value={input}
 										onChange={(e) => setInput(e.target.value)}
 										className='flex-1 px-3 py-2 rounded-md bg-muted'
-										placeholder='Type a command...'
+										placeholder={t('input_placeholder')}
 									/>
 									<button
 										type='submit'
 										className='px-4 py-2 bg-primary text-primary-foreground rounded-md'
 									>
-										Send
+										{t('button.send')}
 									</button>
 								</div>
 							</form>
