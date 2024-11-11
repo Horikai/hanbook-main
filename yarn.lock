@@ -3012,10 +3012,10 @@ semver@^6.3.1:
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
   integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
 
-shadcn@^2.1.3:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/shadcn/-/shadcn-2.1.3.tgz#c342f28f39cff6167dd8f73e3c9f4ab919a3649d"
-  integrity sha512-dOg4wgbudxYP5AyvDoGTg+x4klr2OffdgnZLkYneUkFIblOL5WMHwfOeLCjZhGN5CLsCrAxYe6F+rMDiA1jX9A==
+shadcn@^2.1.6:
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/shadcn/-/shadcn-2.1.6.tgz#48e7bb37255c58ed60c584382d449038dcf0c88d"
+  integrity sha512-Hjxw7sIhjQHnbHMSka1Dt7pkyRYzZ5dA9ANmwS6uwlouxEnqT/15AH5IzFRyyxSv352w7GS3cPL7VGd4ybvQeg==
   dependencies:
     "@antfu/ni" "^0.21.4"
     "@babel/core" "^7.22.1"
@@ -3507,3 +3507,8 @@ zod@^3.20.2:
   version "3.23.8"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.23.8.tgz#e37b957b5d52079769fb8097099b592f0ef4067d"
   integrity sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==
+
+zustand@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.0.1.tgz#2bdca5e4be172539558ce3974fe783174a48fdcf"
+  integrity sha512-pRET7Lao2z+n5R/HduXMio35TncTlSW68WsYBq2Lg1ASspsNGjpwLAsij3RpouyV6+kHMwwwzP0bZPD70/Jx/w==

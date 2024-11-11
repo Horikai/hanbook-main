@@ -19,6 +19,8 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
+import FloatingWindow from './components/FloatingWindow'
+import { useFloatingWindow } from '@/store/useFloatingWindow'
 
 /**
  * Option for select type argument
@@ -153,11 +155,11 @@ export default function App() {
 	const [loading, setLoading] = useState(true)
 	const [activeTab, setActiveTab] = useState(0)
 	const [searchQuery, setSearchQuery] = useState('')
-	const [yuukips, setYuukips] = useState<YuukiPS | null>(null)
 	const [cookies] = useCookies(['uid', 'server', 'code'])
 	const navigate = useNavigate()
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
 	const { t } = useTranslation()
+	const { sendCommand, toggleMinimize } = useFloatingWindow()
 
 	const copyToClipboard = useCallback(
 		(text: string) => {
@@ -172,17 +174,6 @@ export default function App() {
 		[toast, t]
 	)
 
-	useEffect(() => {
-		const yuukips = new YuukiPS()
-		setYuukips(yuukips)
-		yuukips.getResponseCommand((response) => {
-			toast({
-				title: t('toast.success'),
-				description: response.message,
-			})
-		})
-	}, [toast, t])
-
 	const applyCommand = useCallback(
 		(command: string) => {
 			if (!cookies.uid || !cookies.server || !cookies.code) {
@@ -190,13 +181,10 @@ export default function App() {
 				return
 			}
 			const resultCommand = YuukiPS.generateResultCommand(command, {})
-			yuukips?.sendCommand(cookies.uid, cookies.code, cookies.server, resultCommand)
-			toast({
-				title: t('toast.success'),
-				description: t('toast.command_applied'),
-			})
+			sendCommand(cookies.uid, cookies.code, cookies.server, resultCommand)
+			toggleMinimize()
 		},
-		[cookies, toast, yuukips, t]
+		[cookies, sendCommand, toggleMinimize]
 	)
 
 	const toggleArgsVisibility = useCallback((commandId: number) => {
@@ -425,6 +413,7 @@ export default function App() {
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
+			<FloatingWindow />
 		</motion.div>
 	)
 }
