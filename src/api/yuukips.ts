@@ -51,6 +51,8 @@ export default class YuukiPS {
 
 	private socket: Socket | null = null
 
+	private currentListener: ((...args: (ResponseCommand | ResponseWithTicket)[]) => void) | null = null
+
 	/**
 	 * Create a new instance of YuukiPS.
 	 *
@@ -224,7 +226,19 @@ export default class YuukiPS {
 		if (!this.socket) {
 			throw new Error('Socket is not connected')
 		}
+		// Remove previous listener if exists
+		this.removeResponseListener()
+
+		// Store and set new listener
+		this.currentListener = listener
 		this.socket.on('cmdRsp', listener)
+	}
+
+	public removeResponseListener(): void {
+		if (this.socket && this.currentListener) {
+			this.socket.off('cmdRsp', this.currentListener)
+			this.currentListener = null
+		}
 	}
 
 	/**
