@@ -1,0 +1,11 @@
+services:
+  handbook:
+    image: siakbary/handbook
+    container_name: handbook
+    restart: always
+    network_mode: host
+    environment:
+      - TZ=Asia/Makassar
+    stdin_open: true
+    tty: true
+    init: true

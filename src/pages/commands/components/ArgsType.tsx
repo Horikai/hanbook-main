@@ -190,7 +190,7 @@ const SearchArgs = memo(
 					}
 				}
 				let results: GmhandbookGI[] | Hsr
-				const baseURL = 'https://api.elaxan.xyz'
+				const baseURL = 'https://ps.yuuki.me/api/handbook'
 				if (arg.api.game === 'gi') {
 					results = await elaxanApi.getHandbook(baseURL, 'gi', {
 						search: updatedJsonBody.search as string[],

@@ -47,7 +47,7 @@ function App() {
 		output: [],
 		limitsResult: cookies.limitsResult || 100,
 		isHandbookLoading: false,
-		baseURL: 'https://api.elaxan.xyz',
+		baseURL: 'https://ps.yuuki.me/api/handbook',
 	})
 	const currentLanguage: keyof Description = cookies.language || 'EN'
 

@@ -228,7 +228,7 @@ const App = () => {
 
 		try {
 			setIsLoading(true)
-			const results = await elaxanApi.getHandbook('https://api.elaxan.xyz', 'gi', {
+			const results = await elaxanApi.getHandbook('https://ps.yuuki.me/api/handbook', 'gi', {
 				search: [query],
 				limit: 10,
 				category: ['artifact'],

@@ -6,6 +6,6 @@ RUN yarn global add serve
 
 COPY ./dist /app/
 
-EXPOSE 3000
+EXPOSE 8182
 
-CMD sh -c "serve . -l ${PORT:-3000}"
+CMD sh -c "serve . -l ${PORT:-8182}"
