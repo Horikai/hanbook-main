@@ -1,6 +1,6 @@
 # Handbook Finder
 
-Handbook Finder is a cross-platform desktop and mobile application built with React and TypeScript. It enables users to search for game items, characters, and weapons.
+Handbook Finder is a website application built with React and TypeScript. It enables users to search for game items, characters, and weapons.
 
 **Note: This project is still a work in progress, so expect some rough edges and changes along the way!**
 
@@ -11,40 +11,45 @@ Handbook Finder is a cross-platform desktop and mobile application built with Re
 - Dark/Light Theme
 - Command Execution for YuukiPS
 
-## Build from Source
+## Development
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v14 or newer)
+- [Node.js](https://nodejs.org/) (v18 or newer)
 - [Yarn](https://yarnpkg.com/) package manager
 
 ### Installation
 
 1. Clone the repository:
-
-    ```
+    ```bash
     git clone https://github.com/YuukiPS/Handbook.git
     cd Handbook
     ```
 
 2. Install dependencies:
-    ```
+    ```bash
     yarn install
     ```
 
-### Development
+### Development Server
 
-To run the development version:
+Run the development server:
 
 ```bash
 yarn dev
 ```
 
-### Building
+The site will be available at `http://localhost:1420`
+
+### Production Build
+
+Create an optimized production build:
 
 ```bash
 yarn build
 ```
+
+The output will be in the `dist` directory.
 
 ## License
 
