@@ -6,8 +6,7 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "biome lint src && tsc && vite build",
-		"preview": "vite preview",
-		"tauri": "tauri"
+		"preview": "vite preview"
 	},
 	"dependencies": {
 		"@radix-ui/react-checkbox": "^1.1.2",
