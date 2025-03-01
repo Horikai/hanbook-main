@@ -40,25 +40,25 @@ const cards: Array<Cards> = [
 	{
 		title: 'search.title',
 		description: 'search.description',
-		link: '/search',
+		link: '/search.html',
 		icon: 'Search',
 	},
 	{
 		title: 'commands.title',
 		description: 'commands.description',
-		link: '/commands',
+		link: '/commands.html',
 		icon: 'Terminal',
 	},
 	{
 		title: 'artifacts.title',
 		description: 'artifacts.description',
-		link: '/artifacts',
+		link: '/artifacts.html',
 		icon: 'Gem',
 	},
 	{
 		title: 'player_settings.title',
 		description: 'player_settings.description',
-		link: '/settings',
+		link: '/settings.html',
 		icon: 'Settings',
 	},
 ]
@@ -101,7 +101,7 @@ export default function Home() {
 						asChild
 						className='animate-slide-in-bottom delay-400 bg-white text-black hover:bg-gray-200'
 					>
-						<a href='/search'>{t('features.search.title')}</a>
+						<a href='/search.html'>{t('features.search.title')}</a>
 					</Button>
 				</div>
 			</motion.section>
@@ -157,7 +157,7 @@ export default function Home() {
 					{t('open_source.description')}
 				</p>
 				<Button size='lg' variant='outline' asChild className='animate-slide-in-bottom delay-400'>
-					<a href='https://github.com/YuukiPS/Handbook' target='_blank' rel='noopener noreferrer'>
+					<a href='/#' target='_blank' rel='noopener noreferrer'>
 						<FaGithub className='mr-2 h-5 w-5' /> {t('open_source.button')}
 					</a>
 				</Button>
@@ -175,7 +175,7 @@ export default function Home() {
 					{t('donation.description')}
 				</p>
 				<Button size='lg' variant='secondary' asChild className='animate-slide-in-bottom delay-400'>
-					<a href='/donation'>Support Us</a>
+					<a href='/donation.html'>Support Us</a>
 				</Button>
 			</motion.section>
 		</motion.main>
